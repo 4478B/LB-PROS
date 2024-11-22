@@ -214,7 +214,11 @@ void autonomous() {
     //unclamp goal2
     clamp.set_value(LOW);
 
-    
+    // May need to add an odom resetter here
+    // look up how they work but tldr is they have robot go into wall and then reset position of odom based on knowing they are at wall
+    // it prevents drift
+
+
     
     /*controller.set_text(1,1,"Started I <3 Mikey");
 	chassis.follow(test4_txt, 20, 20000,true,false);
