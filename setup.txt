@@ -1,0 +1,47 @@
+This is how to switch from VEXCode to PROS
+First time only {
+
+    1. Install PROS VSCode Extension (Sidebar -> Extensions)
+    2. During installation, click download when prompted
+         to download extra utilities. The prompt is where
+         the "building" notifications show up in VEXCode.
+    3. Save & Close the VEXcode project
+    4. Open Source control (Sidebar -> third option)
+    5. Click "Clone Repository"
+    6. Find 4478B-PROS and clone it to some place memorable
+        (in same parent folder as 4478B VEXCode)
+        -> if "bad credentials" shows up, try generating a PAT
+            in Github and then when cloning the repository put in
+            "https://{YOUR_PAT}@github.com/4478B/4478B-PROS.git"
+
+}
+
+1. Close VEXCode repository and open up PROS repository
+2. Disable "Vex Robotics" and "Vex Robotics Feedback" Extensions
+    (Sidebar -> Extensions)
+3. Make sure "PROS" and "clangd" are enabled
+4. You'll hopefully get a notification when coding/building that says
+    "You're using both clangd and Intellisense. Disable Intellisense?"
+    Make sure you disable it as clangd is pros's Intellisense replacement.
+5. To build and upload, hit the Pros logo in the top right
+    To upload to a different slot, you have to use the terminal
+    (Terminal -> New Terminal, on right you should see "PROS Terminal")
+    First, build from the PROS extension page. Then, type into the terminal
+    "pros upload --slot X" where X is the slot you wanna download to.
+6. To use the auton route generator, go to path.jerryio.com and go to
+    File -> Open File and then locate the 4478B-PROS directory and you
+    should find all the routes saved in the "static" folder there.
+    That is where you should save future routes too. usage on how to
+    use these routes is in the Lemlib API
+
+
+Notes:
+    C++ - Coding Language
+    -PROS - VEX Communication Manager
+    --LemLib - 3rd party movement manager (odom, moveToPose, etc.)
+
+    If you can't figure out the syntax, look for the relevant APIs
+    or look online on stack overflow, vex forums, or LLMS
+
+    To go back to VEXCode do the same process but in reverse 
+    (Disable PROS, clangd, reenable Intellisense, enable VEX Robotics)
