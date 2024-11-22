@@ -164,17 +164,56 @@ void autonomous() {
     // set position to starting spot (needs tweaking)
     chassis.setPose(-58.7, -14.3, 315);
     // back up to hit goal1
-    chassis.moveToPose(-51, -22, 315,1000, {.forwards=false});
-    // clamp goal1
+    chassis.moveToPose(-51, -22, 315,1000, {.forwards=false},false);
+    // clamp goal1 & intake (preload)
     clamp.set_value(HIGH);
+    intake.move(127);
+    // grab ring1 for goal1
+    chassis.moveToPose(-24,-24,170,2000,{.minSpeed=72, .earlyExitRange=4});
+    //grab ring2 for goal1
+    chassis.moveToPose(-24,-48,270,2000,{.minSpeed=72, .earlyExitRange=4},false);
+    //grab ring3 for goal1
+    chassis.moveToPose(-48,-48,200,2000,{},false);
+    //grab ring4 for goal1
+    chassis.moveToPose(-48,-59,180,2000,{},false);
+    //grab ring5 for goal1
+    chassis.moveToPoint(-59,-48,2000,{},false);
+    //small wait so ring5 intakes
+    delay(400);
+    //back goal1 into corner
+    chassis.moveToPose(-63, -63, 45, 2000, {.forwards=false},false);
+    //stop intake
+    intake.brake();
+    //unclamp goal1
+    clamp.set_value(LOW);
+    
 
-    chassis.moveToPoint
-    chassis.moveToPose(63,-63,50,20000);
-    
-    
-    
-    
-    
+    //approach goal2
+    chassis.moveToPose(-48,5,180,2000,{},false);
+    //back into goal2
+    chassis.moveToPose(-48,24,180,2000,{},false);
+    //clamp goal2 & intake
+    clamp.set_value(HIGH);
+    intake.move(127);
+    //grab ring1 for goal2
+    chassis.moveToPose(-24,24,20,2000,{.minSpeed=72, .earlyExitRange=4},false);
+    //grab ring2 for goal2
+    chassis.moveToPose(-24,48,290,2000,{.minSpeed=72, .earlyExitRange=4},false);
+    //grab ring3 for goal2
+    chassis.moveToPose(-48,48,200,2000,{},false);
+    //grab ring4 for goal2
+    chassis.moveToPose(-48,59,180,2000,{},false);
+    //grab ring5 for goal2
+    chassis.moveToPoint(-59,48,2000,{},false);
+    //small wait so ring5 intakes
+    delay(400);
+    //back goal2 into corner
+    chassis.moveToPose(-63, 63, 135, 2000, {.forwards=false},false);
+    //stop intake
+    intake.brake();
+    //unclamp goal2
+    clamp.set_value(LOW);
+
     
     
     /*controller.set_text(1,1,"Started I <3 Mikey");
