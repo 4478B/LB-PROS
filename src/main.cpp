@@ -156,10 +156,19 @@ void testLateralPID(){
  */
  ASSET(test4_txt);
 void autonomous() {
-    // set position to x:0, y:0, heading:0
-    chassis.setPose(0, 0, 0);
-    // turn to face heading 90 with a very long timeout
     
+    
+    
+    // SKILLS ROUTE 1 (from skills_aio.txt)
+    
+    // set position to starting spot (needs tweaking)
+    chassis.setPose(-58.7, -14.3, 315);
+    // back up to hit goal1
+    chassis.moveToPose(-51, -22, 315,1000, {.forwards=false});
+    // clamp goal1
+    clamp.set_value(HIGH);
+
+    chassis.moveToPoint
     chassis.moveToPose(63,-63,50,20000);
     
     
@@ -209,22 +218,20 @@ void handleIntake(){
 
 }
 
-bool clampState = false;
 
 void handleClamp(){
 
     // activates on pressing B
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
     {
-        // toggle clamp states
-        clampState = !clampState;
 
         // clamp or unclamp based on toggled variable
-        clamp.set_value(clampState ? HIGH : LOW);
+        
+        clamp.set_value(clamp.get_value() == LOW ? HIGH : LOW);
 
         // print the state of the clamp on the controller screen
         controller.clear_line(1);
-        controller.set_text(1,1,clampState ? "Clamped" : "");
+        controller.set_text(1,1,clamp.get_value() == LOW ? "Clamped" : "");
     }
     
 }
