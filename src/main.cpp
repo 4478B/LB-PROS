@@ -8,25 +8,7 @@
 #include "pros/rotation.hpp"
 #include <cstdlib>
 #include "devices.h"
-
-
-
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
-}
+#include "auton_selector.h"
 
 // initialize function. Runs on program startup
 void initialize() {
@@ -38,15 +20,17 @@ void initialize() {
     armRot.reset_position(); 
     arm_motors.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 
-    // assign buttons to actions in auton selector
-	lcd::register_btn1_cb(on_center_button);
-    lcd::register_btn0_cb(on_center_button);
+    // show current route on brain screen
+    getAutonSelector().displayCurrentSelection();
 
+    // assign buttons to actions in auton selector
+    lcd::register_btn0_cb(on_left_button);
+	lcd::register_btn2_cb(on_right_button);
 
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
 	
     // print position to brain screen
-    pros::Task screen_task([&]() {
+    /*pros::Task screen_task([&]() {
         while (true) {
             // print robot location to the brain screen
             pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
@@ -56,7 +40,11 @@ void initialize() {
             // delay to save resources
             pros::delay(20);
         }
-    });
+    });*/
+}
+
+void autonomous() {
+    getAutonSelector().runSelectedAuton();
 }
 
 /**
@@ -136,101 +124,6 @@ void testLateralPID(){
         pros::delay(100);
     }
 
-
-}
-
-
-
-
-
-/**
- * Runs the user autonomous code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the autonomous
- * mode. Alternatively, this function may be called in initialize or opcontrol
- * for non-competition testing purposes.
- *
- * If the robot is disabled or communications is lost, the autonomous task
- * will be stopped. Re-enabling the robot will restart the task, not re-start it
- * from where it left off.
- */
- ASSET(test4_txt);
-void autonomous() {
-    
-    
-    
-    // SKILLS ROUTE 1 (from skills_aio.txt)
-    
-    // set position to starting spot (needs tweaking)
-    chassis.setPose(-58.7, -14.3, 315);
-    // back up to hit goal1
-    chassis.moveToPose(-51, -22, 315,1000, {.forwards=false},false);
-    // clamp goal1 & intake (preload)
-    clamp.set_value(HIGH);
-    intake.move(127);
-    // grab ring1 for goal1
-    chassis.moveToPose(-24,-24,170,2000,{.minSpeed=72, .earlyExitRange=4});
-    //grab ring2 for goal1
-    chassis.moveToPose(-24,-48,270,2000,{.minSpeed=72, .earlyExitRange=4},false);
-    //grab ring3 for goal1
-    chassis.moveToPose(-48,-48,200,2000,{},false);
-    //grab ring4 for goal1
-    chassis.moveToPose(-48,-59,180,2000,{},false);
-    //grab ring5 for goal1
-    chassis.moveToPoint(-59,-48,2000,{},false);
-    //small wait so ring5 intakes
-    delay(400);
-    //back goal1 into corner
-    chassis.moveToPose(-63, -63, 45, 2000, {.forwards=false},false);
-    //stop intake
-    intake.brake();
-    //unclamp goal1
-    clamp.set_value(LOW);
-    
-
-    //approach goal2
-    chassis.moveToPose(-48,5,180,2000,{},false);
-    //back into goal2
-    chassis.moveToPose(-48,24,180,2000,{},false);
-    //clamp goal2 & intake
-    clamp.set_value(HIGH);
-    intake.move(127);
-    //grab ring1 for goal2
-    chassis.moveToPose(-24,24,20,2000,{.minSpeed=72, .earlyExitRange=4},false);
-    //grab ring2 for goal2
-    chassis.moveToPose(-24,48,290,2000,{.minSpeed=72, .earlyExitRange=4},false);
-    //grab ring3 for goal2
-    chassis.moveToPose(-48,48,200,2000,{},false);
-    //grab ring4 for goal2
-    chassis.moveToPose(-48,59,180,2000,{},false);
-    //grab ring5 for goal2
-    chassis.moveToPoint(-59,48,2000,{},false);
-    //small wait so ring5 intakes
-    delay(400);
-    //back goal2 into corner
-    chassis.moveToPose(-63, 63, 135, 2000, {.forwards=false},false);
-    //stop intake
-    intake.brake();
-    //unclamp goal2
-    clamp.set_value(LOW);
-
-    // May need to add an odom resetter here
-    // look up how they work but tldr is they have robot go into wall and then reset position of odom based on knowing they are at wall
-    // it prevents drift
-
-
-    
-    /*controller.set_text(1,1,"Started I <3 Mikey");
-	chassis.follow(test4_txt, 20, 20000,true,false);
-    intake.move(127);
-    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
-    chassis.cancelAllMotions();
-    controller.clear_line(1);
-    controller.set_text(1,1,"Stopped");*/
-    std::cout<<"Done";
-	while(true){
-        delay(20);
-    }
 
 }
 
