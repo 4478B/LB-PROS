@@ -10,8 +10,67 @@
 #include "devices.h"
 #include "auton_selector.h"
 
+
+// Global variables needed for arm control
+static double targetPos = 0;
+static bool armMoving = false;
+static const double armThreshold = 1.0; // Adjust as needed
+
+// Task function for arm control
+void arm_control_task(void* param) {
+    double currentPos;
+    double error;
+    double nextMovement;
+    
+    while (true) {
+        if (armMoving) {
+            // current position in centidegrees, convert to degrees
+            currentPos = armRot.get_angle()/100.0;
+            
+            // normalize error to [-180,180]
+            currentPos = currentPos - 360 * (currentPos > 180)
+                                  + 360 * (currentPos < -180);
+
+            // calculate how far arm is from target
+            error = targetPos - currentPos;
+
+            if (fabs(error) < armThreshold) { // goal has been met
+                // reset PID for next usage
+                armPID.reset();
+
+                // stop arm motors in place
+                arm_motors.brake();
+
+                //stop running the PID code
+                armMoving = false;
+            }
+            else { // goal has not been met
+                // determine how far to move based on PID
+                nextMovement = armPID.update(error);
+
+                //ensure values fit bounds of motor voltage
+                nextMovement = std::clamp(nextMovement,-127.0,127.0);
+
+                // move arm motors based on PID
+                arm_motors.move(nextMovement);
+            }
+
+            // collect and print data involving pid on screen
+            pros::lcd::print(6, "Arm State: %s", armMoving ? "Moving" : "Idle");
+            pros::lcd::print(3, "Arm Current Pos: %f", currentPos); 
+            pros::lcd::print(4, "Arm Target Pos: %f", targetPos); 
+            pros::lcd::print(7, "error: %f", error);
+            pros::lcd::print(5, "Arm Next Movement: %f", nextMovement); 
+        }
+        
+        // Add a small delay to prevent the task from hogging CPU
+        pros::delay(20);
+    }
+}
+
 // initialize function. Runs on program startup
 void initialize() {
+
     lcd::initialize(); // initialize brain screen
     chassis.calibrate(); // calibrate sensors
 
@@ -27,9 +86,12 @@ void initialize() {
     lcd::register_btn0_cb(on_left_button);
 	lcd::register_btn2_cb(on_right_button);
 
+    // create arm control task
+    Task arm_task(arm_control_task, nullptr, "Arm Control Task");
+
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
 	
-    // print position to brain screen
+    // print odometry position to brain screen
     /*pros::Task screen_task([&]() {
         while (true) {
             // print robot location to the brain screen
@@ -41,6 +103,7 @@ void initialize() {
             pros::delay(20);
         }
     });*/
+
 }
 
 void autonomous() {
@@ -65,66 +128,60 @@ void disabled() {}
  */
 void competition_initialize() {}
 
-void testAngularPID(){
-
-    while(true){
-        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
-
-            double x = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
-            double y = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
-            double theta;
-            // Handle division by zero case
-            if (y == 0) {
-            theta = (x >= 0) ? 90.0 : 270.0;
-            }
-
-            // Calculate initial angle in radians
-            double angleRad = atan2(x, y);  // Using atan2 instead of atan for proper quadrant handling
-    
-            // Convert to degrees
-            double angleDeg = angleRad * 180.0 / M_PI;
-    
-            // Convert to bearing (clockwise from North)
-            // 1. Make angle positive (0 to 360)
-            if (angleDeg < 0) {
-                angleDeg += 360.0;
-            }
-    
-            // 2. Convert to bearing notation
-            theta = angleDeg;
-
-            chassis.turnToHeading(theta, 4000);
-
-            pros::delay(240);
-        }
-        pros::delay(20);
-
-    }
-
-}
-
-void testLateralPID(){
-
+void testCombinedPID() {
     double nextMovement = 0;
-    while(true){
+    
+    while(true) {
+        // Lateral PID accumulation (Left Joystick)
         int controllerOutput = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        if(abs(controllerOutput) >= 20){ // deadzone of 20 volts
-
-            // 12 in/sec at max
-            // y / 10 / 1000msec
-            // 127 / 100 / 100msec
-
+        if(abs(controllerOutput) >= 20) { // deadzone of 20 volts
             nextMovement += controllerOutput / 100.0;
         }
-        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
+        
+        // Trigger lateral movement with UP button
+        if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
             chassis.moveToPoint(0, nextMovement, 4000);
             nextMovement = 0;
         }
-        controller.print(1,1, "Dist: %f", nextMovement);
+        
+        // Angular PID triggering with X button (Right Joystick)
+        if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+            double x = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+            double y = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+            
+            // Calculate absolute angle (0-360 degrees)
+            double theta;
+            if (fabs(x) < 20 && fabs(y) < 20) { // deadzone check
+                continue; // skip if joystick is in deadzone
+            }
+            
+            if (y == 0) {
+                theta = (x >= 0) ? 90.0 : 270.0;
+            } else {
+                // Calculate absolute angle in degrees
+                theta = atan2(x, y) * 180.0 / M_PI;
+                
+                // Convert to 0-360 range
+                if (theta < 0) {
+                    theta += 360.0;
+                }
+            }
+            
+            // Turn to absolute heading
+            chassis.turnToHeading(theta, 4000);  // Assuming turnToAngle uses absolute angles
+        }
+        
+        // Display information
+        controller.print(1, 1, "Dist: %f", nextMovement);
+        
+        double rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        double rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+        double currentAngle = atan2(rightX, rightY) * 180.0 / M_PI;
+        if (currentAngle < 0) currentAngle += 360.0;
+        controller.print(2, 1, "Target Angle: %f", currentAngle);
+        
         pros::delay(100);
     }
-
-
 }
 
 void handleDriveTrain(){
@@ -172,76 +229,25 @@ void handleClamp(){
     
 }
 
-double error = 0;
-double targetPos = 0, currentPos = 0;
-double nextMovement = 0;
-double armThreshold = 2; // threshold for goal to be met
-bool armMoving = false;
-
-void handleArm(){
-
-
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
-    {
+void handleArm() {
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
         targetPos = 0; // bottom position; the starting value in code
         armMoving = true;
     }
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
-    {
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
         targetPos = 27; // middle position; grabs from intake 
         armMoving = true;
     }
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
         targetPos = 130; // top position; scoring on wall stake
         armMoving = true;
     }
+}
 
-    if(armMoving == true){
+void handleColorSort(){
 
-        // current position in centidegrees, convert to degrees
-        currentPos = armRot.get_angle()/100.0;
-        
-        // normalize error to [-180,180]
-        currentPos = currentPos - 360 * (currentPos > 180)
-                                + 360 * (currentPos < -180);
+    
 
-
-        // calculate how far arm is from target
-        error = targetPos - currentPos;
-
-        if(fabs(error) < armThreshold){ // goal has been met
-
-            // reset PID for next usage
-            armPID.reset();
-
-            // stop arm motors in place
-            arm_motors.brake();
-
-            //stop running the PID code
-            armMoving = false;
-            
-        }
-        else // goal has not been met
-        {
-            // determine how far to move based on PID
-            nextMovement = armPID.update(error);
-
-            //ensure values fit bounds of motor voltage
-            nextMovement = std::clamp(nextMovement,-127.0,127.0);
-
-            // move arm motors based on PID
-            arm_motors.move(nextMovement);
-        }
-
-        // collect and print data involving pid on screen
-        pros::lcd::print(6, "Arm State: %s", armMoving ? "Moving" : "Idle");
-        pros::lcd::print(3, "Arm Current Pos: %f", currentPos); 
-        pros::lcd::print(4, "Arm Target Pos: %f", targetPos); 
-        pros::lcd::print(7,"error: %f", error);
-        pros::lcd::print(5, "Arm Next Movement: %f", nextMovement); 
-
-    }
-     
 }
 
 /*int countPoints = 1;
@@ -280,8 +286,7 @@ void opcontrol() {
 	// loop forever
     while (true) {
         
-        //testAngularPID();  // overrides other functions for testing purposes
-        //testLateralPID();
+        //testCombinedPID();
         handleDriveTrain();
         handleIntake();
         handleClamp();
