@@ -74,7 +74,6 @@ void setArm(int position) {
         return; // Invalid position
     }
 
-    double targetPos;
     if(position == 1) {
         targetPos = 0;    // Bottom position
     }
@@ -131,14 +130,8 @@ void on_center_button(){ // swaps team for color sort
 // it is the actions that are taken to sort out a ring
 void tossRing(){ 
 
-    intake.move(127);
-    delay(10);
-    setArmMid();
-    intake.brake();
     intake.move(-127);
-    delay(50);
-    setArmBottom();
-    intake.move(127);
+    delay(1000);
 
 }
 
@@ -169,27 +162,16 @@ void initialize() {
 
     lcd::initialize(); // initialize brain screen
     chassis.calibrate(); // calibrate sensors
+    
+    clamp.set_value(HIGH);
 
-    initialize_arm_position();
-
-    // show current route on brain screen
-    getAutonSelector().displayCurrentSelection();
-
-    // run buttons once to print values on screen
-    on_left_button();
-    on_center_button();
-    on_right_button();
-
-    // assign buttons to actions in auton selector
-    lcd::register_btn0_cb(on_left_button);
-    lcd::register_btn1_cb(on_center_button);
-	lcd::register_btn2_cb(on_right_button);
+    //initialize_arm_position();
 
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
 
     // create color sort task
-    Task csort_task(color_sort_task, nullptr, "Color Sort Task");
+    //Task csort_task(color_sort_task, nullptr, "Color Sort Task");
 
     // set optical sensor for color sort
     colorSens.set_led_pwm(100);
@@ -213,6 +195,8 @@ void initialize() {
 
 void autonomous() {
     getAutonSelector().runSelectedAuton();
+    left_motors.brake();
+    right_motors.brake();
 }
 
 /**
@@ -231,7 +215,22 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+
+    // show current route on brain screen
+    getAutonSelector().displayCurrentSelection();
+
+    // run buttons once to print values on screen
+    on_left_button();
+    on_center_button();
+    on_right_button();
+
+    // assign buttons to actions in auton selector
+    lcd::register_btn0_cb(on_left_button);
+    lcd::register_btn1_cb(on_center_button);
+	lcd::register_btn2_cb(on_right_button);
+
+}
 
 void testCombinedPID() {
     double nextMovement = 0;
@@ -277,12 +276,14 @@ void testCombinedPID() {
         }
         
         // Display information
+        controller.clear_line(1);
         controller.print(1, 1, "Dist: %f", nextMovement);
         
         double rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         double rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         double currentAngle = atan2(rightX, rightY) * 180.0 / M_PI;
         if (currentAngle < 0) currentAngle += 360.0;
+        controller.clear_line(2);
         controller.print(2, 1, "Target Angle: %f", currentAngle);
         
         pros::delay(100);
