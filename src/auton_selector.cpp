@@ -42,7 +42,7 @@ void AutonSelector::prevSelection()
 
 void AutonSelector::displayCurrentSelection()
 {
-    pros::lcd::clear();
+    pros::lcd::clear_line(2);
     pros::lcd::print(2, routines[currentSelection - 1].displayName);
 }
 

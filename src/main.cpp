@@ -116,6 +116,53 @@ void initialize_arm_position() {
     }
 }
 
+bool isRedAlliance = false;
+
+void on_center_button(){ // swaps team for color sort
+    
+    isRedAlliance = !isRedAlliance;
+
+    lcd::clear_line(1);
+    lcd::print(1, "Team: %s", isRedAlliance ? "Red Team" : "Blue Team");
+
+}
+
+// this function is called during the color_sort_task
+// it is the actions that are taken to sort out a ring
+void tossRing(){ 
+
+    intake.move(127);
+    delay(10);
+    setArmMid();
+    intake.brake();
+    intake.move(-127);
+    delay(50);
+    setArmBottom();
+    intake.move(127);
+
+}
+
+bool currentlySorting = false;
+
+void color_sort_task(void* param){
+    int hueMin, hueMax; // these are endpoints for acceptable ring colors
+    if(isRedAlliance) { 
+        hueMin = 330; // min < max b/c it loops around 360 degrees
+        hueMax = 45; 
+    }
+    else { 
+        hueMin = 0; // placeholder values
+        hueMax = 0;
+    }
+    // detected ring is out of bounds of acceptable color range
+    if ((colorSens.get_hue() < hueMin || colorSens.get_hue() > hueMax) && colorSens.get_proximity() < 20)
+    {
+        currentlySorting = true;
+        tossRing();
+        currentlySorting = false;
+    }
+    delay(20);
+}
 
 // initialize function. Runs on program startup
 void initialize() {
@@ -128,12 +175,21 @@ void initialize() {
     // show current route on brain screen
     getAutonSelector().displayCurrentSelection();
 
+    // run buttons once to print values on screen
+    on_left_button();
+    on_center_button();
+    on_right_button();
+
     // assign buttons to actions in auton selector
     lcd::register_btn0_cb(on_left_button);
+    lcd::register_btn1_cb(on_center_button);
 	lcd::register_btn2_cb(on_right_button);
 
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
+
+    // create color sort task
+    Task csort_task(color_sort_task, nullptr, "Color Sort Task");
 
     // set optical sensor for color sort
     colorSens.set_led_pwm(100);
@@ -246,18 +302,26 @@ void handleDriveTrain(){
 
 void handleIntake(){
 
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
-    {
-        intake.move(127);
-    }
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
-    {
-        intake.move(-127);
-    }
-    else {
-        intake.brake();
-    }
+    // manual controls are overridden if color sort mechanism is active
+    if(!currentlySorting){
+    
+        // intake
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+        {
+            intake.move(127);
+        }
+        // outtake
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+        {
+            intake.move(-127);
+        }
+        // no movement without button pressed
+        else 
+        {
+          intake.brake();
+        }
 
+    }
 }
 
 
@@ -289,48 +353,6 @@ void handleArm() {
         setArmTop();
     }
 }
-
-void handleColorSort(bool isRedAlliance){
-
-    int hueMin, hueMax; // these are endpoints for acceptable ring colors
-    if(isRedAlliance) { 
-        hueMin = 330; // min < max b/c it loops around 360 degrees
-        hueMax = 45; 
-    }
-    else { 
-        hueMin = 0; // placeholder values
-        hueMax = 0;
-    }
-    // detected ring is out of bounds of acceptable color range
-    if ((colorSens.get_hue() < hueMin || colorSens.get_hue() > hueMax) && colorSens.get_proximity() < 20)
-    {
-        delay(10);
-        setArmMid();
-        intake.brake();
-        intake.move(-127);
-        delay(50);
-        setArmBottom();
-    }
-    delay(20);
-}
-
-/*int countPoints = 1;
-
-void handleSavePoint(){
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
-        std::cout<<"Point " + countPoints + ": " + chassis.getPose();
-
-    }
-
-}*/
-
-
-
-
-
-
-
-
 
 /**
  * Runs the operator control code. This function will be started in its own task
