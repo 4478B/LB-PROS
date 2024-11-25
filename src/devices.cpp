@@ -19,6 +19,7 @@ PID armPID(1.5, 0, 1);
 
 Rotation armRot(2);
 
+Optical colorSens(19);
 
 // drivetrain settings
 Drivetrain drivetrain(&left_motors, // left motor group

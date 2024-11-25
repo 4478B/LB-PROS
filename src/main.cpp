@@ -68,16 +68,62 @@ void arm_control_task(void* param) {
     }
 }
 
+void setArm(int position) {
+    // Validate input
+    if (position < 1 || position > 3) {
+        return; // Invalid position
+    }
+
+    double targetPos;
+    if(position == 1) {
+        targetPos = 0;    // Bottom position
+    }
+    else if(position == 2) {
+        targetPos = 27;   // Middle position
+    }
+    else if(position == 3) {
+        targetPos = 130;  // Top position
+    }
+    armMoving = true;
+}
+
+// aliases for specific positions
+void setArmBottom() { setArm(1); }
+void setArmMid() { setArm(2); }
+void setArmTop() { setArm(3); }
+
+void initialize_arm_position() {
+    // Move arm down at moderate speed but low power
+    arm_motors.set_voltage_limit(4000);  // Limit to 4V for gentle movement
+    arm_motors.move_velocity(-50);       // Move down at moderate speed
+    arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
+    
+    // Wait until arm stalls (high current, low velocity)
+    while (true) {
+        // Get current draw and velocity
+        double velocity = arm_motors.get_actual_velocity();
+        int current = arm_motors.get_current_draw();
+        
+        // If we detect high current (stall) and low velocity, we've hit bottom
+        if (current > 1500 && std::abs(velocity) < 5) {
+            arm_motors.brake();
+            arm_motors.set_voltage_limit(12000);  // Reset to full voltage
+            armRot.reset_position(); 
+            break;
+        }
+        
+        pros::delay(20); // Small delay to prevent hogging CPU
+    }
+}
+
+
 // initialize function. Runs on program startup
 void initialize() {
 
     lcd::initialize(); // initialize brain screen
     chassis.calibrate(); // calibrate sensors
 
-    
-    // configure motors for arm movement
-    armRot.reset_position(); 
-    arm_motors.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+    initialize_arm_position();
 
     // show current route on brain screen
     getAutonSelector().displayCurrentSelection();
@@ -231,24 +277,20 @@ void handleClamp(){
 
 void handleArm() {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-        targetPos = 0; // bottom position; the starting value in code
-        armMoving = true;
+        setArmBottom();
     }
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
-        targetPos = 27; // middle position; grabs from intake 
-        armMoving = true;
+        setArmMid();
     }
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-        targetPos = 130; // top position; scoring on wall stake
-        armMoving = true;
+        setArmTop();
     }
 }
 
-void handleColorSort(){
-
-    
+void handleColorSort(bool isRedAlliance){
 
 }
+
 
 /*int countPoints = 1;
 
