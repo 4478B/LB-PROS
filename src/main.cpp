@@ -135,6 +135,9 @@ void initialize() {
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
 
+    // set optical sensor for color sort
+    colorSens.set_led_pwm(100);
+
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
 	
     // print odometry position to brain screen
@@ -289,8 +292,27 @@ void handleArm() {
 
 void handleColorSort(bool isRedAlliance){
 
+    int hueMin, hueMax; // these are endpoints for acceptable ring colors
+    if(isRedAlliance) { 
+        hueMin = 330; // min < max b/c it loops around 360 degrees
+        hueMax = 45; 
+    }
+    else { 
+        hueMin = 0; // placeholder values
+        hueMax = 0;
+    }
+    // detected ring is out of bounds of acceptable color range
+    if ((colorSens.get_hue() < hueMin || colorSens.get_hue() > hueMax) && colorSens.get_proximity() < 20)
+    {
+        delay(10);
+        setArmMid();
+        intake.brake();
+        intake.move(-127);
+        delay(50);
+        setArmBottom();
+    }
+    delay(20);
 }
-
 
 /*int countPoints = 1;
 
