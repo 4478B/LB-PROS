@@ -21,9 +21,11 @@ void progSkills(){
     // set position to starting spot (needs tweaking)
     chassis.setPose(-60, 0, 0);
     // back up to hit goal1
-    chassis.moveToPose(-48, -24, 315, 2000 , {.forwards=false},false);
+    chassis.moveToPose(-48, -24, 315, 2000, {.forwards=false},true);
     // clamp goal1 
+    delay(1500);
     clamp.set_value(LOW);
+
     intake.move(127);
     //score preload
     delay(1000);
@@ -31,9 +33,11 @@ void progSkills(){
     chassis.moveToPoint(-24,-24,2000,{},false);
     //grab ring2 for goal1
     chassis.moveToPoint(-24,-48,2000,{},false);
-    //grab ring3 & ring4 for goal1
-    chassis.moveToPose(-59,-48,180,3000,{},false);
+    //grab ring3 for goal1
+    chassis.moveToPoint(-59,-48,3000,{},false);
     delay(1000);
+    //grab ring4 for goal1
+    chassis.moveToPoint(-48,-48,2000,{.forwards=false},false);
     //grab ring5 for goal1
     chassis.moveToPoint(-48,-59,2000,{},false);
     //small wait so ring5 intakes
@@ -86,8 +90,13 @@ void blueGoalSide(){
 }
 void redGoalSide(){
 
+    // mapped in redGoalSide.txt
 
-    
+    chassis.setPose(-52,-63.4,270);
+    chassis.moveToPoint(-20,-58,5000,{.forwards=false,.minSpeed=72,.earlyExitRange=12},false);
+    //chassis.moveToPose(-13,-52,240,1000,{.forwards=false,.lead=.2,.minSpeed=80,.earlyExitRange = 10},false);
+    chassis.moveToPose(-3,-49,240,2000,{.forwards=false,.lead=.2,.minSpeed=40},false);
+    clamp.set_value(LOW);
 }
 void blueRingSide(){
 

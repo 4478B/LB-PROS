@@ -194,9 +194,14 @@ void initialize() {
 }
 
 void autonomous() {
+    left_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
+    right_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
     getAutonSelector().runSelectedAuton();
     left_motors.brake();
     right_motors.brake();
+    delay(2000);
+    left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
+    right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
 }
 
 /**
@@ -370,6 +375,9 @@ void handleArm() {
  */
 void opcontrol() {
 
+
+    left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
+    right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
 	// loop forever
     while (true) {
         

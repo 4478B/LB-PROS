@@ -22,7 +22,7 @@ static AutonSelector instance;
 
 // Constructor implementation
 AutonSelector::AutonSelector() : routines(ROUTINES),
-                               currentSelection(1), // Start with Prog Skills (Route 1)
+                               currentSelection(3), // Start with Prog Skills (Route 1)
                                routineCount(sizeof(ROUTINES) / sizeof(ROUTINES[0]))
 {
 }
