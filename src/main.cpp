@@ -301,16 +301,43 @@ void testCombinedPID() {
     }
 }
 
+// This function runs in driver control WITHOUT COMM SWITCH, it is a better way of testing the 
+// autons since you can take inputs from the controller and test multiple times.
+// NOTE: The arm is on a different task, so don't hit those buttons during auton
 void testAuton(bool inputReq = true){
 
-    bool buttonsPressed =    controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)
-                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)
-                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)
-                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT);
-    if(!inputReq || buttonsPressed){
-        controller.clear_line(1);
-        controller.print(1,1,"Section: 0");
+    // if the parameter inputReq is set to true (default), these buttons
+    // will start the route when all pressed
+    bool buttonsPressed =    controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)
+                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)
+                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)
+                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
+
+    // it runs once automatically with inputReq, otherwise manually
+    if((!inputReq && autonSection == 0) || buttonsPressed){
+
+        // prints information about section to controller
+        autonSection = 0;
+        endSection();
+        
+        // sets motor brake type to hold (standard for auton)
+        left_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
+        right_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
+
+        // THIS IS WHERE YOU CHANGE RUN YOU'RE TESTING
         progSkills();
+
+        // stops motors to prevent rogue movements after auton
+        left_motors.brake();
+        right_motors.brake();
+
+        // small delay to make sure robot is still
+        delay(2000);
+
+        // sets motor brake type to coast (standard for usercontrol)
+        intake.brake();
+        left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
+        right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     }
 
 }

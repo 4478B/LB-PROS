@@ -52,20 +52,29 @@ void inert(float theta){
 
 
 // This method is designed for testing sections of autons separately
-// It waits until the user presses the button X** or it times out
-// ** this only works if called in testAuton
+
+// IF CALLED IN COMPETITION/WITH COMM SWITCH:
+// -- functions as regular delay
+// IF CALLED NOT IN COMPETITION & WITHOUT COMM SWITCH:
+// -- waits until user presses X or it times out
+// -- prints section information to controller screen
+
+// in the future we can make it print information about ending positions
 
 int autonSection = 0;
-void endSection(int timeout = 0){
+void endSection(int delay){
     
+    // functions as normal delay
     if(inCompetition) {
-        delay(timeout);
+        pros::delay(delay);
     }
     else {
         double startTime = pros::millis();
-        while(!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X) && pros::millis() - startTime < timeout){
-            delay(20);
+        // while button hasn't been pressed and hasn't timed out
+        while(!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X) && pros::millis() - startTime < delay){
+            pros::delay(20);
         }
+        // updates controller screen with section information
         autonSection++;
         controller.clear_line(1);
         controller.print(1,1,"Section: %d", autonSection);
@@ -76,7 +85,6 @@ void endSection(int timeout = 0){
 // The routes should have linked path.jerryio files for reference
 
 
-// low is clamped position
 void progSkills(){
 
     // PROG SKILLS ROUTE 1 (reference is skills_aio.txt)
