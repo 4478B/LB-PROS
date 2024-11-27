@@ -94,9 +94,9 @@ void redGoalSide(){
 
     chassis.setPose(-52,-63.4,270);
     chassis.moveToPoint(-20,-58,5000,{.forwards=false,.minSpeed=72,.earlyExitRange=12},false);
-    //chassis.moveToPose(-13,-52,240,1000,{.forwards=false,.lead=.2,.minSpeed=80,.earlyExitRange = 10},false);
     chassis.moveToPose(-3,-49,240,2000,{.forwards=false,.lead=.2,.minSpeed=40},false);
     clamp.set_value(LOW);
+    intake.move(127);
 }
 void blueRingSide(){
 
