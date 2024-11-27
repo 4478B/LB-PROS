@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include "devices.h"
 #include "auton_selector.h"
+#include "auton_routes.h"
 
 
 // Global variables needed for arm control
@@ -220,8 +221,13 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
+
+// this is a failsafe incase testing functions in opcontrol haven't been commented out
+bool inCompetition = false;
+
 void competition_initialize() {
 
+    inCompetition = true;
     // show current route on brain screen
     getAutonSelector().displayCurrentSelection();
 
@@ -293,6 +299,20 @@ void testCombinedPID() {
         
         pros::delay(100);
     }
+}
+
+void testAuton(bool inputReq = true){
+
+    bool buttonsPressed =    controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)
+                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)
+                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)
+                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT);
+    if(!inputReq || buttonsPressed){
+        controller.clear_line(1);
+        controller.print(1,1,"Section: 0");
+        progSkills();
+    }
+
 }
 
 void handleDriveTrain(){
@@ -381,7 +401,11 @@ void opcontrol() {
 	// loop forever
     while (true) {
         
-        //testCombinedPID();
+        // THIS WHOLE IF STATEMENT SHOULD BE COMMENTED OUT IN COMPS
+        if (!inCompetition){ 
+            //testCombinedPID();
+            testAuton();
+        }
         handleDriveTrain();
         handleIntake();
         handleClamp();

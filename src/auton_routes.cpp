@@ -1,3 +1,4 @@
+#include "lemlib/chassis/chassis.hpp"
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "lemlib/pid.hpp"
@@ -9,6 +10,67 @@
 #include <cstdlib>
 #include "devices.h"
 
+
+// These our functions made for backwards-compatibility with VEXCode routes
+
+void drivePID(double goalInches, bool clamping = false, double clampDistInches = 2){
+    // Get the current robot pose
+    Pose poseInit(chassis.getPose(true));
+
+    // Calculate goal coordinates based on current pose and movement
+    double unitCircleAngle = (90.0 - poseInit.theta);
+    float goalX = poseInit.x + goalInches * cos(unitCircleAngle);
+    float goalY = poseInit.y + goalInches * sin(unitCircleAngle);
+
+    // Create goal pose with same heading
+    Pose poseGoal(goalX, goalY, poseInit.theta);
+
+    // Determine drive direction
+    bool isForwards = goalInches > 0;
+
+    // Move to calculated point
+    chassis.moveToPoint(poseGoal.x, poseGoal.y, 4000, {.forwards=isForwards}, clamping ? true : false);
+
+    // handle clamping if enabled
+    if(clamping){
+        while(chassis.isInMotion()) {
+            if(poseInit.distance(poseGoal) < clampDistInches){
+                clamp.set_value(LOW);
+            }
+        delay(20);
+        }
+    }
+}
+
+void DriveInchesClamp(double gDist, double cDist = 2){
+    drivePID(gDist,true,cDist);
+}
+
+void inert(float theta){
+    chassis.turnToHeading(theta,2000);
+}
+
+
+// This method is designed for testing sections of autons separately
+// It waits until the user presses the button X** or it times out
+// ** this only works if called in testAuton
+
+int autonSection = 0;
+void endSection(int timeout = 0){
+    
+    if(inCompetition) {
+        delay(timeout);
+    }
+    else {
+        double startTime = pros::millis();
+        while(!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X) && pros::millis() - startTime < timeout){
+            delay(20);
+        }
+        autonSection++;
+        controller.clear_line(1);
+        controller.print(1,1,"Section: %d", autonSection);
+    }
+}
 
 // This file includes all of the routes coded in PROS for our robot
 // The routes should have linked path.jerryio files for reference
@@ -92,11 +154,17 @@ void redGoalSide(){
 
     // mapped in redGoalSide.txt
 
+    // rush goal and clamp
     chassis.setPose(-52,-63.4,270);
     chassis.moveToPoint(-20,-58,5000,{.forwards=false,.minSpeed=72,.earlyExitRange=12},false);
     chassis.moveToPose(-3,-49,240,2000,{.forwards=false,.lead=.2,.minSpeed=40},false);
     clamp.set_value(LOW);
+    endSection(5000);
+
+    // grab ring1 for goal1
     intake.move(127);
+    chassis.moveToPose(-24,-48,270,4000);
+
 }
 void blueRingSide(){
 
