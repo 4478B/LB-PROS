@@ -1,4 +1,5 @@
 #include "devices.h"
+#include "extended_chassis.h"
 
 
 // left motor group
@@ -70,7 +71,7 @@ ExpoDriveCurve throttle_curve(3, // joystick deadband out of 127
 );
 
 // create the chassis
-Chassis chassis(drivetrain, // drivetrain settings
+ExtendedChassis chassis(drivetrain, // drivetrain settings
                         lateral_controller, // lateral PID settings
                         angular_controller, // angular PID settings
                         sensors, // odometry sensors

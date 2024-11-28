@@ -5,6 +5,7 @@
 #include "main.h"
 #include "lemlib/api.hpp"
 #include "lemlib/pid.hpp"
+#include "extended_chassis.h"
 
 // namespace for declarations
 using namespace pros;
@@ -27,6 +28,6 @@ extern OdomSensors sensors;
 extern ControllerSettings lateral_controller;
 extern ControllerSettings angular_controller;
 extern ExpoDriveCurve throttle_curve;
-extern Chassis chassis;
+extern ExtendedChassis chassis;
 
 #endif // DEVICES_H

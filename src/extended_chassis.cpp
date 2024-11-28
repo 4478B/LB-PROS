@@ -1,0 +1,34 @@
+#include "extended_chassis.h"
+#include "devices.h"
+
+
+// This is a custom extension of the Chassis lemlib class to add clamping during MoveToPoint and MoveToPose
+
+void ExtendedChassis::MoveToPointClamp(float x, float y, int timeout, float clampDist, lemlib::MoveToPointParams params) {
+    
+    this->moveToPoint(x, y, timeout, params);
+    Pose poseGoal(x,y,0);
+    bool clampState = HIGH;
+
+    while(chassis.isInMotion()) {
+        if(chassis.getPose().distance(poseGoal) < clampDist && clampState != LOW){
+            clamp.set_value(LOW);
+        }
+        delay(20);
+    }
+}
+
+
+void ExtendedChassis::MoveToPoseClamp(float x, float y, float theta, int timeout, float clampDist, lemlib::MoveToPoseParams params) {
+    
+    this->moveToPose(x, y, theta, timeout, params);
+    Pose poseGoal(x,y,theta);
+    bool clampState = HIGH;
+
+    while(chassis.isInMotion()) {
+        if(chassis.getPose().distance(poseGoal) < clampDist && clampState != LOW){
+            clamp.set_value(LOW);
+        }
+        delay(20);
+    }
+}

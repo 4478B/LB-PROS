@@ -29,20 +29,15 @@ void drivePID(double goalInches, bool clamping = false, double clampDistInches =
     bool isForwards = goalInches > 0;
 
     // Move to calculated point
-    chassis.moveToPoint(poseGoal.x, poseGoal.y, 4000, {.forwards=isForwards}, clamping ? true : false);
-
-    // handle clamping if enabled
     if(clamping){
-        while(chassis.isInMotion()) {
-            if(poseInit.distance(poseGoal) < clampDistInches){
-                clamp.set_value(LOW);
-            }
-        delay(20);
-        }
+        chassis.MoveToPointClamp(poseGoal.x, poseGoal.y, 4000, .5, {.forwards=isForwards});
+    }
+    else{
+        chassis.moveToPoint(poseGoal.x, poseGoal.y, 4000, {.forwards=isForwards});
     }
 }
 
-void DriveInchesClamp(double gDist, double cDist = 2){
+void DriveInchesClamp(double gDist, double cDist = .5){
     drivePID(gDist,true,cDist);
 }
 
