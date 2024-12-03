@@ -326,7 +326,7 @@ void testAuton(bool inputReq = true){
         right_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
 
         // THIS IS WHERE YOU CHANGE RUN YOU'RE TESTING
-        progSkills();
+        blueGoalSide();
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();

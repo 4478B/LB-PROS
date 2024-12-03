@@ -18,7 +18,7 @@ void drivePID(double goalInches, bool clamping = false, double clampDistInches =
     Pose poseInit(chassis.getPose(true));
 
     // Calculate goal coordinates based on current pose and movement
-    double unitCircleAngle = (90.0 - poseInit.theta);
+    double unitCircleAngle = (M_PI/2 - poseInit.theta);
     float goalX = poseInit.x + goalInches * cos(unitCircleAngle);
     float goalY = poseInit.y + goalInches * sin(unitCircleAngle);
 
@@ -150,6 +150,18 @@ void progSkills(){
 }
 void blueGoalSide(){
 
+    // this is going to test the backwards compatibility functions
+
+    chassis.setPose(0,0,0);
+    drivePID(48);
+    endSection(10000);
+    drivePID(-48);
+    endSection(10000);
+
+    inert(90);
+    endSection(10000);
+    inert(270);
+    endSection(10000);
 
 
 }
@@ -172,7 +184,7 @@ void redGoalSide(){
 void blueRingSide(){
 
     chassis.setPose(56,56,0);
-    chassis.moveToPoint(23,23,5000,{.forwards=false,.minSpeed=100},false); //60
+    chassis.moveToPoint(23,25,5000,{.forwards=false,.minSpeed=100},false); //60
     clamp.set_value(LOW);
     delay(500);
 
