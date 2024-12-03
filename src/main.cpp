@@ -167,7 +167,7 @@ void initialize() {
     clamp.set_value(HIGH);
 
     //initialize_arm_position();
-    arm_motors.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+    arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
 
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
@@ -424,8 +424,10 @@ void handleArm() {
 void opcontrol() {
 
 
-    left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
-    right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
+    //left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
+    //right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+
 	// loop forever
     while (true) {
         
