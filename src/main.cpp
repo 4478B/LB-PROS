@@ -79,10 +79,10 @@ void setArm(int position) {
         targetPos = 0;    // Bottom position
     }
     else if(position == 2) {
-        targetPos = 27;   // Middle position
+        targetPos = 33;   // Middle position
     }
     else if(position == 3) {
-        targetPos = 130;  // Top position
+        targetPos = 134;  // Top position
     }
     armMoving = true;
 }
@@ -167,6 +167,7 @@ void initialize() {
     clamp.set_value(HIGH);
 
     //initialize_arm_position();
+    arm_motors.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");

@@ -72,7 +72,7 @@ void endSection(int delay){
         // updates controller screen with section information
         autonSection++;
         controller.clear_line(1);
-        controller.print(1,1,"Section: %d", autonSection);
+        controller.set_text(1,1,std::to_string(autonSection).c_str());
     }
 }
 
@@ -171,7 +171,36 @@ void redGoalSide(){
 }
 void blueRingSide(){
 
+    chassis.setPose(56,56,0);
+    chassis.moveToPoint(23,23,5000,{.forwards=false,.minSpeed=100},false); //60
+    clamp.set_value(LOW);
+    delay(500);
 
+    intake.move(127);
+    delay(500);
+    chassis.moveToPoint(10,43,5000,{.forwards=true,.minSpeed=2},true);
+    delay(500);
+    chassis.moveToPoint(18,23,5000,{.forwards=false,.minSpeed=20},false);
+    chassis.moveToPoint(24,47,5000,{.forwards=true,.minSpeed=20},false);
+    delay(500);
+    chassis.moveToPoint(9,56,5000,{.forwards=true,.minSpeed=20},false);
+    delay(500);
+    chassis.moveToPoint(30,36,5000,{.forwards=false,.minSpeed=20},false);
+    chassis.moveToPose(47,6,180,5000,{.forwards=true,.lead=.2,.minSpeed=20},false);
+    clamp.set_value(HIGH);
+    chassis.moveToPoint(43,-10,5000,{.forwards=true,.minSpeed=20},false);
+    intake.move(0);
+
+
+/*
+chassis.moveToPoint(58,-12,5000,{.forwards=true,.minSpeed=20},false);
+chassis.moveToPoint(64,-1,5000,{.forwards=false,.minSpeed=20},false);
+*/
+/*
+chassis.moveToPoint(47,-11,5000,{.forwards=true,.minSpeed=20},false);
+chassis.moveToPoint(21,-24,5000,{.forwards=false,.minSpeed=20},false);
+clamp.set_value(LOW);
+chassis.moveToPose(23,-54,180,5000,{.forwards=true,.lead=.2,.minSpeed=20},false);*/
     
 }
 void redRingSide(){
