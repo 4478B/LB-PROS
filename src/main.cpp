@@ -1,4 +1,5 @@
 #include "main.h"
+#include "extended_chassis.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "lemlib/pid.hpp"
 #include "liblvgl/llemu.hpp"
@@ -10,6 +11,8 @@
 #include "devices.h"
 #include "auton_selector.h"
 #include "auton_routes.h"
+#include "testing.h"
+#include "old_systems.h"
 
 
 // Global variables needed for arm control
@@ -57,11 +60,13 @@ void arm_control_task(void* param) {
             }
 
             // collect and print data involving pid on screen
+            /*
             pros::lcd::print(6, "Arm State: %s", armMoving ? "Moving" : "Idle");
             pros::lcd::print(3, "Arm Current Pos: %f", currentPos); 
             pros::lcd::print(4, "Arm Target Pos: %f", targetPos); 
             pros::lcd::print(7, "error: %f", error);
             pros::lcd::print(5, "Arm Next Movement: %f", nextMovement); 
+            */
         }
         
         // Add a small delay to prevent the task from hogging CPU
@@ -120,10 +125,10 @@ bool isRedAlliance = false;
 
 void on_center_button(){ // swaps team for color sort
     
-    isRedAlliance = !isRedAlliance;
+    /*isRedAlliance = !isRedAlliance;
 
     lcd::clear_line(1);
-    lcd::print(1, "Team: %s", isRedAlliance ? "Red Team" : "Blue Team");
+    lcd::print(1, "Team: %s", isRedAlliance ? "Red Team" : "Blue Team");*/
 
 }
 
@@ -176,7 +181,7 @@ void initialize() {
     //Task csort_task(color_sort_task, nullptr, "Color Sort Task");
 
     // set optical sensor for color sort
-    colorSens.set_led_pwm(100);
+    //colorSens.set_led_pwm(100);
 
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
 	
@@ -244,113 +249,42 @@ void competition_initialize() {
 
 }
 
-void testCombinedPID() {
-    double nextMovement = 0;
-    
-    while(true) {
-        // Lateral PID accumulation (Left Joystick)
-        int controllerOutput = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        if(abs(controllerOutput) >= 20) { // deadzone of 20 volts
-            nextMovement += controllerOutput / 100.0;
-        }
-        
-        // Trigger lateral movement with UP button
-        if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
-            chassis.moveToPoint(0, nextMovement, 4000);
-            nextMovement = 0;
-        }
-        
-        // Angular PID triggering with X button (Right Joystick)
-        if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-            double x = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-            double y = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-            
-            // Calculate absolute angle (0-360 degrees)
-            double theta;
-            if (fabs(x) < 20 && fabs(y) < 20) { // deadzone check
-                continue; // skip if joystick is in deadzone
-            }
-            
-            if (y == 0) {
-                theta = (x >= 0) ? 90.0 : 270.0;
-            } else {
-                // Calculate absolute angle in degrees
-                theta = atan2(x, y) * 180.0 / M_PI;
-                
-                // Convert to 0-360 range
-                if (theta < 0) {
-                    theta += 360.0;
-                }
-            }
-            
-            // Turn to absolute heading
-            chassis.turnToHeading(theta, 4000);  // Assuming turnToAngle uses absolute angles
-        }
-        
-        // Display information
-        controller.clear_line(1);
-        controller.print(1, 1, "Dist: %f", nextMovement);
-        
-        double rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-        double rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        double currentAngle = atan2(rightX, rightY) * 180.0 / M_PI;
-        if (currentAngle < 0) currentAngle += 360.0;
-        controller.clear_line(2);
-        controller.print(2, 1, "Target Angle: %f", currentAngle);
-        
-        pros::delay(100);
-    }
+const double SMOOTHING_DENOMINATOR = 31.62278; // Used to normalize the exponential curve
+const double EXPONENTIAL_POWER = 1.75;         // Controls how aggressive the curve is
+// Helper function that makes joystick input more precise for small movements
+// while maintaining full power at maximum joystick
+double logDriveJoystick(double joystickPCT)
+{
+  // Get the absolute value for calculation
+  double magnitude = fabs(joystickPCT);
+
+  // Calculate the smoothed value
+  double smoothedValue = pow(magnitude, EXPONENTIAL_POWER) / SMOOTHING_DENOMINATOR;
+
+  // Restore the original sign (positive or negative)
+  return joystickPCT >= 0 ? smoothedValue : -smoothedValue;
 }
 
-// This function runs in driver control WITHOUT COMM SWITCH, it is a better way of testing the 
-// autons since you can take inputs from the controller and test multiple times.
-// NOTE: The arm is on a different task, so don't hit those buttons during auton
-void testAuton(bool inputReq = true){
-
-    // if the parameter inputReq is set to true (default), these buttons
-    // will start the route when all pressed
-    bool buttonsPressed =    controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)
-                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)
-                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)
-                          && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
-
-    // it runs once automatically with inputReq, otherwise manually
-    if((!inputReq && autonSection == 0) || buttonsPressed){
-
-        // prints information about section to controller
-        autonSection = 0;
-        endSection();
-        
-        // sets motor brake type to hold (standard for auton)
-        left_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
-        right_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
-
-        // THIS IS WHERE YOU CHANGE RUN YOU'RE TESTING
-        blueGoalSide();
-
-        // stops motors to prevent rogue movements after auton
-        left_motors.brake();
-        right_motors.brake();
-
-        // small delay to make sure robot is still
-        delay(2000);
-
-        // sets motor brake type to coast (standard for usercontrol)
-        intake.brake();
-        left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
-        right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
-    }
-
-}
 
 void handleDriveTrain(){
 
 	// get left y and right y positions
-        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+    double leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+    double rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+     
+    // convert to pct
+    leftY /= 1.27;
+    rightY /= 1.27;
 
-        // move the robot
-        chassis.tank(leftY, rightY);
+    leftY = logDriveJoystick(leftY);
+    rightY = logDriveJoystick(rightY);
+
+    // convert to gearset
+    leftY *= 6;
+    rightY *= 6;
+
+    left_motors.move_velocity(leftY);
+    right_motors.move_velocity(rightY);
 
 }
 
@@ -391,7 +325,7 @@ void handleClamp(){
 
         // print the state of the clamp on the controller screen
         controller.clear_line(1);
-        controller.set_text(1,1,clamp.get_value() == LOW ? "Clamped" : "");
+        controller.print(1,1,clamp.get_value() == LOW ? "Clamped" : "");
     }
     
 }
@@ -433,7 +367,6 @@ void opcontrol() {
         
         // THIS WHOLE IF STATEMENT SHOULD BE COMMENTED OUT IN COMPS
         if (!inCompetition){ 
-            //testCombinedPID();
             testAuton();
         }
         handleDriveTrain();

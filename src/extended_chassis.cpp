@@ -6,7 +6,7 @@
 
 void ExtendedChassis::MoveToPointClamp(float x, float y, int timeout, float clampDist, lemlib::MoveToPointParams params) {
     
-    this->moveToPoint(x, y, timeout, params);
+    this->moveToPoint(x, y, timeout, {.forwards=false});
     Pose poseGoal(x,y,0);
     bool clampState = HIGH;
 
@@ -21,7 +21,7 @@ void ExtendedChassis::MoveToPointClamp(float x, float y, int timeout, float clam
 
 void ExtendedChassis::MoveToPoseClamp(float x, float y, float theta, int timeout, float clampDist, lemlib::MoveToPoseParams params) {
     
-    this->moveToPose(x, y, theta, timeout, params);
+    this->moveToPose(x, y, theta, timeout, {.forwards=false},true);
     Pose poseGoal(x,y,theta);
     bool clampState = HIGH;
 

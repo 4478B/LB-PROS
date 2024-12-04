@@ -65,8 +65,8 @@ ControllerSettings angular_controller(2, // proportional gain (kP)
 );
 
 // input curve for throttle input during driver control
-ExpoDriveCurve throttle_curve(6, // joystick deadband out of 127
-                                     6, // minimum output where drivetrain will move out of 127
+ExpoDriveCurve throttle_curve(3, // joystick deadband out of 127
+                                     0, // minimum output where drivetrain will move out of 127
                                      1.019 // expo curve gain
 );
 
