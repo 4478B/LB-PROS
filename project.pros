@@ -299,7 +299,8 @@
     },
     "upload_options": {
       "icon": "power",
-      "description": "50 point auton!!!!!"
+      "description": "50 point auton!!!!!",
+      "slot": 2
     },
     "use_early_access": false
   }

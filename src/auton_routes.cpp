@@ -166,16 +166,43 @@ void redGoalSide(){
 
     // mapped in redGoalSide.txt
 
+    clamp.set_value(HIGH);
     // rush goal and clamp
     chassis.setPose(-52,-63.4,270);
     chassis.moveToPoint(-20,-58,5000,{.forwards=false,.minSpeed=72,.earlyExitRange=12},false);
     chassis.moveToPose(-3,-49,240,2000,{.forwards=false,.lead=.2,.minSpeed=40},false);
     clamp.set_value(LOW);
-    endSection(5000);
+    endSection(50000);
 
     // grab ring1 for goal1
     intake.move(127);
-    chassis.moveToPose(-24,-48,270,4000);
+    chassis.moveToPoint(-34,-45,4000,{},false);
+    endSection(50000);
+
+    //unclamp goal1
+    clamp.set_value(HIGH);
+    intake.brake();
+    endSection(50000);
+
+    // face goal2
+    chassis.moveToPoint(-36,-36,600,{.maxSpeed=40},false);
+    chassis.turnToHeading(180, 2000);
+    endSection(50000);
+
+    // goto goal2 and clamp
+    chassis.moveToPose(-24,-30,240,2000,{.forwards=false,.minSpeed=15},false);
+    clamp.set_value(LOW);
+    endSection(50000);
+    
+    // grab ring1 for goal2
+    intake.move(127);
+    chassis.moveToPoint(-48,0,4000,{.minSpeed=40},false);
+    endSection(50000);
+
+    // move arm and touch middle
+    setArmTop();
+    chassis.moveToPoint(-12,-12,5000,{},false);
+    endSection(50000);
 
 }
 void blueRingSide(){
