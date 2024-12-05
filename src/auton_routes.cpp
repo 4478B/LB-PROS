@@ -11,7 +11,6 @@
 #include "devices.h"
 #include "old_systems.h"
 
-
 // These our functions made for backwards-compatibility with VEXCode routes
 
 /*void drivePID(double goalInches, bool clamping = false, double clampDistInches = 2){
@@ -42,10 +41,10 @@ void driveInchesClamp(double gDist, double cDist = .5){
     drivePID(gDist,true,cDist);
 }
 */
-void inert(float theta){
-    chassis.turnToHeading(theta,2000);
+void inert(float theta)
+{
+    chassis.turnToHeading(theta, 2000);
 }
-
 
 // This method is designed for testing sections of autons separately
 
@@ -58,63 +57,66 @@ void inert(float theta){
 // in the future we can make it print information about ending positions
 
 int autonSection = 0;
-void endSection(int delay){
-    
+void endSection(int delay)
+{
+
     // functions as normal delay
-    if(inCompetition) {
+    if (inCompetition)
+    {
         pros::delay(delay);
     }
-    else {
+    else
+    {
         double startTime = pros::millis();
         // while button hasn't been pressed and hasn't timed out
-        while(!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X) && pros::millis() - startTime < delay){
+        while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X) && pros::millis() - startTime < delay)
+        {
             pros::delay(20);
         }
         // updates controller screen with section information
         autonSection++;
         controller.clear_line(1);
-        controller.set_text(1,1,std::to_string(autonSection).c_str());
+        controller.set_text(1, 1, std::to_string(autonSection).c_str());
     }
 }
 
 // This file includes all of the routes coded in PROS for our robot
 // The routes should have linked path.jerryio files for reference
 
-
-void progSkills(){
+void progSkills()
+{
 
     // PROG SKILLS ROUTE 1 (reference is skills_aio.txt)
     // set position to starting spot (needs tweaking)
     chassis.setPose(-60, 0, 0);
     // back up to hit goal1
-    chassis.moveToPose(-48, -24, 315, 2000, {.forwards=false},true);
-    // clamp goal1 
+    chassis.moveToPose(-48, -24, 315, 2000, {.forwards = false}, true);
+    // clamp goal1
     delay(1500);
     clamp.set_value(LOW);
 
     intake.move(127);
-    //score preload
+    // score preload
     delay(1000);
     // grab ring1 for goal1
-    chassis.moveToPoint(-24,-24,2000,{},false);
-    //grab ring2 for goal1
-    chassis.moveToPoint(-24,-48,2000,{},false);
-    //grab ring3 for goal1
-    chassis.moveToPoint(-59,-48,3000,{},false);
+    chassis.moveToPoint(-24, -24, 2000, {}, false);
+    // grab ring2 for goal1
+    chassis.moveToPoint(-24, -48, 2000, {}, false);
+    // grab ring3 for goal1
+    chassis.moveToPoint(-59, -48, 3000, {}, false);
     delay(1000);
-    //grab ring4 for goal1
-    chassis.moveToPoint(-48,-48,2000,{.forwards=false},false);
-    //grab ring5 for goal1
-    chassis.moveToPoint(-48,-59,2000,{},false);
-    //small delay so ring5 intakes
+    // grab ring4 for goal1
+    chassis.moveToPoint(-48, -48, 2000, {.forwards = false}, false);
+    // grab ring5 for goal1
+    chassis.moveToPoint(-48, -59, 2000, {}, false);
+    // small delay so ring5 intakes
     delay(1000);
-    //back goal1 into corner
-    chassis.moveToPose(-63, -63, 45, 2000, {.forwards=false},false);
-    //stop intake
+    // back goal1 into corner
+    chassis.moveToPose(-63, -63, 45, 2000, {.forwards = false}, false);
+    // stop intake
     intake.brake();
-    //unclamp goal1
+    // unclamp goal1
     clamp.set_value(HIGH);
-    
 
     /*
     //approach goal2
@@ -149,115 +151,122 @@ void progSkills(){
 
     */
 }
-void blueGoalSide(){
+void blueGoalSide()
+{
 
     // this is going to test the backwards compatibility functions
 
-    while(true){
+    while (true)
+    {
         endSection(1000000);
-        chassis.setPose(0,0,0);
+        chassis.setPose(0, 0, 0);
         drivePID(48);
         endSection(1000000);
         drivePID(-48);
     }
-
 }
-void redGoalSide(){
+void redGoalSide()
+{
 
     // mapped in redGoalSide.txt
-
     clamp.set_value(HIGH);
     // rush goal and clamp
-    chassis.setPose(-52,-63.4,270);
-    chassis.moveToPoint(-20,-58,5000,{.forwards=false,.minSpeed=72,.earlyExitRange=12},false);
-    chassis.moveToPose(-3,-49,240,2000,{.forwards=false,.lead=.2,.minSpeed=40},false);
+    chassis.setPose(-52, -63.4, 270);
+    chassis.moveToPoint(-20, -58, 5000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 12}, false);
+    chassis.moveToPose(-3, -49, 240, 2000, {.forwards = false, .lead = .2, .minSpeed = 40}, false);
     clamp.set_value(LOW);
     endSection(50000);
 
     // grab ring1 for goal1
     intake.move(127);
-    chassis.moveToPoint(-34,-45,4000,{},false);
-    endSection(50000);
-
-    //unclamp goal1
-    clamp.set_value(HIGH);
+    chassis.moveToPoint(-34, -45, 4000, {}, false);
+    delay(500);
     intake.brake();
     endSection(50000);
 
+    // unclamp goal1
+    clamp.set_value(HIGH);
+    endSection(50000);
+
     // face goal2
-    chassis.moveToPoint(-36,-36,600,{.maxSpeed=40},false);
+    chassis.moveToPoint(-36, -36, 600, {.maxSpeed = 40}, false);
     chassis.turnToHeading(180, 2000);
     endSection(50000);
 
     // goto goal2 and clamp
-    chassis.moveToPose(-24,-30,240,2000,{.forwards=false,.minSpeed=15},false);
+    chassis.moveToPose(-24, -35, 240, 2000, {.forwards = false, .minSpeed = 15}, false);
     clamp.set_value(LOW);
     endSection(50000);
-    
+
     // grab ring1 for goal2
-    intake.move(127);
-    chassis.moveToPoint(-48,0,4000,{.minSpeed=40},false);
-    endSection(50000);
-
-    // move arm and touch middle
+    //intake.move(127);
     setArmTop();
-    chassis.moveToPoint(-12,-12,5000,{},false);
+    chassis.moveToPoint(-52, -6, 4000, {.minSpeed = 40}, false);
+    setArmBottom();
+    delay(500);
+    chassis.moveToPoint(-52, -25, 4000, {.forwards = false, .minSpeed = 40}, false);
+    clamp.set_value(HIGH);
+    //while(colorSens.)
     endSection(50000);
 
+    //
+    //chassis.moveToPoint(-12, -12, 5000, {}, false);
+    chassis.moveToPoint(-64, 5, 4000, {.minSpeed = 40}, false);
+    chassis.moveToPose(-64,-8,0,5000, {.forwards = false, .minSpeed = 72},false);
+    intake.move(127);
+
+
 }
-void blueRingSide(){
+void blueRingSide()
+{
 
-  drivePID(-27);
-  driveInchesClamp(-7,30);
-  delay(500);
-  intake.move(127);
-  endSection(10000);
+    drivePID(-27);
+    driveInchesClamp(-7, 30);
+    delay(500);
+    intake.move(127);
+    endSection(10000);
 
-  inert(-55);
-  delay(500);
-  drivePID(27); //+3; nvm
-  delay(500);
-  drivePID(-4);
-  endSection(10000);
+    inert(-55);
+    delay(500);
+    drivePID(27); //+3; nvm
+    delay(500);
+    drivePID(-4);
+    endSection(10000);
 
-  inert(-145);
-  drivePID(20);
-  delay(500);
-  endSection(10000);
+    inert(-145);
+    drivePID(20);
+    delay(500);
+    endSection(10000);
 
-  drivePID(-10);
-  inert(-110);
-  drivePID(11, 30);
-  delay(500);
-  drivePID(-6);
-  inert(-145);
-  endSection(10000);
+    drivePID(-10);
+    inert(-110);
+    drivePID(11, 30);
+    delay(500);
+    drivePID(-6);
+    inert(-145);
+    endSection(10000);
 
-  drivePID(-15);
-  inert(-55);
-  endSection(10000);
+    drivePID(-15);
+    inert(-55);
+    endSection(10000);
 
-  drivePID(-11); //-3; nvm
-  drivePID(-20);
-  setArmTop();
-  inert(-145);
-  drivePID(7);
-  endSection(10000);
+    drivePID(-11); //-3; nvm
+    drivePID(-20);
+    setArmTop();
+    inert(-145);
+    drivePID(7);
+    endSection(10000);
 
-
-/*
-chassis.moveToPoint(58,-12,5000,{.forwards=true,.minSpeed=20},false);
-chassis.moveToPoint(64,-1,5000,{.forwards=false,.minSpeed=20},false);
-*/
-/*
-chassis.moveToPoint(47,-11,5000,{.forwards=true,.minSpeed=20},false);
-chassis.moveToPoint(21,-24,5000,{.forwards=false,.minSpeed=20},false);
-clamp.set_value(LOW);
-chassis.moveToPose(23,-54,180,5000,{.forwards=true,.lead=.2,.minSpeed=20},false);*/
-    
+    /*
+    chassis.moveToPoint(58,-12,5000,{.forwards=true,.minSpeed=20},false);
+    chassis.moveToPoint(64,-1,5000,{.forwards=false,.minSpeed=20},false);
+    */
+    /*
+    chassis.moveToPoint(47,-11,5000,{.forwards=true,.minSpeed=20},false);
+    chassis.moveToPoint(21,-24,5000,{.forwards=false,.minSpeed=20},false);
+    clamp.set_value(LOW);
+    chassis.moveToPose(23,-54,180,5000,{.forwards=true,.lead=.2,.minSpeed=20},false);*/
 }
-void redRingSide(){
-
-
-    
+void redRingSide()
+{
 }

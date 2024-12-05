@@ -16,11 +16,16 @@ Motor intake(1);
 
 adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
 
+adi::Port doinker('C', pros::E_ADI_DIGITAL_OUT);
+
+
 PID armPID(1.5, 0, 1);
 
 Rotation armRot(2);
 
 Optical colorSens(19);
+
+
 
 // drivetrain settings
 Drivetrain drivetrain(&left_motors, // left motor group
