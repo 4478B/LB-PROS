@@ -40,12 +40,18 @@ void drivePID(double inches, double kP, double kI, double kD, double goalThresho
 
   // Reset motor encoder value to 0
   left_motors.set_zero_position(left_motors.get_position(0),0);
+  left_motors.set_zero_position(left_motors.get_position(1),1);
+  left_motors.set_zero_position(left_motors.get_position(2),2);
+  right_motors.set_zero_position(right_motors.get_position(0),0);
+  right_motors.set_zero_position(right_motors.get_position(1),1);
+  right_motors.set_zero_position(right_motors.get_position(2),2);
+
 
   while (inGoal < goalsNeeded) // CHECK IF IT SHOULD BE A < or <=
   {
     // Main PID loop; runs until target is reached
     // Read motor position (you can average left and right motor values for straight driving)
-    double currentPosition = (left_motors.get_position(0));
+    double currentPosition = ((left_motors.get_position(0)+right_motors.get_position(0))/2);
 
     // Calculate the current error
     currentDelta = target - currentPosition;
@@ -91,6 +97,67 @@ void drivePID(double inches, double kP, double kI, double kD, double goalThresho
   // Stop the motors once goal is met
   left_motors.brake();
   right_motors.brake();
+}
+
+void inert(double target, double kP, double kI, double kD){
+  bool isComplete = false;
+  double startTime = pros::millis(), prevTime = startTime, deltaTime, currentTime;
+  double integral = 0, error = 0, derivative = 0, prevError = 0;
+  double currentDeg = imu.get_heading();
+  double output;
+  int oscillation = 0;
+  while (!isComplete)
+  {
+    //////////////////setting values
+    currentTime = pros::millis();
+    deltaTime = currentTime - prevTime;
+    prevTime = currentTime;
+    currentDeg = imu.get_heading();
+
+    // calculations
+
+    error = target - currentDeg;
+
+    if (error > 180)
+    {
+      error = error - 360;
+    }
+    else if (error < -180)
+    {
+      error = 360 + error;
+    }
+
+    derivative = (error - prevError) / deltaTime;
+
+    prevError = error;
+
+    integral = +error * deltaTime;
+
+    output = kP * error + kI * integral + kD * derivative;
+
+    //  output = turnSlew(output);
+
+    //////////////////////// motor output
+
+    left_motors.move_velocity(output*6);
+    right_motors.move_velocity(-output*6);
+
+    //      Printing values
+
+    //      Exiting loop
+    if (((fabs(prevError) < 1.5)))
+    {
+      oscillation++;
+      if (oscillation > 1)
+      {
+        isComplete = true;
+        left_motors.brake();
+        right_motors.brake();
+        break;
+      }
+    }
+    delay(20);
+  }
 }
 
 void driveInches(double inches, int veloc, bool clamping)

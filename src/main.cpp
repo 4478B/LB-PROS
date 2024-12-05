@@ -249,8 +249,8 @@ void competition_initialize() {
 
 }
 
-const double SMOOTHING_DENOMINATOR = 31.62278; // Used to normalize the exponential curve
-const double EXPONENTIAL_POWER = 1.75;         // Controls how aggressive the curve is
+const double SMOOTHING_DENOMINATOR = 100; // Used to normalize the exponential curve
+const double EXPONENTIAL_POWER = 2;         // Controls how aggressive the curve is
 // Helper function that makes joystick input more precise for small movements
 // while maintaining full power at maximum joystick
 double logDriveJoystick(double joystickPCT)
@@ -271,7 +271,7 @@ void handleDriveTrain(){
 	// get left y and right y positions
     double leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     double rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-     
+
     // convert to pct
     leftY /= 1.27;
     rightY /= 1.27;
@@ -327,6 +327,25 @@ void handleClamp(){
         controller.clear_line(1);
         controller.print(1,1,clamp.get_value() == LOW ? "Clamped" : "");
     }
+
+    
+}
+
+void handleDoinky(){
+
+    // activates on pressing B
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT))
+    {
+
+        // clamp or unclamp based on toggled variable
+        
+        doinker.set_value(doinker.get_value() == LOW ? HIGH : LOW);
+
+        // print the state of the clamp on the controller screen
+        //controller.clear_line(1);
+        //controller.print(1,1,.get_value() == LOW ? "Clamped" : "");
+    }
+
     
 }
 
@@ -373,6 +392,7 @@ void opcontrol() {
         handleIntake();
         handleClamp();
         handleArm();
+        handleDoinky();
 
         // delay to save resources
         pros::delay(20);
