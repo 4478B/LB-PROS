@@ -13,34 +13,44 @@
 
 // These our functions made for backwards-compatibility with VEXCode routes
 
-/*void drivePID(double goalInches, bool clamping = false, double clampDistInches = 2){
-    // Get the current robot pose
+void drivePIDOdom(double goalInches, bool clamping = false, double clampDistInches = 2) {
+    // Step 1: Get the current robot pose from odometry.
     Pose poseInit(chassis.getPose(true));
-
-    // Calculate goal coordinates based on current pose and movement
-    double unitCircleAngle = (M_PI/2 - poseInit.theta);
+    
+    // Step 2: Calculate goal coordinates in global space based on current pose and movement distance.
+    // Convert the robot's heading angle from bearing notation to unit circle angles.
+    double unitCircleAngle = (M_PI / 2 - poseInit.theta);
+    
+    // Compute the target position using trigonometry.
     float goalX = poseInit.x + goalInches * cos(unitCircleAngle);
     float goalY = poseInit.y + goalInches * sin(unitCircleAngle);
-
-    // Create goal pose with same heading
+    
+    // Step 3: Create a goal pose with the same heading as the current pose.
     Pose poseGoal(goalX, goalY, poseInit.theta);
-
-    // Determine drive direction
+    
+    // Step 4: Determine whether the movement is forward or backward.
     bool isForwards = goalInches > 0;
 
-    // Move to calculated point
-    if(clamping){
-        chassis.MoveToPointClamp(poseGoal.x, poseGoal.y, 4000, .5, {.forwards=isForwards});
+    // Step 5: Move to the calculated point, either clamped or unclamped.
+    if (clamping) {
+        // Move to point with clamping to prevent overshoot.
+        chassis.MoveToPointClamp(poseGoal.x, poseGoal.y, 4000, clampDistInches, {.forwards = isForwards});
+    } else {
+        // Move to point without clamping.
+        chassis.moveToPoint(poseGoal.x, poseGoal.y, 4000, {.forwards = isForwards});
     }
-    else{
-        chassis.moveToPoint(poseGoal.x, poseGoal.y, 4000, {.forwards=isForwards});
-    }
+
+    // Step 6: Print debug information for testing pose calculations.
+    // Output trimmed to 3 decimal places to fit the screen.
+    pros::lcd::print(3, "Pose Init: X: %.3f, Y: %.3f, Th: %.3f", poseInit.x, poseInit.y, poseInit.theta);
+    pros::lcd::print(4, "Pose Goal: X: %.3f, Y: %.3f, Th: %.3f", poseGoal.x, poseGoal.y, poseGoal.theta);
+    pros::lcd::print(5, "Unit Angle: %.3f", unitCircleAngle);
 }
 
 void driveInchesClamp(double gDist, double cDist = .5){
     drivePID(gDist,true,cDist);
 }
-*/
+
 void inert(float theta)
 {
     chassis.turnToHeading(theta, 2000);
