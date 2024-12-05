@@ -20,6 +20,8 @@ adi::Port doinker('C', pros::E_ADI_DIGITAL_OUT);
 
 
 PID armPID(1.5, 0, 1);
+PID lateralPID(.11,0,0.15);
+PID angularPID(0.499, 0, 0.002);
 
 Rotation armRot(2);
 

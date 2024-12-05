@@ -22,6 +22,9 @@ extern pros::Optical colorSens;
 extern adi::Port doinker;
 
 extern PID armPID;
+extern PID lateralPID;
+extern PID angularPID;
+
 extern Rotation armRot;
 extern Drivetrain drivetrain;
 extern Imu imu;
