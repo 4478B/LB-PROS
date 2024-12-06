@@ -13,7 +13,7 @@
 
 // These our functions made for backwards-compatibility with VEXCode routes
 
-void drivePIDOdom(double goalInches, bool clamping = false, double clampDistInches = 2) {
+void drivePIDOdom(double goalInches, bool clamping, double clampDistInches) {
     // Step 1: Get the current robot pose from odometry.
     Pose poseInit(chassis.getPose(true));
     
@@ -51,10 +51,10 @@ void driveInchesClamp(double gDist, double cDist = .5){
     drivePID(gDist,true,cDist);
 }
 
-void inert(float theta)
+/*void inert(float theta)
 {
     chassis.turnToHeading(theta, 2000);
-}
+}*/
 
 // This method is designed for testing sections of autons separately
 
@@ -164,16 +164,6 @@ void progSkills()
 void blueGoalSide()
 {
 
-    // this is going to test the backwards compatibility functions
-
-    while (true)
-    {
-        endSection(1000000);
-        chassis.setPose(0, 0, 0);
-        drivePID(48);
-        endSection(1000000);
-        drivePID(-48);
-    }
 }
 void redGoalSide()
 {
@@ -190,7 +180,7 @@ void redGoalSide()
     // grab ring1 for goal1
     intake.move(127);
     chassis.moveToPoint(-34, -45, 4000, {}, false);
-    delay(500);
+    delay(200);
     intake.brake();
     endSection(50000);
 
@@ -206,6 +196,9 @@ void redGoalSide()
     // goto goal2 and clamp
     chassis.moveToPose(-24, -35, 240, 2000, {.forwards = false, .minSpeed = 15}, false);
     clamp.set_value(LOW);
+    intake.move(127);
+    delay(1000);
+    intake.brake();
     endSection(50000);
 
     // grab ring1 for goal2
@@ -214,7 +207,10 @@ void redGoalSide()
     chassis.moveToPoint(-52, -6, 4000, {.minSpeed = 40}, false);
     setArmBottom();
     delay(500);
-    chassis.moveToPoint(-52, -25, 4000, {.forwards = false, .minSpeed = 40}, false);
+    intake.move(127);
+    delay(400);
+    intake.brake();
+    chassis.moveToPoint(-59, -40, 4000, {.forwards = false, .minSpeed = 40}, false);
     clamp.set_value(HIGH);
     //while(colorSens.)
     endSection(50000);
@@ -222,7 +218,9 @@ void redGoalSide()
     //
     //chassis.moveToPoint(-12, -12, 5000, {}, false);
     chassis.moveToPoint(-64, 5, 4000, {.minSpeed = 40}, false);
-    chassis.moveToPose(-64,-8,0,5000, {.forwards = false, .minSpeed = 72},false);
+    clamp.set_value(LOW);
+
+    chassis.moveToPose(-79,-13.5,60,5000, {.forwards = false, .minSpeed = 72},false);
     intake.move(127);
 
 

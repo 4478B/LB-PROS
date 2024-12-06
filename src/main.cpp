@@ -14,80 +14,95 @@
 #include "testing.h"
 #include "old_systems.h"
 
-
 // Global variables needed for arm control
 static double targetPos = 0;
 static bool armMoving = false;
-static const double armThreshold = 1.0; // Adjust as needed
+static const double armThreshold = 0.25; // Adjust as needed
 
 // Task function for arm control
-void arm_control_task(void* param) {
+void arm_control_task(void *param)
+{
     double currentPos;
     double error;
     double nextMovement;
-    
-    while (true) {
-        if (armMoving) {
+    int goalCount = 0;
+
+    while (true)
+    {
+        if (armMoving)
+        {
             // current position in centidegrees, convert to degrees
-            currentPos = armRot.get_angle()/100.0;
-            
+            currentPos = armRot.get_angle() / 100.0;
+
             // normalize error to [-180,180]
-            currentPos = currentPos - 360 * (currentPos > 180)
-                                  + 360 * (currentPos < -180);
+            currentPos = currentPos - 360 * (currentPos > 180) + 360 * (currentPos < -180);
 
             // calculate how far arm is from target
             error = targetPos - currentPos;
 
-            if (fabs(error) < armThreshold) { // goal has been met
-                // reset PID for next usage
-                armPID.reset();
+            if (fabs(error) < armThreshold)
+            { // goal has been met
 
-                // stop arm motors in place
-                arm_motors.brake();
+                goalCount++;
+                if (goalCount > 3)
+                {
+                    // reset PID for next usage
+                    armPID.reset();
 
-                //stop running the PID code
-                armMoving = false;
+                    // stop arm motors in place
+                    arm_motors.brake();
+
+                    // stop running the PID code
+                    armMoving = false;
+                    goalCount = 0;
+                }
             }
-            else { // goal has not been met
+            else
+            { // goal has not been met
+                goalCount = 0;
                 // determine how far to move based on PID
                 nextMovement = armPID.update(error);
 
-                //ensure values fit bounds of motor voltage
-                nextMovement = std::clamp(nextMovement,-127.0,127.0);
+                // ensure values fit bounds of motor voltage
+                nextMovement = std::clamp(nextMovement, -600.0, 600.0);
 
                 // move arm motors based on PID
-                arm_motors.move(nextMovement);
+                arm_motors.move_velocity(nextMovement);
             }
 
             // collect and print data involving pid on screen
-            /*
+
             pros::lcd::print(6, "Arm State: %s", armMoving ? "Moving" : "Idle");
-            pros::lcd::print(3, "Arm Current Pos: %f", currentPos); 
-            pros::lcd::print(4, "Arm Target Pos: %f", targetPos); 
+            pros::lcd::print(3, "Arm Current Pos: %f", currentPos);
+            pros::lcd::print(4, "Arm Target Pos: %f", targetPos);
             pros::lcd::print(7, "error: %f", error);
-            pros::lcd::print(5, "Arm Next Movement: %f", nextMovement); 
-            */
+            pros::lcd::print(5, "Arm Next Movement: %f", nextMovement);
         }
-        
+
         // Add a small delay to prevent the task from hogging CPU
         pros::delay(20);
     }
 }
 
-void setArm(int position) {
+void setArm(int position)
+{
     // Validate input
-    if (position < 1 || position > 3) {
+    if (position < 1 || position > 3)
+    {
         return; // Invalid position
     }
 
-    if(position == 1) {
-        targetPos = 0;    // Bottom position
+    if (position == 1)
+    {
+        targetPos = 0; // Bottom position
     }
-    else if(position == 2) {
-        targetPos = 33;   // Middle position
+    else if (position == 2)
+    {
+        targetPos = 33; // Middle position
     }
-    else if(position == 3) {
-        targetPos = 134;  // Top position
+    else if (position == 3)
+    {
+        targetPos = 134; // Top position
     }
     armMoving = true;
 }
@@ -97,59 +112,65 @@ void setArmBottom() { setArm(1); }
 void setArmMid() { setArm(2); }
 void setArmTop() { setArm(3); }
 
-void initialize_arm_position() {
+void initialize_arm_position()
+{
     // Move arm down at moderate speed but low power
-    arm_motors.set_voltage_limit(4000);  // Limit to 4V for gentle movement
-    arm_motors.move_velocity(-50);       // Move down at moderate speed
+    arm_motors.set_voltage_limit(4000); // Limit to 4V for gentle movement
+    arm_motors.move_velocity(-50);      // Move down at moderate speed
     arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
-    
+
     // Wait until arm stalls (high current, low velocity)
-    while (true) {
+    while (true)
+    {
         // Get current draw and velocity
         double velocity = arm_motors.get_actual_velocity();
         int current = arm_motors.get_current_draw();
-        
+
         // If we detect high current (stall) and low velocity, we've hit bottom
-        if (current > 1500 && std::abs(velocity) < 5) {
+        if (current > 1500 && std::abs(velocity) < 5)
+        {
             arm_motors.brake();
-            arm_motors.set_voltage_limit(12000);  // Reset to full voltage
-            armRot.reset_position(); 
+            arm_motors.set_voltage_limit(12000); // Reset to full voltage
+            armRot.reset_position();
             break;
         }
-        
+
         pros::delay(20); // Small delay to prevent hogging CPU
     }
 }
 
 bool isRedAlliance = false;
 
-void on_center_button(){ // swaps team for color sort
-    
+void on_center_button()
+{ // swaps team for color sort
+
     /*isRedAlliance = !isRedAlliance;
 
     lcd::clear_line(1);
     lcd::print(1, "Team: %s", isRedAlliance ? "Red Team" : "Blue Team");*/
-
 }
 
 // this function is called during the color_sort_task
 // it is the actions that are taken to sort out a ring
-void tossRing(){ 
+void tossRing()
+{
 
     intake.move(-127);
     delay(1000);
-
 }
 
 bool currentlySorting = false;
 
-void color_sort_task(void* param){
+void color_sort_task(void *param)
+{
     int hueMin, hueMax; // these are endpoints for acceptable ring colors
-    if(isRedAlliance) { 
+    if (isRedAlliance)
+    {
         hueMin = 330; // min < max b/c it loops around 360 degrees
-        hueMax = 45; 
+        hueMax = 45;
     }
-    else { 
+    else
+    {
         hueMin = 0; // placeholder values
         hueMax = 0;
     }
@@ -164,27 +185,28 @@ void color_sort_task(void* param){
 }
 
 // initialize function. Runs on program startup
-void initialize() {
+void initialize()
+{
 
-    lcd::initialize(); // initialize brain screen
+    lcd::initialize();   // initialize brain screen
     chassis.calibrate(); // calibrate sensors
-    
+
     clamp.set_value(HIGH);
 
-    //initialize_arm_position();
+    // initialize_arm_position();
     arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
 
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
 
     // create color sort task
-    //Task csort_task(color_sort_task, nullptr, "Color Sort Task");
+    // Task csort_task(color_sort_task, nullptr, "Color Sort Task");
 
     // set optical sensor for color sort
-    //colorSens.set_led_pwm(100);
+    // colorSens.set_led_pwm(100);
 
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
-	
+
     // print odometry position to brain screen
     /*pros::Task screen_task([&]() {
         while (true) {
@@ -197,10 +219,10 @@ void initialize() {
             pros::delay(20);
         }
     });*/
-
 }
 
-void autonomous() {
+void autonomous()
+{
     left_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
     right_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
     getAutonSelector().runSelectedAuton();
@@ -231,7 +253,8 @@ void disabled() {}
 // this is a failsafe incase testing functions in opcontrol haven't been commented out
 bool inCompetition = false;
 
-void competition_initialize() {
+void competition_initialize()
+{
 
     inCompetition = true;
     // show current route on brain screen
@@ -245,30 +268,29 @@ void competition_initialize() {
     // assign buttons to actions in auton selector
     lcd::register_btn0_cb(on_left_button);
     lcd::register_btn1_cb(on_center_button);
-	lcd::register_btn2_cb(on_right_button);
-
+    lcd::register_btn2_cb(on_right_button);
 }
 
 const double SMOOTHING_DENOMINATOR = 100; // Used to normalize the exponential curve
-const double EXPONENTIAL_POWER = 2;         // Controls how aggressive the curve is
+const double EXPONENTIAL_POWER = 2;       // Controls how aggressive the curve is
 // Helper function that makes joystick input more precise for small movements
 // while maintaining full power at maximum joystick
 double logDriveJoystick(double joystickPCT)
 {
-  // Get the absolute value for calculation
-  double magnitude = fabs(joystickPCT);
+    // Get the absolute value for calculation
+    double magnitude = fabs(joystickPCT);
 
-  // Calculate the smoothed value
-  double smoothedValue = pow(magnitude, EXPONENTIAL_POWER) / SMOOTHING_DENOMINATOR;
+    // Calculate the smoothed value
+    double smoothedValue = pow(magnitude, EXPONENTIAL_POWER) / SMOOTHING_DENOMINATOR;
 
-  // Restore the original sign (positive or negative)
-  return joystickPCT >= 0 ? smoothedValue : -smoothedValue;
+    // Restore the original sign (positive or negative)
+    return joystickPCT >= 0 ? smoothedValue : -smoothedValue;
 }
 
+void handleDriveTrain()
+{
 
-void handleDriveTrain(){
-
-	// get left y and right y positions
+    // get left y and right y positions
     double leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
     double rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
@@ -285,14 +307,15 @@ void handleDriveTrain(){
 
     left_motors.move_velocity(leftY);
     right_motors.move_velocity(rightY);
-
 }
 
-void handleIntake(){
+void handleIntake()
+{
 
     // manual controls are overridden if color sort mechanism is active
-    if(!currentlySorting){
-    
+    if (!currentlySorting)
+    {
+
         // intake
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
         {
@@ -304,59 +327,59 @@ void handleIntake(){
             intake.move(-127);
         }
         // no movement without button pressed
-        else 
+        else
         {
-          intake.brake();
+            intake.brake();
         }
-
     }
 }
 
-
-void handleClamp(){
+void handleClamp()
+{
 
     // activates on pressing B
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
     {
 
         // clamp or unclamp based on toggled variable
-        
+
         clamp.set_value(clamp.get_value() == LOW ? HIGH : LOW);
 
         // print the state of the clamp on the controller screen
         controller.clear_line(1);
-        controller.print(1,1,clamp.get_value() == LOW ? "Clamped" : "");
+        controller.print(1, 1, clamp.get_value() == LOW ? "Clamped" : "");
     }
-
-    
 }
 
-void handleDoinky(){
+void handleDoinky()
+{
 
     // activates on pressing B
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT))
     {
 
         // clamp or unclamp based on toggled variable
-        
+
         doinker.set_value(doinker.get_value() == LOW ? HIGH : LOW);
 
         // print the state of the clamp on the controller screen
-        //controller.clear_line(1);
-        //controller.print(1,1,.get_value() == LOW ? "Clamped" : "");
+        // controller.clear_line(1);
+        // controller.print(1,1,.get_value() == LOW ? "Clamped" : "");
     }
-
-    
 }
 
-void handleArm() {
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+void handleArm()
+{
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
+    {
         setArmBottom();
     }
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
+    {
         setArmMid();
     }
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
+    {
         setArmTop();
     }
 }
@@ -374,18 +397,20 @@ void handleArm() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-void opcontrol() {
+void opcontrol()
+{
 
-
-    //left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
-    //right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
+    // left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
+    // right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 
-	// loop forever
-    while (true) {
-        
+    // loop forever
+    while (true)
+    {
+
         // THIS WHOLE IF STATEMENT SHOULD BE COMMENTED OUT IN COMPS
-        if (!inCompetition){ 
+        if (!inCompetition)
+        {
             testAuton();
         }
         handleDriveTrain();

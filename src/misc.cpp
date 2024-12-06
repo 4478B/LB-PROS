@@ -1,7 +1,7 @@
 #include "devices.h"
 
 // function for drivePID using lemlib pids
-void DrivePIDLL(double goalInches)
+void drivePIDLL(double goalInches)
 {
   double currentPos;
   double error;
@@ -83,4 +83,41 @@ void inertLL(double degrees)
   // stop arm motors in place
   left_motors.brake();
   right_motors.brake();
+}
+
+// This is a really jenk implementation of drivePID with odometry
+// It works relatively and then updates the global positions based on the change in movement
+void drivePIDWTF(double goalInches, bool clamping, double clampDistInches)
+{
+  // Step 1: Get the current robot pose from odometry.
+  Pose poseInit(chassis.getPose());
+
+  // Step 2: Set dummy pose to run moveToPoint relatively
+  chassis.setPose(0, 0, 0);
+
+  // Step 3: Determine whether the movement is forward or backward.
+  bool isForwards = goalInches > 0;
+
+  // Step 4: Move to the calculated point, either clamped or unclamped.
+  if (clamping)
+  {
+    // Move to point with clamping to prevent overshoot.
+    chassis.MoveToPointClamp(0, goalInches, 4000, clampDistInches, {.forwards = isForwards});
+  }
+  else
+  {
+    // Move to point without clamping.
+    chassis.moveToPoint(0, goalInches, 4000, {.forwards = isForwards});
+  }
+
+  // Step 5: use change in pose to update global pose
+  Pose poseDelta(chassis.getPose());
+  Pose poseGlobal(poseInit.x + poseDelta.x, poseInit.y + poseDelta.y, poseInit.theta + poseDelta.theta);
+  chassis.setPose(poseGlobal);
+
+  // Step 6: Print debug information for testing pose calculations.
+  // Output trimmed to 3 decimal places to fit the screen.
+  pros::lcd::print(3, "Pose Init: X: %.3f, Y: %.3f, Th: %.3f", poseInit.x, poseInit.y, poseInit.theta);
+  pros::lcd::print(4, "Pose Delta: X: %.3f, Y: %.3f, Th: %.3f", poseDelta.x, poseDelta.y, poseDelta.theta);
+  pros::lcd::print(4, "Pose Global: X: %.3f, Y: %.3f, Th: %.3f", poseGlobal.x, poseGlobal.y, poseGlobal.theta);
 }
