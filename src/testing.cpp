@@ -106,7 +106,8 @@ void testAuton(bool inputReq)
         right_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        redGoalSide();
+        testDrivePID();
+
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();

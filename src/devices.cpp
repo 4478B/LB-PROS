@@ -17,7 +17,7 @@ adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
 
 adi::Port doinker('C', pros::E_ADI_DIGITAL_OUT);
 
-PID armPID(4, 0, 2);
+PID armPID(3, 0, 2.5);
 PID lateralPID(.11, 0, 0.15);
 PID angularPID(0.499, 0, 0.002);
 

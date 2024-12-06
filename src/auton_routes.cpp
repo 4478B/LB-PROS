@@ -175,31 +175,30 @@ void redGoalSide()
     chassis.moveToPoint(-20, -58, 5000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 12}, false);
     chassis.moveToPose(-3, -49, 240, 2000, {.forwards = false, .lead = .2, .minSpeed = 40}, false);
     clamp.set_value(LOW);
-    endSection(50000);
+    endSection(100);
 
     // grab ring1 for goal1
     intake.move(127);
     chassis.moveToPoint(-34, -45, 4000, {}, false);
-    delay(200);
+    delay(150);
     intake.brake();
-    endSection(50000);
+    endSection(0);
 
     // unclamp goal1
     clamp.set_value(HIGH);
-    endSection(50000);
+    endSection(300);
 
     // face goal2
     chassis.moveToPoint(-36, -36, 600, {.maxSpeed = 40}, false);
-    chassis.turnToHeading(180, 2000);
-    endSection(50000);
+    chassis.turnToHeading(180, 1000);
+    endSection(100);
 
     // goto goal2 and clamp
-    chassis.moveToPose(-24, -35, 240, 2000, {.forwards = false, .minSpeed = 15}, false);
+    chassis.moveToPose(-22, -36, 240, 2000, {.forwards = false, .minSpeed = 15}, false);
     clamp.set_value(LOW);
     intake.move(127);
-    delay(1000);
-    intake.brake();
-    endSection(50000);
+
+    endSection(0);
 
     // grab ring1 for goal2
     //intake.move(127);
@@ -213,16 +212,22 @@ void redGoalSide()
     chassis.moveToPoint(-59, -40, 4000, {.forwards = false, .minSpeed = 40}, false);
     clamp.set_value(HIGH);
     //while(colorSens.)
-    endSection(50000);
+    endSection(500);
 
     //
     //chassis.moveToPoint(-12, -12, 5000, {}, false);
     chassis.moveToPoint(-64, 5, 4000, {.minSpeed = 40}, false);
     clamp.set_value(LOW);
 
+    // score on alliance stake
     chassis.moveToPose(-79,-13.5,60,5000, {.forwards = false, .minSpeed = 72},false);
     intake.move(127);
+    endSection(1000);
 
+    // go to middle with arm up
+    intake.brake();
+    setArmTop();
+    chassis.moveToPoint(-5,0,2000,{.maxSpeed=70},false);
 
 }
 void blueRingSide()
