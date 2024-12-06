@@ -63,21 +63,24 @@ void arm_control_task(void *param)
                 // determine how far to move based on PID
                 nextMovement = armPID.update(error);
 
-                // ensure values fit bounds of motor voltage
-                nextMovement = std::clamp(nextMovement, -600.0, 600.0);
-
-                // move arm motors based on PID
-                arm_motors.move_velocity(nextMovement);
+                // clamps movements to [-600,-2]U[2,600]
+                nextMovement = (nextMovement < -2) ? std::max(nextMovement, -600.0) 
+                             : (nextMovement> 2)  ? std::min(nextMovement, 600.0) 
+                             : (nextMovement < 0)  ? -2.0 
+                             : 2.0;
             }
 
-            // collect and print data involving pid on screen
-
-            pros::lcd::print(6, "Arm State: %s", armMoving ? "Moving" : "Idle");
-            pros::lcd::print(3, "Arm Current Pos: %f", currentPos);
-            pros::lcd::print(4, "Arm Target Pos: %f", targetPos);
-            pros::lcd::print(7, "error: %f", error);
-            pros::lcd::print(5, "Arm Next Movement: %f", nextMovement);
+            // move arm motors based on PID
+            arm_motors.move_velocity(nextMovement);
         }
+
+        // collect and print data involving pid on screen
+
+        pros::lcd::print(6, "Arm State: %s", armMoving ? "Moving" : "Idle");
+        pros::lcd::print(3, "Arm Current Pos: %f", currentPos);
+        pros::lcd::print(4, "Arm Target Pos: %f", targetPos);
+        pros::lcd::print(7, "error: %f", error);
+        pros::lcd::print(5, "Arm Next Movement: %f", nextMovement);
 
         // Add a small delay to prevent the task from hogging CPU
         pros::delay(20);

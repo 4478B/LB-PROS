@@ -164,8 +164,70 @@ void progSkills()
 void blueGoalSide()
 {
 
+    // mapped in redGoalSide.txt
+    clamp.set_value(HIGH);
+    // rush goal and clamp
+    chassis.setPose(52, -63.4, -270);
+    chassis.moveToPoint(20, -58, 5000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 12}, false);
+    chassis.moveToPose(3, -49, -240, 2000, {.forwards = false, .lead = .2, .minSpeed = 40}, false);
+    clamp.set_value(LOW);
+    endSection(100);
+
+    // grab ring1 for goal1
+    intake.move(127);
+    chassis.moveToPoint(34, -45, 4000, {}, false);
+    delay(150);
+    intake.brake();
+    endSection(0);
+
+    // unclamp goal1
+    clamp.set_value(HIGH);
+    endSection(300);
+
+    // face goal2
+    chassis.moveToPoint(36, -36, 600, {.maxSpeed = 40}, false);
+    chassis.turnToHeading(-180, 1000);
+    endSection(100);
+
+    // goto goal2 and clamp
+    chassis.moveToPose(22, -36, -240, 2000, {.forwards = false, .minSpeed = 15}, false);
+    clamp.set_value(LOW);
+    intake.move(127);
+
+    endSection(0);
+
+    // grab ring1 for goal2
+    //intake.move(127);
+    setArmTop();
+    chassis.moveToPoint(52, -6, 4000, {.minSpeed = 40}, false);
+    setArmBottom();
+    delay(500);
+    intake.move(127);
+    delay(400);
+    intake.brake();
+    chassis.moveToPoint(59, -40, 4000, {.forwards = false, .minSpeed = 40}, false);
+    clamp.set_value(HIGH);
+    //while(colorSens.)
+    endSection(500);
+
+    //
+    //chassis.moveToPoint(-12, -12, 5000, {}, false);
+    chassis.moveToPoint(64, 5, 4000, {.minSpeed = 40}, false);
+    clamp.set_value(LOW);
+
+    // score on alliance stake
+    chassis.moveToPose(79,-13.5,-60,5000, {.forwards = false, .minSpeed = 72},false);
+    intake.move(127);
+    endSection(1000);
+
+    // go to middle with arm up
+    intake.brake();
+    setArmTop();
+    chassis.moveToPoint(5,0,2000,{.maxSpeed=70},false);
+
 }
-void redGoalSide()
+
+void redGoalSide() // edit this one and mirror it for the other part
 {
 
     // mapped in redGoalSide.txt
