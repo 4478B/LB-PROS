@@ -15,6 +15,7 @@ static const AutonRoutine ROUTINES[] = {
     {"Red Goal Side", redGoalSide},     // Route 3
     {"Blue Ring Side", blueRingSide},   // Route 4
     {"Red Ring Side", redRingSide},     // Route 5
+    {"WPI AWP", WPIAWP}                 // Route 6
 };
 
 // Create static instance

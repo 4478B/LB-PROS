@@ -412,10 +412,10 @@ void opcontrol()
     {
 
         // THIS WHOLE IF STATEMENT SHOULD BE COMMENTED OUT IN COMPS
-        /*if (!inCompetition)
+        if (!inCompetition)
         {
             testAuton();
-        }*/
+        }
         handleDriveTrain();
         handleIntake();
         handleClamp();

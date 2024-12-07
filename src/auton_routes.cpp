@@ -366,3 +366,83 @@ void blueRingSide()
 void redRingSide()
 {
 }
+void WPIAWP(){
+
+    clamp.set_value(HIGH);
+    //inital pose beside alliance stake  
+    chassis.setPose(-48,12,270);
+
+    
+    //score on alliance stake
+    setArmTop();
+    delay(1000);
+    setArmBottom();
+    endSection(500);
+    
+    // clamp goal1
+    chassis.moveToPoint(-29.2,20,2000,{.forwards=false},false);
+    clamp.set_value(LOW);
+    endSection(500);
+
+    // grab ring1 for goal1 (ringside midfield)
+    intake.move(127);
+    chassis.moveToPoint(-27,47,2000,{},false);
+    endSection(200);
+
+    // grab ring2 for goal1 (ringside upper)
+    chassis.moveToPoint(-15,55,2000,{},false);
+    endSection(500);
+
+    // back up to ringside turning point
+    chassis.moveToPoint(-33.3,47.5,2000,{.forwards=false},false);
+    intake.brake();
+    endSection(500);
+
+    intake.move(127);
+    chassis.moveToPoint(-15,47,2000,{},false);
+    endSection(500);
+
+    chassis.moveToPose(-40,47.5,45,3000,{.forwards=false},false);
+    endSection(500);
+
+    chassis.moveToPoint(-20,20,2000,{},false);
+    
+
+
+    /*
+    // turn to face goalside
+    chassis.turnToHeading(180,2000);
+    endSection(50000);
+
+    // rush to goalside (motion chaining)
+    chassis.moveToPoint(-38.2,-25.4,2000,{.minSpeed=70,.earlyExitRange=6},false);
+    intake.move(127);
+    clamp.set_value(HIGH);
+    endSection(50000);
+
+    // get ring1 for goal2
+    chassis.moveToPoint(-24,-48,2000,{},false);
+    //here we need to tweak delay to hold ring
+    endSection(50000);
+    
+    // face goal2
+    intake.brake();
+    chassis.turnToHeading(180,2000);
+    endSection(50000);
+
+    //clamp goal2
+    chassis.moveToPoint(-24,-28,2000,{.forwards=false},false);
+    clamp.set_value(LOW);
+    endSection(50000);
+
+    //turn to posts
+    setArmTop();
+    chassis.turnToHeading(45,2000);
+    endSection(5000);
+
+    //touch posts
+    chassis.moveToPoint(5,0,2000,{.maxSpeed=60},false);
+
+    */
+
+}

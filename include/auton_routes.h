@@ -10,5 +10,6 @@ void blueGoalSide();
 void redGoalSide();
 void blueRingSide();
 void redRingSide();
+void WPIAWP();
 
 #endif // AUTON_ROUTES_H
