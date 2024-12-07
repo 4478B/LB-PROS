@@ -50,6 +50,7 @@ void arm_control_task(void *param)
                     armPID.reset();
 
                     // stop arm motors in place
+                    arm_motors.move_velocity(0);
                     arm_motors.brake();
 
                     // stop running the PID code
@@ -63,11 +64,8 @@ void arm_control_task(void *param)
                 // determine how far to move based on PID
                 nextMovement = armPID.update(error);
 
-                // clamps movements to [-600,-2]U[2,600]
-                nextMovement = (nextMovement < -2) ? std::max(nextMovement, -600.0) 
-                             : (nextMovement> 2)  ? std::min(nextMovement, 600.0) 
-                             : (nextMovement < 0)  ? -2.0 
-                             : 2.0;
+                // clamps movements to [-600,600]
+                nextMovement = std::clamp(nextMovement,-600.0,600.0);
             }
 
             // move arm motors based on PID
@@ -76,11 +74,13 @@ void arm_control_task(void *param)
 
         // collect and print data involving pid on screen
 
+        /*
         pros::lcd::print(6, "Arm State: %s", armMoving ? "Moving" : "Idle");
         pros::lcd::print(3, "Arm Current Pos: %f", currentPos);
         pros::lcd::print(4, "Arm Target Pos: %f", targetPos);
         pros::lcd::print(7, "error: %f", error);
         pros::lcd::print(5, "Arm Next Movement: %f", nextMovement);
+        */
 
         // Add a small delay to prevent the task from hogging CPU
         pros::delay(20);
@@ -97,7 +97,7 @@ void setArm(int position)
 
     if (position == 1)
     {
-        targetPos = 0; // Bottom position
+        targetPos = 5; // Bottom position
     }
     else if (position == 2)
     {
@@ -350,7 +350,7 @@ void handleClamp()
 
         // print the state of the clamp on the controller screen
         controller.clear_line(1);
-        controller.print(1, 1, clamp.get_value() == LOW ? "Clamped" : "");
+        controller.set_text(1, 1, clamp.get_value() == LOW ? "Clamped" : "Uncl");
     }
 }
 
@@ -412,10 +412,10 @@ void opcontrol()
     {
 
         // THIS WHOLE IF STATEMENT SHOULD BE COMMENTED OUT IN COMPS
-        if (!inCompetition)
+        /*if (!inCompetition)
         {
             testAuton();
-        }
+        }*/
         handleDriveTrain();
         handleIntake();
         handleClamp();

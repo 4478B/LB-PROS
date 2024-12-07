@@ -10,6 +10,8 @@
 #include <cstdlib>
 #include "devices.h"
 #include "old_systems.h"
+#include "testing.h"
+#include <iomanip>
 
 // These our functions made for backwards-compatibility with VEXCode routes
 
@@ -77,7 +79,25 @@ void endSection(int delay)
     }
     else
     {
-        double startTime = pros::millis();
+        // handle updating timers
+        int startTime = pros::millis();
+        int deltaTime = startTime - prevTime;
+        totalTime += deltaTime;
+        prevTime = startTime;
+
+        // print timer positions to console for permanent logging
+        std::cout << std::setw(14) << autonSection << " | "
+                  << std::setw(14) << deltaTime << " | "
+                  << std::setw(14) << totalTime << " | "
+                  << std::endl;
+        
+        // print timer positions on controller and screen for temporary logging
+        pros::lcd::print(5, "Auton Section: %f", autonSection);
+        pros::lcd::print(5, "Section Time: %f", deltaTime);
+        pros::lcd::print(5, "Total Time: %f", totalTime);
+
+        //controller.set_text(2,1,std) // controller WIP bc set_text is bad
+
         // while button hasn't been pressed and hasn't timed out
         while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X) && pros::millis() - startTime < delay)
         {
@@ -186,18 +206,19 @@ void blueGoalSide()
 
     // face goal2
     chassis.moveToPoint(36, -36, 600, {.maxSpeed = 40}, false);
-    chassis.turnToHeading(-180, 1000);
+    delay(500);
+    chassis.turnToHeading(180, 1000);
     endSection(100);
 
     // goto goal2 and clamp
-    chassis.moveToPose(22, -36, -240, 2000, {.forwards = false, .minSpeed = 15}, false);
+    chassis.moveToPose(22, -36,60, 2000, {.forwards = false, .minSpeed = 15}, false);
     clamp.set_value(LOW);
     intake.move(127);
 
-    endSection(0);
+    endSection(200);
 
-    // grab ring1 for goal2
-    //intake.move(127);
+    /*// grab ring1 for goal2
+    //intake.move(127); 
     setArmTop();
     chassis.moveToPoint(52, -6, 4000, {.minSpeed = 40}, false);
     setArmBottom();
@@ -218,12 +239,12 @@ void blueGoalSide()
     // score on alliance stake
     chassis.moveToPose(79,-13.5,-60,5000, {.forwards = false, .minSpeed = 72},false);
     intake.move(127);
-    endSection(1000);
+    endSection(1000);*/
 
     // go to middle with arm up
     intake.brake();
     setArmTop();
-    chassis.moveToPoint(5,0,2000,{.maxSpeed=70},false);
+    chassis.moveToPoint(5,0,3000,{.maxSpeed=70},false);
 
 }
 
@@ -260,7 +281,7 @@ void redGoalSide() // edit this one and mirror it for the other part
     clamp.set_value(LOW);
     intake.move(127);
 
-    endSection(0);
+    endSection(200);
 
     // grab ring1 for goal2
     //intake.move(127);

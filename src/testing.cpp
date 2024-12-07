@@ -13,6 +13,7 @@
 #include "auton_routes.h"
 #include "old_systems.h"
 #include "misc.h"
+#include <iomanip>
 
 void testCombinedPID()
 {
@@ -83,6 +84,9 @@ void testCombinedPID()
     }
 }
 
+
+int totalTime;
+int prevTime;
 // This function runs in driver control WITHOUT COMM SWITCH, it is a better way of testing the
 // autons since you can take inputs from the controller and test multiple times.
 // NOTE: The arm is on a different task, so don't hit those buttons during auton
@@ -105,8 +109,21 @@ void testAuton(bool inputReq)
         left_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
         right_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
 
+        // initalize timer variables
+        totalTime = 0;
+        prevTime = pros::millis();
+
+        // set up permanent console logging for auton timers
+        std::cout << std::fixed << std::setprecision(2);
+        std::cout << std::setw(14) << "section" << " | "
+                  << std::setw(14) << "time" << " | "
+                  << std::setw(14) << "total" << " | "
+                  << std::endl;
+        std::cout << std::string(15 * 3 + 4, '-')  
+                  << std::endl;
+
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        testDrivePID();
+        blueGoalSide();
 
 
         // stops motors to prevent rogue movements after auton
