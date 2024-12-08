@@ -370,7 +370,7 @@ void WPIAWP(){
 
     clamp.set_value(HIGH);
     //inital pose beside alliance stake  
-    chassis.setPose(-48,12,270);
+    chassis.setPose(-61,12,270-49);
 
     
     //score on alliance stake
@@ -379,6 +379,7 @@ void WPIAWP(){
     setArmBottom();
     endSection(500);
     
+    //chassis.moveToPose(-48,-12,270,5000, {.forwards = false, .minSpeed = 72},false);
     // clamp goal1
     chassis.moveToPoint(-29.2,20,2000,{.forwards=false},false);
     clamp.set_value(LOW);
