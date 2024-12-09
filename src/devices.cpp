@@ -31,15 +31,15 @@ Drivetrain drivetrain(&left_motors,               // left motor group
                       11,                         // 11 inch track width
                       lemlib::Omniwheel::NEW_275, // using new 2.75" omnis
                       450,                        // drivetrain rpm is 450
-                      2                           // horizontal drift is 2 (for now)
+                      8                           // horizontal drift is 8 (center traction wheel drivebase)
 );
 
 Imu imu(20);
 
-OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
-                    nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
+OdomSensors sensors(nullptr, // vertical tracking wheel 1
+                    nullptr, // vertical tracking wheel 2
                     nullptr, // horizontal tracking wheel 1
-                    nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
+                    nullptr, // horizontal tracking wheel 2
                     &imu     // inertial sensor
 );
 
