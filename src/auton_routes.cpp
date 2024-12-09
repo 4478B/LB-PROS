@@ -366,6 +366,51 @@ void blueRingSide()
 void redRingSide()
 {
 }
+void redGoalSidePostWPI(){ // in tylers routes, scores 5 on goalside, doinkers goalside without clamping
+
+    // rush goal and set doinker down
+    clamp.set_value(HIGH);
+    chassis.setPose(-54, -61, 90);
+    chassis.moveToPoint(-20, -58, 5000, {.minSpeed = 72, .earlyExitRange = 12}, false);
+    chassis.moveToPose(-12, -49,45, 2000, {.lead = .2, .minSpeed = 60}, false);
+    doinker.set_value(LOW);
+    endSection(50000);
+
+    // back up with goal doinkered
+    chassis.moveToPoint(-17,-55,2000,{.forwards=false, .minSpeed=40},false);
+    endSection(50000);
+
+    // undoinker and turn to ring1
+    doinker.set_value(HIGH);
+    chassis.turnToPoint(-28,-48,2000,{},false);
+    endSection(50000);
+
+    // approach and intake ring1
+    chassis.moveToPoint(-28,-48,2000,{},true);
+    delay(150);
+    intake.move(127);
+    while(chassis.isInMotion()){
+        delay(20);
+    }
+    endSection(50000);
+
+    // turn to goal1
+    intake.brake();
+    chassis.turnToHeading(180,2000);
+    endSection(50000);
+
+    // goto goal1, clamp, and then intake both rings
+    chassis.moveToPoint(-29,-27,2000,{.forwards=false,.maxSpeed=50},false);
+    clamp.set_value(LOW);
+    intake.move(127);
+    endSection(50000);
+
+    //back up to line up with corner
+    chassis.moveToPoint(-33,-62,2000,{.forwards=false, .minSpeed=40},false);
+
+
+
+}
 void WPIAWP(){
 
     clamp.set_value(HIGH);

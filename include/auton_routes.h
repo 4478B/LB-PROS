@@ -8,6 +8,7 @@ void endSection(int delay = 0);
 void progSkills();
 void blueGoalSide();
 void redGoalSide();
+void redGoalSidePostWPI();
 void blueRingSide();
 void redRingSide();
 void WPIAWP();
