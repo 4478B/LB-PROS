@@ -116,6 +116,7 @@ void endSection(int delay)
 void progSkills()
 {
 
+    /*
     // PROG SKILLS ROUTE 1 (reference is skills_aio.txt)
     // set position to starting spot (needs tweaking)
     chassis.setPose(-60, 0, 0);
@@ -146,7 +147,32 @@ void progSkills()
     // stop intake
     intake.brake();
     // unclamp goal1
+    clamp.set_value(HIGH);*/
+
     clamp.set_value(HIGH);
+    chassis.setPose(-54, 0, 270);
+    chassis.moveToPoint(-48, 0, 5000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 12}, false);
+    chassis.turnToHeading(0, 2000);
+    chassis.moveToPoint(-48, -28, 5000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 12}, false);
+    clamp.set_value(LOW);
+    endSection(50000);
+    chassis.turnToHeading(90, 2000);
+    intake.move(127);
+    //chassis.setPose(-48, -28, 0);
+    chassis.moveToPoint(-20, -26, 5000, {.forwards = true, .minSpeed = 72}, false);
+    delay(1000);
+    chassis.moveToPoint(0, -55, 5000, {.forwards = true, .minSpeed = 40}, false);
+    delay(2000);
+    endSection(50000);
+    chassis.moveToPoint(0, -52, 5000, {.forwards = false, .minSpeed = 72}, false);
+    chassis.turnToHeading(270, 2000);
+    chassis.moveToPoint(-60, -52, 5000, {.forwards = true, .minSpeed = 72}, false);
+    endSection(50000);
+    chassis.moveToPoint(-48,-52, 5000, {.forwards = true, .minSpeed = 72}, false);
+    chassis.turnToHeading(180, 2000);
+    chassis.moveToPoint(-48, -55, 5000, {.forwards = false, .minSpeed = 72}, false);
+    chassis.moveToPoint(-48, -52, 5000, {.forwards = false, .minSpeed = 72}, false);
+
 
     /*
     //approach goal2

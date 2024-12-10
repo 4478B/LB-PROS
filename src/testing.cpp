@@ -123,7 +123,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        redGoalSidePostWPI();
+        progSkills();
 
 
         // stops motors to prevent rogue movements after auton
