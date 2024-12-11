@@ -12,5 +12,6 @@ void redGoalSidePostWPI();
 void blueRingSide();
 void redRingSide();
 void WPIAWP();
+void allianceRedRingSide();
 
 #endif // AUTON_ROUTES_H

@@ -32,3 +32,10 @@ void ExtendedChassis::MoveToPoseClamp(float x, float y, float theta, int timeout
         delay(20);
     }
 }
+
+void printPose(int line1, int line2, int line3){
+    lemlib::Pose pose = chassis.getPose();
+    pros::lcd::print(line1, "X: %f", pose.x);
+    pros::lcd::print(line2, "Y: %f", pose.y);
+    pros::lcd::print(line3, "t: %f", pose.theta);
+}

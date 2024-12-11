@@ -107,6 +107,10 @@ void setArm(int position)
     {
         targetPos = 134; // Top position
     }
+    else if (position == 4)
+    {
+        targetPos = 220; // Alliance stake position
+    }
     armMoving = true;
 }
 
@@ -114,6 +118,7 @@ void setArm(int position)
 void setArmBottom() { setArm(1); }
 void setArmMid() { setArm(2); }
 void setArmTop() { setArm(3); }
+void setArmAlliance() { setArm(4); }
 
 void initialize_arm_position()
 {

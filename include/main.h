@@ -65,6 +65,7 @@ extern "C" {
 void setArmBottom();
 void setArmMid();
 void setArmTop();
+void setArmAlliance();
 void autonomous(void);
 void initialize(void);
 void disabled(void);
