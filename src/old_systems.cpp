@@ -14,12 +14,14 @@
 
 void drivePID(double inches, double kP, double kI, double kD, double goalThreshold)
 {
+  left_motors.set_encoder_units_all(E_MOTOR_ENCODER_DEGREES);
+  right_motors.set_encoder_units_all(E_MOTOR_ENCODER_DEGREES);
   // Function to control robot movement using PID
   int inGoal = 0;                       // Tracks robot's time in goal threshold
   double currentDelta;                  // Error between target and current position
   double P = 0, I = 0, D = 0, totalPID; // PID terms
   double pollingRate = 20;              // Polling rate in ms
-  double target = inches / 1.375;       // Target position in degrees (1.375 is wheelRadius)
+  double target = inches * 360 / (2 * M_PI * 1.375);       // Target position in degrees (1.375 is wheelRadius)
 
   inches *= 48.0 / 36; // Account for gear ratio
 
