@@ -1,4 +1,5 @@
 #include "devices.h"
+#include "main.h"
 
 // function for drivePID using lemlib pids
 void drivePIDLL(double goalInches)
@@ -119,5 +120,5 @@ void drivePIDWTF(double goalInches, bool clamping, double clampDistInches)
   // Output trimmed to 3 decimal places to fit the screen.
   pros::lcd::print(3, "Pose Init: X: %.3f, Y: %.3f, Th: %.3f", poseInit.x, poseInit.y, poseInit.theta);
   pros::lcd::print(4, "Pose Delta: X: %.3f, Y: %.3f, Th: %.3f", poseDelta.x, poseDelta.y, poseDelta.theta);
-  pros::lcd::print(4, "Pose Global: X: %.3f, Y: %.3f, Th: %.3f", poseGlobal.x, poseGlobal.y, poseGlobal.theta);
+  pros::lcd::print(5, "Pose Global: X: %.3f, Y: %.3f, Th: %.3f", poseGlobal.x, poseGlobal.y, poseGlobal.theta);
 }

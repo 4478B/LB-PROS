@@ -88,7 +88,6 @@ void testCombinedPID()
     }
 }
 
-
 int totalTime;
 int prevTime;
 // This function runs in driver control WITHOUT COMM SWITCH, it is a better way of testing the
@@ -123,12 +122,15 @@ void testAuton(bool inputReq)
                   << std::setw(14) << "time" << " | "
                   << std::setw(14) << "total" << " | "
                   << std::endl;
-        std::cout << std::string(15 * 3 + 4, '-')  
+        std::cout << std::string(15 * 3 + 4, '-')
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        progSkills();
-
+        drivePID(24);
+        delay(1000);
+        // chassis.setPose(0, 0, 0);
+        drivePID(-24);
+        // chassis.turnToHeading
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();
@@ -156,97 +158,97 @@ void updateController(int sel, double mag, ControllerSettings PID)
 {
 
     controller.clear();
-    controller.print(sel+1,1,"*"); // creates marker for current selected value
-    controller.print(1,1,"kP: %c %f",0 == sel ? "*" : " ", PID.kP);
-    controller.print(1,1,"kI: %c %f",1 == sel ? "*" : " ", PID.kI);
-    controller.print(1,1,"kD: %c %f",2 == sel ? "*" : " ", PID.kD); // prints P I D on new lines
+    controller.print(sel + 1, 1, "*"); // creates marker for current selected value
+    controller.print(1, 1, "kP: %c %f", 0 == sel ? "*" : " ", PID.kP);
+    controller.print(1, 1, "kI: %c %f", 1 == sel ? "*" : " ", PID.kI);
+    controller.print(1, 1, "kD: %c %f", 2 == sel ? "*" : " ", PID.kD); // prints P I D on new lines
 
-    controller.print(1,14,"%f",mag);
+    controller.print(1, 14, "%f", mag);
 }
 
 void tunePID()
 {
-  using std::cout;
-  using std::endl;
-  const double resetVal = 0.1, resetMag = 0.1;  // Defines what values to reset to
-  double valMag = resetMag;                     // Sets initial magnitude
-  int currentConst = 0;                         // Defines current constant (P,I, or D) to change
-  ControllerSettings PID = lateral_controller;
-  cout << "Now modifying P" << endl; // tells user default value modified
-  updateController(currentConst,valMag,PID);
-  while (true)
-  {
-    double bUP = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP);
-    double bDOWN = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
-    double bLEFT = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT);
-    double bRIGHT = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT);
+    using std::cout;
+    using std::endl;
+    const double resetVal = 0.1, resetMag = 0.1; // Defines what values to reset to
+    double valMag = resetMag;                    // Sets initial magnitude
+    int currentConst = 0;                        // Defines current constant (P,I, or D) to change
+    ControllerSettings PID = lateral_controller;
+    cout << "Now modifying P" << endl; // tells user default value modified
+    updateController(currentConst, valMag, PID);
+    while (true)
+    {
+        double bUP = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP);
+        double bDOWN = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
+        double bLEFT = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT);
+        double bRIGHT = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT);
 
-    if (bUP && bDOWN)
-    {
-      valMag = resetMag; // Resets magnitude of dynamic change
-      cout << "magnitude RESET to " << resetMag << endl;
-      updateController(currentConst,valMag,PID);
-    }
-    else if (bUP)
-    {
-      valMag *= 10; // Increments magnitude by a factor of 10
-      cout << "magnitude set to " << valMag << endl;
-      updateController(currentConst,valMag,PID);
-    }
-    else if (bDOWN)
-    {
-      valMag /= 10; // Decrements magnitude by a factor of 10
-      cout << "magnitude set to " << valMag << endl;
-      updateController(currentConst,valMag,PID);
-    }
-
-    if(bLEFT || bRIGHT){
-        double deltaVal;
-        if (bLEFT)
+        if (bUP && bDOWN)
         {
-            deltaVal = -valMag; // Decreases temp. PID value by magnitude
+            valMag = resetMag; // Resets magnitude of dynamic change
+            cout << "magnitude RESET to " << resetMag << endl;
+            updateController(currentConst, valMag, PID);
         }
-        else if (bRIGHT)
+        else if (bUP)
         {
-            deltaVal = valMag; // Increases temp. PID value by magnitude
+            valMag *= 10; // Increments magnitude by a factor of 10
+            cout << "magnitude set to " << valMag << endl;
+            updateController(currentConst, valMag, PID);
         }
-        switch (currentConst) {
-        case 1:
-            PID.kP += deltaVal;
-            cout << "kP: %f", PID.kP;
-            break;
-        case 2:
-            PID.kI += deltaVal;
-            break;
-        case 3:
-            PID.kD += deltaVal;
-            break;
+        else if (bDOWN)
+        {
+            valMag /= 10; // Decrements magnitude by a factor of 10
+            cout << "magnitude set to " << valMag << endl;
+            updateController(currentConst, valMag, PID);
         }
-        
-        updateController(currentConst,valMag,PID);
-    }
-    
 
+        if (bLEFT || bRIGHT)
+        {
+            double deltaVal;
+            if (bLEFT)
+            {
+                deltaVal = -valMag; // Decreases temp. PID value by magnitude
+            }
+            else if (bRIGHT)
+            {
+                deltaVal = valMag; // Increases temp. PID value by magnitude
+            }
+            switch (currentConst)
+            {
+            case 1:
+                PID.kP += deltaVal;
+                cout << "kP: %f", PID.kP;
+                break;
+            case 2:
+                PID.kI += deltaVal;
+                break;
+            case 3:
+                PID.kD += deltaVal;
+                break;
+            }
 
-    if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_Y))
-    { // Controls value being changed
-      currentConst += 1;
-      currentConst %= 3; // variable has 3 states, modulus keeps within 3 states
-      if (currentConst == 0)
-      {
-        cout << "Now modifying P" << endl;
-      }
-      else if (currentConst == 1)
-      {
-        cout << "Now modifying I" << endl;
-      }
-      else
-      {
-        cout << "Now modifying D" << endl;
-      }
-      updateController(currentConst,valMag,PID);
+            updateController(currentConst, valMag, PID);
+        }
+
+        if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_Y))
+        { // Controls value being changed
+            currentConst += 1;
+            currentConst %= 3; // variable has 3 states, modulus keeps within 3 states
+            if (currentConst == 0)
+            {
+                cout << "Now modifying P" << endl;
+            }
+            else if (currentConst == 1)
+            {
+                cout << "Now modifying I" << endl;
+            }
+            else
+            {
+                cout << "Now modifying D" << endl;
+            }
+            updateController(currentConst, valMag, PID);
+        }
     }
-}
 }
 
 void testDrivePID()

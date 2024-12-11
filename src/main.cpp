@@ -35,7 +35,7 @@ void arm_control_task(void *param)
             currentPos = armRot.get_angle() / 100.0;
 
             // normalize error to [-180,180]
-            currentPos = currentPos - 360 * (currentPos > 180) + 360 * (currentPos < -180);
+            currentPos = currentPos - 360 * (currentPos > 240) + 360 * (currentPos < -240);
 
             // calculate how far arm is from target
             error = targetPos - currentPos;
@@ -65,7 +65,7 @@ void arm_control_task(void *param)
                 nextMovement = armPID.update(error);
 
                 // clamps movements to [-600,600]
-                nextMovement = std::clamp(nextMovement,-600.0,600.0);
+                nextMovement = std::clamp(nextMovement, -600.0, 600.0);
             }
 
             // move arm motors based on PID
@@ -73,7 +73,6 @@ void arm_control_task(void *param)
         }
 
         // collect and print data involving pid on screen
-
         /*
         pros::lcd::print(6, "Arm State: %s", armMoving ? "Moving" : "Idle");
         pros::lcd::print(3, "Arm Current Pos: %f", currentPos);
@@ -81,7 +80,6 @@ void arm_control_task(void *param)
         pros::lcd::print(7, "error: %f", error);
         pros::lcd::print(5, "Arm Next Movement: %f", nextMovement);
         */
-
         // Add a small delay to prevent the task from hogging CPU
         pros::delay(20);
     }
@@ -90,7 +88,7 @@ void arm_control_task(void *param)
 void setArm(int position)
 {
     // Validate input
-    if (position < 1 || position > 3)
+    if (position < 1 || position > 4)
     {
         return; // Invalid position
     }
@@ -109,7 +107,7 @@ void setArm(int position)
     }
     else if (position == 4)
     {
-        targetPos = 220; // Alliance stake position
+        targetPos = 200; // Alliance stake position
     }
     armMoving = true;
 }
@@ -389,6 +387,10 @@ void handleArm()
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
     {
         setArmTop();
+    }
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
+    {
+        setArmAlliance();
     }
 }
 
