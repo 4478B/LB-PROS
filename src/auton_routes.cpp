@@ -1,3 +1,4 @@
+#include "auton_routes.h"
 #include "lemlib/chassis/chassis.hpp"
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
@@ -516,5 +517,64 @@ void WPIAWP(){
     chassis.moveToPoint(5,0,2000,{.maxSpeed=60},false);
 
     */
+
+}
+
+void allianceRedRingSide(){
+
+    clamp.set_value(HIGH);
+    chassis.setPose(0,0,221);
+
+    // arm functions
+    setArmAlliance();
+    delay(1000);
+    drivePID(-6);
+    setArmTop();
+    endSection(700);
+
+
+    // move to alliance ring and score it
+    chassis.turnToHeading(164,2000,{},false);
+    endSection(500000);
+    intake.move(127);
+    drivePID(16);
+    setArmMid();
+    endSection(500000);
+
+    // back up
+    chassis.turnToHeading(180,2000,{},false);
+    chassis.turnToHeading(180,2000,{},false);
+    drivePID(-7);
+    setArmBottom();
+    endSection(500000);
+    chassis.turnToHeading(250,2000,{},false);
+    intake.brake();
+    endSection(500000);
+
+    // go to goal and clamp
+    drivePID(-25);
+    delay(500);
+    clamp.set_value(LOW);
+    intake.move(127);
+    endSection(500000);
+    chassis.turnToHeading(20,2000,{},false);
+    endSection(500000);
+
+    // score ring 2
+    drivePID(26);
+    endSection();
+
+    // go to middle
+    chassis.turnToHeading(160,2000,{},false);
+    setArmTop();
+    left_motors.move(40);
+    right_motors.move(40);
+    delay(5000);
+    left_motors.brake();
+    right_motors.brake();
+    
+
+    
+
 
 }

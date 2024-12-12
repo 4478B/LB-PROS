@@ -126,7 +126,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        testDrivePID();
+        allianceRedRingSide();
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();
@@ -256,7 +256,12 @@ void testDrivePID()
         pros::lcd::print(1, "drivePID");
         drivePID(24);
         endSection(100000);
-        drivePID(-24);
+        chassis.setPose(0,0,0);
+        chassis.turnToHeading(90,2000);
+        drivePID(48);
+        endSection(100000);
+        chassis.setPose(0,0,0);
+        chassis.turnToHeading(90,2000);
         endSection(100000);
 
     }

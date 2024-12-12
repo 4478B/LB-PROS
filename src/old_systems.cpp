@@ -77,10 +77,10 @@ void drivePID(double inches, double kP, double kI, double kD, double goalThresho
     totalPID = P + I + D;
 
     // Use totalPID to move motors proportionally
-    totalPID = std::clamp(totalPID,-600.0,600.0);
+    totalPID = std::clamp(totalPID,-127.0,127.0);
 
-    left_motors.move_velocity(totalPID);
-    right_motors.move_velocity(totalPID);
+    left_motors.move(totalPID);
+    right_motors.move(totalPID);
 
     // Check if the error is small enough to stop
     if (fabs(currentDelta) < goalThreshold)
