@@ -12,18 +12,26 @@
 #include "devices.h"
 #include "auton_routes.h"
 
+// Define constants for conversions
+const double WHEEL_RADIUS = 1.375;               // Inches
+const double WHEEL_CIRCUMFERENCE = 2 * M_PI * WHEEL_RADIUS; // Circumference in inches
+const double GEAR_RATIO = 48.0 / 36;            // Ratio for gear adjustment
+
+
+
 void drivePID(double inches, double kP, double kI, double kD, double goalThreshold)
 {
-  left_motors.set_encoder_units_all(E_MOTOR_ENCODER_DEGREES);
-  right_motors.set_encoder_units_all(E_MOTOR_ENCODER_DEGREES);
+  left_motors.set_encoder_units_all(E_MOTOR_ENCODER_ROTATIONS);
+  right_motors.set_encoder_units_all(E_MOTOR_ENCODER_ROTATIONS);
   // Function to control robot movement using PID
   int inGoal = 0;                       // Tracks robot's time in goal threshold
   double currentDelta;                  // Error between target and current position
   double P = 0, I = 0, D = 0, totalPID; // PID terms
   double pollingRate = 20;              // Polling rate in ms
-  double target = inches * 360 / (2 * M_PI * 1.375);       // Target position in degrees (1.375 is wheelRadius)
+  // Convert inches into encoder rotations
 
-  inches *= 48.0 / 36; // Account for gear ratio
+  double target = inches * GEAR_RATIO / WHEEL_CIRCUMFERENCE; // Encoder rotations for target distance
+  goalThreshold *= GEAR_RATIO / WHEEL_CIRCUMFERENCE; 
 
   double previousDelta = target; // Initialize previous error as target
   double integralSum = 0;        // Cumulative error for integral term
@@ -41,12 +49,8 @@ void drivePID(double inches, double kP, double kI, double kD, double goalThresho
   }
 
   // Reset motor encoder value to 0
-  left_motors.set_zero_position(left_motors.get_position(0), 0);
-  left_motors.set_zero_position(left_motors.get_position(1), 1);
-  left_motors.set_zero_position(left_motors.get_position(2), 2);
-  right_motors.set_zero_position(right_motors.get_position(0), 0);
-  right_motors.set_zero_position(right_motors.get_position(1), 1);
-  right_motors.set_zero_position(right_motors.get_position(2), 2);
+  left_motors.tare_position_all();
+  right_motors.tare_position_all();
 
   while (inGoal < goalsNeeded) // CHECK IF IT SHOULD BE A < or <=
   {
@@ -58,11 +62,13 @@ void drivePID(double inches, double kP, double kI, double kD, double goalThresho
     currentDelta = target - currentPosition;
 
     // Proportional: Larger error results in larger response
-    P = (kP / 1000) * currentDelta;
+    P = kP * currentDelta;
 
     // Integral: Sum of all errors helps correct for small errors over time
     integralSum += currentDelta;
     I = kI * integralSum;
+
+    I = std::clamp(I,-50.0,50.0);
 
     // Derivative: React to the rate of error change
     D = kD * (currentDelta - previousDelta) / pollingRate;
@@ -71,8 +77,10 @@ void drivePID(double inches, double kP, double kI, double kD, double goalThresho
     totalPID = P + I + D;
 
     // Use totalPID to move motors proportionally
-    left_motors.move_velocity(totalPID * 6);
-    right_motors.move_velocity(totalPID * 6);
+    totalPID = std::clamp(totalPID,-600.0,600.0);
+
+    left_motors.move_velocity(totalPID);
+    right_motors.move_velocity(totalPID);
 
     // Check if the error is small enough to stop
     if (fabs(currentDelta) < goalThreshold)
@@ -92,10 +100,17 @@ void drivePID(double inches, double kP, double kI, double kD, double goalThresho
     // Update the previous error for the next loop
     previousDelta = currentDelta;
 
-    pros::lcd::print(3, "Current Pos %f", currentPosition);
-    pros::lcd::print(4, "Target Pos: %f", currentDelta);
-    pros::lcd::print(5, "Next Movement: %f", totalPID);
-    pros::lcd::print(2, "left motor pos: %f", left_motors.get_position(0));
+    // Convert currentPosition back to inches
+    double currentPositionInInches = currentPosition * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
+    pros::lcd::print(3, "Current Pos: %f inches", currentPositionInInches);
+
+    // Convert currentDelta back to inches
+    double currentDeltaInInches = currentDelta * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
+    pros::lcd::print(4, "Target Delta: %f inches", currentDeltaInInches);
+
+    // Display the PID output (already in motor velocity units, no conversion needed)
+    pros::lcd::print(6, "Next Movement: %f", totalPID);
+
     // Wait for the polling rate before next iteration
     delay(pollingRate);
   }
@@ -176,7 +191,7 @@ void driveInches(double inches, int veloc, bool clamping)
   double degrs = (adjustedInches * 180) / (1.375 * M_PI);
 
   double average = 0;
-  left_motors.set_zero_position(left_motors.get_position(0), 0);
+  left_motors.tare_position_all();
 
   // Determine direction of movement
   int dirType = (degrs >= 0) ? 1 : -1;

@@ -95,26 +95,20 @@ void drivePIDWTF(double goalInches, bool clamping, double clampDistInches)
 
   // Step 2: Set dummy pose to run moveToPoint relatively
   chassis.setPose(0, 0, 0);
+  chassis.setPose(0, 0, 0);
+  chassis.setPose(0, 0, 0);
+  chassis.setPose(0, 0, 0);
 
-  // Step 3: Determine whether the movement is forward or backward.
+  // Step 3: Determine whether the movement is forward or backward
   bool isForwards = goalInches > 0;
 
-  // Step 4: Move to the calculated point, either clamped or unclamped.
-  if (clamping)
-  {
-    // Move to point with clamping to prevent overshoot.
-    chassis.MoveToPointClamp(0, goalInches, 4000, clampDistInches, {.forwards = isForwards});
-  }
-  else
-  {
-    // Move to point without clamping.
-    chassis.moveToPoint(0, goalInches, 4000, {.forwards = isForwards});
-  }
+  // Step 4: Move to the calculated point
+  chassis.moveToPoint(0, goalInches, 4000, {.forwards = isForwards,.maxSpeed = 127,.minSpeed = 10,.earlyExitRange = 1});
 
   // Step 5: use change in pose to update global pose
   Pose poseDelta(chassis.getPose());
   Pose poseGlobal(poseInit.x + poseDelta.x, poseInit.y + poseDelta.y, poseInit.theta + poseDelta.theta);
-  chassis.setPose(poseGlobal);
+  //chassis.setPose(poseGlobal);
 
   // Step 6: Print debug information for testing pose calculations.
   // Output trimmed to 3 decimal places to fit the screen.

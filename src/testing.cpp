@@ -126,11 +126,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        drivePID(24);
-        delay(1000);
-        // chassis.setPose(0, 0, 0);
-        drivePID(-24);
-        // chassis.turnToHeading
+        testDrivePID();
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();
@@ -253,53 +249,15 @@ void tunePID()
 
 void testDrivePID()
 {
-
-    int theta = 45;
-    int type = 0;
     while (true)
     {
 
-        chassis.setPose(0, 0, theta);
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "drivePID");
+        drivePID(24);
+        endSection(100000);
+        drivePID(-24);
+        endSection(100000);
 
-        if (type == 0)
-        {
-            pros::lcd::clear_line(1);
-            pros::lcd::print(1, "drivePIDWTF");
-            drivePIDWTF(24);
-            endSection(10000);
-            drivePIDWTF(-24);
-        }
-        else if (type == 1)
-        {
-            pros::lcd::clear_line(1);
-            pros::lcd::print(1, "drivePIDOdom");
-            drivePIDOdom(24);
-            endSection(10000);
-            drivePIDOdom(-24);
-        }
-        else if (type == 2)
-        {
-            pros::lcd::clear_line(1);
-            pros::lcd::print(1, "drivePIDLL");
-            drivePIDLL(24);
-            endSection(10000);
-            drivePIDLL(-24);
-        }
-        else if (type == 3)
-        {
-            pros::lcd::clear_line(1);
-            pros::lcd::print(1, "drivePIDWTF");
-            drivePIDWTF(24);
-            endSection(10000);
-            drivePIDWTF(-24);
-        }
-        endSection(10000);
-        theta += 90;
-        chassis.turnToHeading(theta, 4000);
-        endSection(10000);
-        if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_A))
-        {
-            type = (type + 1) % 4;
-        }
     }
 }
