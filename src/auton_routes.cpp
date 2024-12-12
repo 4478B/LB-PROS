@@ -534,26 +534,41 @@ void allianceRedRingSide(){
 
 
     // move to alliance ring and score it
-    chassis.turnToHeading(164,2000,{},false);
-    endSection(500000);
+    chassis.turnToHeading(162,2000,{},false);
+    //endSection(500000);
     intake.move(127);
-    drivePID(16);
-    setArmMid();
-    endSection(500000);
+    drivePID(18,45);
+   // setArmMid();
+    setArmBottom();
+    intake.brake();
+    delay(400);
+
+    
+    //endSection(500000);
 
     // back up
+    intake.move(100);
     chassis.turnToHeading(180,2000,{},false);
-    chassis.turnToHeading(180,2000,{},false);
-    drivePID(-7);
-    setArmBottom();
-    endSection(500000);
-    chassis.turnToHeading(250,2000,{},false);
     intake.brake();
-    endSection(500000);
+    //chassis.turnToHeading(180,2000,{},false);
+    drivePID(-7);
+    //intake.move(-100);
+    delay(1000);
+    //setArmBottom();
+    intake.brake();
+    //setArmBottom();
+    //endSection(100);
+    chassis.turnToHeading(252,2000,{},false);
+    intake.brake();
+    endSection(100);
+
+
 
     // go to goal and clamp
-    drivePID(-25);
-    delay(500);
+    drivePID(-26,40);
+    //drivePID(-24);
+    //drivePID(-4,42.5);
+    //delay(500);
     clamp.set_value(LOW);
     intake.move(127);
     endSection(500000);
@@ -561,7 +576,7 @@ void allianceRedRingSide(){
     endSection(500000);
 
     // score ring 2
-    drivePID(26);
+    drivePID(26,45);
     endSection();
 
     // go to middle
