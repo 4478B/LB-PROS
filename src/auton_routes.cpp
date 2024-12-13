@@ -13,6 +13,7 @@
 #include "old_systems.h"
 #include "testing.h"
 #include <iomanip>
+#include "color_sort.h"
 
 // These our functions made for backwards-compatibility with VEXCode routes
 
@@ -534,38 +535,39 @@ void allianceRedRingSide(){
 
 
     // move to alliance ring and score it
-    chassis.turnToHeading(162,2000,{},false);
+    chassis.turnToHeading(161,2000,{},false);
     //endSection(500000);
     intake.move(127);
-    drivePID(18,45);
+    drivePID(20,3000,45);
    // setArmMid();
     setArmBottom();
-    intake.brake();
     delay(400);
 
     
     //endSection(500000);
 
     // back up
-    intake.move(100);
-    chassis.turnToHeading(180,2000,{},false);
+    chassis.turnToHeading(180,2000,{},true);
+    waitUntilRedIntake(2000);
     intake.brake();
+    chassis.waitUntilDone();
+
     //chassis.turnToHeading(180,2000,{},false);
-    drivePID(-7);
+    drivePID(-10);
     //intake.move(-100);
-    delay(1000);
+    delay(500);
     //setArmBottom();
     intake.brake();
     //setArmBottom();
     //endSection(100);
     chassis.turnToHeading(252,2000,{},false);
     intake.brake();
-    endSection(100);
+    //endSection(100);
 
 
 
     // go to goal and clamp
-    drivePID(-26,40);
+    drivePID(-28,3000,40);
     //drivePID(-24);
     //drivePID(-4,42.5);
     //delay(500);
@@ -573,10 +575,10 @@ void allianceRedRingSide(){
     intake.move(127);
     endSection(500000);
     chassis.turnToHeading(20,2000,{},false);
-    endSection(500000);
+   // endSection(500000);
 
     // score ring 2
-    drivePID(26,45);
+    drivePID(26,3000,45);
     endSection();
 
     // go to middle
@@ -584,7 +586,7 @@ void allianceRedRingSide(){
     setArmTop();
     left_motors.move(40);
     right_motors.move(40);
-    delay(5000);
+    delay(500);
     left_motors.brake();
     right_motors.brake();
     

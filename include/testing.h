@@ -3,7 +3,7 @@
 
 void testCombinedPID();
 void testAuton(bool inp = true);
-void testDrivePID();
+void testRandom();
 extern int totalTime;
 extern int prevTime;
 

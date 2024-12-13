@@ -19,7 +19,7 @@ const double GEAR_RATIO = 48.0 / 36;            // Ratio for gear adjustment
 
 
 
-void drivePID(double inches, double kP, double kI, double kD, double goalThreshold)
+void drivePID(double inches, int timeout, double kP, double kI, double kD, double goalThreshold, bool clamping)
 {
   left_motors.set_encoder_units_all(E_MOTOR_ENCODER_ROTATIONS);
   right_motors.set_encoder_units_all(E_MOTOR_ENCODER_ROTATIONS);
@@ -36,8 +36,14 @@ void drivePID(double inches, double kP, double kI, double kD, double goalThresho
   double previousDelta = target; // Initialize previous error as target
   double integralSum = 0;        // Cumulative error for integral term
 
-  double startTime = pros::millis();
-  double timeout = 3000;                                 // max time before PID times out
+  // make sure clamp is up if clamping
+  double clampState = clamp.get_value();
+  if(clamping && clampState == LOW){
+    clamp.set_value(HIGH);
+    clampState = HIGH;
+  }
+
+  double startTime = pros::millis();                                // max time before PID times out
   double goalsNeeded = (fabs(inches) / 5) * pollingRate; // makes time spent in goal proportional to distance
   if (goalsNeeded == 0)
   { // sets bounds (max & min) for goals needed to reach goal
@@ -91,6 +97,15 @@ void drivePID(double inches, double kP, double kI, double kD, double goalThresho
     {
       inGoal = 0;
     }
+    
+    // Check if should clamp
+    if (clamping && clampState == HIGH && fabs(currentDelta) < 2){
+
+      clamp.set_value(LOW);
+      clampState = LOW;
+
+    }
+
     // Check if should timeout
     if ((pros::millis() - startTime) >= timeout)
     {
@@ -119,7 +134,12 @@ void drivePID(double inches, double kP, double kI, double kD, double goalThresho
   right_motors.brake();
 }
 
-void inert(double target, double kP, double kI, double kD)
+// alias for clamping
+void drivePIDClamp(double inches, int timeout, double kP, double kI, double kD, double goalThreshold){
+  drivePID(inches, timeout, kP, kI, kD, goalThreshold, true);
+}
+
+/*void inert(double target, double kP, double kI, double kD)
 {
   bool isComplete = false;
   double startTime = pros::millis(), prevTime = startTime, deltaTime, currentTime;
@@ -227,3 +247,4 @@ void driveInches(double inches, int veloc, bool clamping)
 
 // alias for clamping mode
 void driveInchesClamp(double inches, int veloc) { driveInches(inches, veloc, true); }
+*/

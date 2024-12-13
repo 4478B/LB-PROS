@@ -14,6 +14,7 @@
 #include "old_systems.h"
 #include "misc.h"
 #include <iomanip>
+#include "color_sort.h"
 
 void testCombinedPID()
 {
@@ -247,22 +248,19 @@ void tunePID()
     }
 }
 
-void testDrivePID()
+void testRandom() // just for testing quick code
 {
     while (true)
     {
 
+        intake.move(20);
         pros::lcd::clear_line(1);
-        pros::lcd::print(1, "drivePID");
-        drivePID(24);
-        endSection(100000);
-        chassis.setPose(0,0,0);
-        chassis.turnToHeading(90,2000);
-        drivePID(48);
-        endSection(100000);
-        chassis.setPose(0,0,0);
-        chassis.turnToHeading(90,2000);
-        endSection(100000);
+        pros::lcd::print(1, "Waiting for red...");
+        waitUntilRedIntake(100000);
+        intake.brake();
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "Got red!");
+        endSection(1000000);
 
     }
 }
