@@ -533,52 +533,33 @@ void allianceRedRingSide(){
     setArmTop();
     endSection(700);
 
-
     // move to alliance ring and score it
     chassis.turnToHeading(161,1000,{},false);
-    //endSection(500000);
     intake.move(127);
     drivePID(20,1000,45);
     intake.brake();
-   // setArmMid();
     setArmBottom();
     delay(400);
 
-    
-    //endSection(500000);
-
     // back up
     intake.move(127);
-    chassis.turnToHeading(180,1000,{},true);
+    chassis.turnToHeading(180 ,1000,{},true);
     waitUntilRedIntake(500);
     intake.brake();
     chassis.waitUntilDone();
 
-    //chassis.turnToHeading(180,2000,{},false);
     drivePID(-8,1000);
-    //intake.move(-100);
     delay(500);
-    //setArmBottom();
-    //setArmBottom();
-    //endSection(100);
     chassis.turnToHeading(252,700,{},false);
     intake.brake();
-    //endSection(100);
-
-
 
     // go to goal and clamp
-    //drivePIDClamp(-29,3000,35);
-    //drivePID(-28,3000,40);
-    //drivePIDClamp(-28,1500,42.5);
     drivePID(-20);
     drivePID(-8,1000,42.5);
-    //delay(500);
     clamp.set_value(LOW);
     intake.move(127);
     endSection(500);
     chassis.turnToHeading(20,1000,{},false);
-   // endSection(500000);
 
     // score ring 2
     drivePID(26,1000,45);
@@ -592,9 +573,60 @@ void allianceRedRingSide(){
     delay(5000);
     left_motors.brake();
     right_motors.brake();
-    
 
-    
+}
 
+void allianceBlueRingSide(){
+    clamp.set_value(HIGH);
+    chassis.setPose(0,0,221);
+
+    // arm functions
+    setArmAlliance();
+    delay(1000);
+    drivePID(-6);
+    setArmTop();
+    endSection(700);
+
+    // move to alliance ring and score it
+    chassis.turnToHeading(-161,1000,{},false);//
+    intake.move(127);
+    drivePID(20,1000,45);
+    intake.brake();
+    setArmBottom();
+    delay(400);
+
+    // back up
+    intake.move(127);
+    chassis.turnToHeading(-180 ,1000,{},true);//
+    waitUntilRedIntake(500);
+    intake.brake();
+    chassis.waitUntilDone();
+
+    drivePID(-8,1000);
+    delay(500);
+    chassis.turnToHeading(-252,700,{},false);//
+    intake.brake();
+
+    // go to goal and clamp
+    drivePID(-20);
+    drivePID(-8,1000,42.5);
+    clamp.set_value(LOW);
+    intake.move(127);
+    endSection(500);
+    chassis.turnToHeading(-20,1000,{},false);//
+
+    // score ring 2
+    drivePID(26,1000,45);
+    endSection();
+
+    // go to middle
+    chassis.turnToHeading(-165,1000,{},false);//
+    setArmTop();
+    left_motors.move(40);
+    right_motors.move(40);
+    delay(5000);
+    left_motors.brake();
+    right_motors.brake();
+    
 
 }

@@ -11,11 +11,13 @@
 // Define the routines array
 static const AutonRoutine ROUTINES[] = {
     {"Prog Skills", progSkills},        // Route 1
-    {"Blue Goal Side", blueGoalSide},   // Route 2
-    {"Red Goal Side", redGoalSide},     // Route 3
-    {"Blue Ring Side", blueRingSide},   // Route 4
-    {"Red Ring Side", redRingSide},     // Route 5
-    {"WPI AWP", WPIAWP}                 // Route 6
+    {"Alliance Red Ringside AWP", allianceRedRingSide}, // Route 2
+    {"Alliance Blue Ringside AWP", allianceBlueRingSide}, // Route 3
+    {"Blue Goal Side", blueGoalSide},   // Route 4
+    {"Red Goal Side", redGoalSide},     // Route 5
+    {"Blue Ring Side", blueRingSide},   // Route 6
+    {"Red Ring Side", redRingSide},     // Route 7
+    {"WPI AWP", WPIAWP}                 // Route 8
 };
 
 // Create static instance
@@ -23,7 +25,7 @@ static AutonSelector instance;
 
 // Constructor implementation
 AutonSelector::AutonSelector() : routines(ROUTINES),
-                               currentSelection(3), // Start with Prog Skills (Route 1)
+                               currentSelection(1), // Start with Prog Skills (Route 1)
                                routineCount(sizeof(ROUTINES) / sizeof(ROUTINES[0]))
 {
 }

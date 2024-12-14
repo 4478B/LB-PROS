@@ -13,5 +13,6 @@ void blueRingSide();
 void redRingSide();
 void WPIAWP();
 void allianceRedRingSide();
+void allianceBlueRingSide();
 
 #endif // AUTON_ROUTES_H
