@@ -578,7 +578,7 @@ void allianceRedRingSide(){
 
 void allianceBlueRingSide(){
     clamp.set_value(HIGH);
-    chassis.setPose(0,0,221);
+    chassis.setPose(0,0,-221);
 
     // arm functions
     setArmAlliance();
