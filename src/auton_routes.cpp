@@ -562,14 +562,14 @@ void allianceRedRingSide(){
     chassis.turnToHeading(20,1000,{},false);
 
     // score ring 2
-    drivePID(26,1000,45);
+    drivePID(29,1000,45);
     endSection();
 
     // go to middle
     chassis.turnToHeading(165,1000,{},false);
     setArmTop();
-    left_motors.move(40);
-    right_motors.move(40);
+    left_motors.move(42);
+    right_motors.move(42);
     delay(5000);
     left_motors.brake();
     right_motors.brake();
@@ -616,14 +616,14 @@ void allianceBlueRingSide(){
     chassis.turnToHeading(-20,1000,{},false);//
 
     // score ring 2
-    drivePID(26,1000,45);
+    drivePID(29,1000,45);
     endSection();
 
     // go to middle
     chassis.turnToHeading(-165,1000,{},false);//
     setArmTop();
-    left_motors.move(40);
-    right_motors.move(40);
+    left_motors.move(42);
+    right_motors.move(42);
     delay(5000);
     left_motors.brake();
     right_motors.brake();

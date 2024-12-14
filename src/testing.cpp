@@ -127,7 +127,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        allianceBlueRingSide();
+        redGoalSide();
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();
@@ -261,6 +261,5 @@ void testRandom() // just for testing quick code
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got red!");
         endSection(1000000);
-
     }
 }

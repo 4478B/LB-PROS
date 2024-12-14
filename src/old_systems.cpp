@@ -114,7 +114,7 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
 
     // Update the previous error for the next loop
     previousDelta = currentDelta;
-
+    /*
     // Convert currentPosition back to inches
     double currentPositionInInches = currentPosition * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
     pros::lcd::print(3, "Current Pos: %f inches", currentPositionInInches);
@@ -125,6 +125,7 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
 
     // Display the PID output (already in motor velocity units, no conversion needed)
     pros::lcd::print(6, "Next Movement: %f", totalPID);
+    */
 
     // Wait for the polling rate before next iteration
     delay(pollingRate);

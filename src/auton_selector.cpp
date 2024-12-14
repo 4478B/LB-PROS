@@ -10,14 +10,13 @@
 
 // Define the routines array
 static const AutonRoutine ROUTINES[] = {
-    {"Prog Skills", progSkills},        // Route 1
-    {"Alliance Red Ringside AWP", allianceRedRingSide}, // Route 2
+    {"Prog Skills", progSkills},                          // Route 1
+    {"Alliance Red Ringside AWP", allianceRedRingSide},   // Route 2
     {"Alliance Blue Ringside AWP", allianceBlueRingSide}, // Route 3
-    {"Blue Goal Side", blueGoalSide},   // Route 4
-    {"Red Goal Side", redGoalSide},     // Route 5
-    {"Blue Ring Side", blueRingSide},   // Route 6
-    {"Red Ring Side", redRingSide},     // Route 7
-    {"WPI AWP", WPIAWP}                 // Route 8
+    {"Blue Goal Side", blueGoalSide},                     // Route 4
+    {"Red Goal Side", redGoalSide},                       // Route 5
+    {"Blue Ring Side", blueRingSide},                     // Route 6
+    {"Red Ring Side", redRingSide},                       // Route 7
 };
 
 // Create static instance
@@ -25,8 +24,8 @@ static AutonSelector instance;
 
 // Constructor implementation
 AutonSelector::AutonSelector() : routines(ROUTINES),
-                               currentSelection(1), // Start with Prog Skills (Route 1)
-                               routineCount(sizeof(ROUTINES) / sizeof(ROUTINES[0]))
+                                 currentSelection(2), // set starting route here
+                                 routineCount(sizeof(ROUTINES) / sizeof(ROUTINES[0]))
 {
 }
 
@@ -52,7 +51,7 @@ void AutonSelector::displayCurrentSelection()
 void AutonSelector::runSelectedAuton()
 {
     const AutonRoutine &selected = routines[currentSelection - 1];
-    selected.routine();  // Removed multiplier parameter
+    selected.routine(); // Removed multiplier parameter
 }
 
 int AutonSelector::getCurrentSelection() const
@@ -66,10 +65,12 @@ AutonSelector &getAutonSelector()
     return instance;
 }
 
-void on_left_button() {
+void on_left_button()
+{
     getAutonSelector().prevSelection();
 }
 
-void on_right_button() {
+void on_right_button()
+{
     getAutonSelector().nextSelection();
 }
