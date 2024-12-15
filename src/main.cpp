@@ -145,51 +145,6 @@ void initialize_arm_position()
     }
 }
 
-bool isRedAlliance = false;
-
-void on_center_button()
-{ // swaps team for color sort
-
-    /*isRedAlliance = !isRedAlliance;
-
-    lcd::clear_line(1);
-    lcd::print(1, "Team: %s", isRedAlliance ? "Red Team" : "Blue Team");*/
-}
-
-// this function is called during the color_sort_task
-// it is the actions that are taken to sort out a ring
-void tossRing()
-{
-
-    intake.move(-127);
-    delay(1000);
-}
-
-bool currentlySorting = false;
-
-void color_sort_task(void *param)
-{
-    int hueMin, hueMax; // these are endpoints for acceptable ring colors
-    if (isRedAlliance)
-    {
-        hueMin = 330; // min < max b/c it loops around 360 degrees
-        hueMax = 45;
-    }
-    else
-    {
-        hueMin = 0; // placeholder values
-        hueMax = 0;
-    }
-    // detected ring is out of bounds of acceptable color range
-    if ((colorSens.get_hue() < hueMin || colorSens.get_hue() > hueMax) && colorSens.get_proximity() < 20)
-    {
-        currentlySorting = true;
-        tossRing();
-        currentlySorting = false;
-    }
-    delay(20);
-}
-
 // initialize function. Runs on program startup
 void initialize()
 {
@@ -268,12 +223,10 @@ void competition_initialize()
 
     // run buttons once to print values on screen
     on_left_button();
-    on_center_button();
     on_right_button();
 
     // assign buttons to actions in auton selector
     lcd::register_btn0_cb(on_left_button);
-    lcd::register_btn1_cb(on_center_button);
     lcd::register_btn2_cb(on_right_button);
 }
 
