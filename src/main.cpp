@@ -13,6 +13,7 @@
 #include "auton_routes.h"
 #include "testing.h"
 #include "old_systems.h"
+#include "color_sort.h"
 
 // Global variables needed for arm control
 static double targetPos = 0;
@@ -161,10 +162,8 @@ void initialize()
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
 
     // create color sort task
+    // colorSortHandler& sorter = colorSortHandler::getInstance();
     // Task csort_task(color_sort_task, nullptr, "Color Sort Task");
-
-    // set optical sensor for color sort
-    // colorSens.set_led_pwm(100);
 
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
 
@@ -272,7 +271,7 @@ void handleIntake()
 {
 
     // manual controls are overridden if color sort mechanism is active
-    if (!currentlySorting)
+    if (!colorSortHandler::getInstance().getIsCurrentlySorting())
     {
 
         // intake
@@ -291,6 +290,17 @@ void handleIntake()
             intake.brake();
         }
     }
+}
+
+void handleColorSort(){
+    
+    /*if(controller.get_digital_new_press()){
+        colorSortHandler::getInstance().killSwitch();
+    }
+    else if (controller.get_digital_new_press()){
+        colorSortHandler::getInstance().swapTeam();
+    }*/
+
 }
 
 void handleClamp()
@@ -376,6 +386,7 @@ void opcontrol()
         {
             testAuton();
         }
+        handleColorSort();
         handleDriveTrain();
         handleIntake();
         handleClamp();
