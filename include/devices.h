@@ -18,7 +18,7 @@ extern MotorGroup arm_motors;
 extern Controller controller;
 extern Motor intake;
 extern adi::Port clamp;
-extern pros::Optical colorSens;
+extern pros::Optical ringSens;
 extern adi::Port doinker;
 
 extern PID armPID;

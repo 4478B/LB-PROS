@@ -23,7 +23,7 @@ PID angularPID(0.499, 0, 0.002);
 
 Rotation armRot(11);
 
-Optical colorSens(19);
+Optical ringSens(19);
 
 // drivetrain settings
 Drivetrain drivetrain(&left_motors,               // left motor group

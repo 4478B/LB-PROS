@@ -256,7 +256,7 @@ void blueGoalSide()
     intake.brake();
     chassis.moveToPoint(59, -40, 4000, {.forwards = false, .minSpeed = 40}, false);
     clamp.set_value(HIGH);
-    //while(colorSens.)
+    //while(ringSens.)
     endSection(500);
 
     //
@@ -322,7 +322,7 @@ void redGoalSide() // edit this one and mirror it for the other part
     intake.brake();
     chassis.moveToPoint(-59, -40, 4000, {.forwards = false, .minSpeed = 40}, false);
     clamp.set_value(HIGH);
-    //while(colorSens.)
+    //while(ringSens.)
     endSection(500);
 
     //

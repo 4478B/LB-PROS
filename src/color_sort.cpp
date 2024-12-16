@@ -42,13 +42,13 @@ void waitUntilRingDetected(int msecTimeout, bool getRed = isRedAlliance){
     hueMin = (targetHue - HUE_RANGE + 360) % 360; // Wrap around to ensure valid range
     hueMax = (targetHue + HUE_RANGE) % 360; // Wrap around to ensure valid range
 
-    colorSens.set_led_pwm(100); // Set the LED brightness to maximum for better detection
+    ringSens.set_led_pwm(100); // Set the LED brightness to maximum for better detection
 
     while(pros::millis() - startTime < msecTimeout && ringDetected < MIN_RING_DETECTION){
         // Calculate elapsed time and check if detection target is met
 
-        int currentHue = colorSens.get_hue(); // Get the current hue value from the sensor
-        int currentDist = colorSens.get_proximity(); // Get the current proximity value from the sensor
+        int currentHue = ringSens.get_hue(); // Get the current hue value from the sensor
+        int currentDist = ringSens.get_proximity(); // Get the current proximity value from the sensor
 
         // Determine if the current hue falls within the valid range, considering wrapping around 360 degrees
         bool inRange = (hueMin <= hueMax) ? 
@@ -68,7 +68,7 @@ void waitUntilRingDetected(int msecTimeout, bool getRed = isRedAlliance){
 
         pros::delay(20); // Wait briefly before the next sensor reading to prevent excessive polling
     }
-    colorSens.set_led_pwm(0);
+    ringSens.set_led_pwm(0);
 }
 
 /*
@@ -112,9 +112,9 @@ colorSortHandler::colorSortHandler()
 void colorSortHandler::killSwitch() {
     isCurrentlySorting = !isCurrentlySorting;
     if (isCurrentlySorting) {
-        colorSens.set_led_pwm(100);
+        ringSens.set_led_pwm(100);
     } else {
-        colorSens.set_led_pwm(0);
+        ringSens.set_led_pwm(0);
     }
 }
 
@@ -152,8 +152,8 @@ void color_sort_task(void *param)
 
         if(sorter.getIsCurrentlySorting()) {
 
-            int currentHue = colorSens.get_hue(); // Get the current hue value from the sensor
-            int currentDist = colorSens.get_proximity(); // Get the current proximity value from the sensor
+            int currentHue = ringSens.get_hue(); // Get the current hue value from the sensor
+            int currentDist = ringSens.get_proximity(); // Get the current proximity value from the sensor
 
             // Determine if the current hue falls within the valid range, considering wrapping around 360 degrees
             bool inRange = (sorter.hueMin <= sorter.hueMax) ? 
