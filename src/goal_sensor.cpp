@@ -1,13 +1,8 @@
-#include "color_sort.h"
-#include "auton_routes.h"
-#include "lemlib/chassis/chassis.hpp"
+#include "goal_sensor.h"
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include <cstdlib>
 #include "devices.h"
-#include "old_systems.h"
-#include "testing.h"
-#include <iomanip>
 
 const int MIN_GOAL_DETECTION = 3; // Amount of detections needed to quit loop
 const int MAX_GOAL_DISTANCE = 10; // maximum distance goal is to be counted
@@ -70,5 +65,14 @@ void driveClamp(int volts, int maxDist, int maxTime){
 
 }
 
+bool isGoalClamped(){
 
+    // if goal is detected and clamp is down
+    if(goalSens.get_distance() <= MAX_GOAL_DISTANCE && clamp.get_value() == LOW) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 
