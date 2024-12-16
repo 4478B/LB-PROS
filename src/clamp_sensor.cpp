@@ -22,8 +22,7 @@ void driveClamp(int volts, int maxDist, int maxTime){
     clamp.set_value(HIGH);
     
     // start moving at user specified speed
-    left_motors.move(-volts);
-    right_motors.move(-volts);
+    all_motors.move(-volts);
 
     // set up motor for distance tracking
     left_motors.tare_position(0);
@@ -65,8 +64,7 @@ void driveClamp(int volts, int maxDist, int maxTime){
     }
     
     // stop moving when goal is detected or timeouts are reached
-    left_motors.brake();
-    right_motors.brake();
+    all_motors.brake();
     // clamp goal
     clamp.set_value(LOW);
 

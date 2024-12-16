@@ -14,6 +14,7 @@ using namespace lemlib;
 // External variable declarations
 extern MotorGroup left_motors;
 extern MotorGroup right_motors;
+extern MotorGroup all_motors;
 extern MotorGroup arm_motors;
 extern Controller controller;
 extern Motor intake;

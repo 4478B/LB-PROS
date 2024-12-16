@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include "devices.h"
 #include "auton_routes.h"
+#include <numeric>
 
 // Define constants for conversions
 const double WHEEL_RADIUS = 1.375;               // Inches
@@ -21,8 +22,7 @@ const double GEAR_RATIO = 48.0 / 36;            // Ratio for gear adjustment
 
 void drivePID(double inches, int timeout, double kP, double kI, double kD, double goalThreshold, bool clamping)
 {
-  left_motors.set_encoder_units_all(E_MOTOR_ENCODER_ROTATIONS);
-  right_motors.set_encoder_units_all(E_MOTOR_ENCODER_ROTATIONS);
+  all_motors.set_encoder_units_all(E_MOTOR_ENCODER_ROTATIONS);
   // Function to control robot movement using PID
   int inGoal = 0;                       // Tracks robot's time in goal threshold
   double currentDelta;                  // Error between target and current position
@@ -55,15 +55,17 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
   }
 
   // Reset motor encoder value to 0
-  left_motors.tare_position_all();
-  right_motors.tare_position_all();
+  all_motors.tare_position_all();
 
   while (inGoal < goalsNeeded) // CHECK IF IT SHOULD BE A < or <=
   {
     // Main PID loop; runs until target is reached
     // Read motor position (you can average left and right motor values for straight driving)
-    double currentPosition = ((left_motors.get_position(0) + right_motors.get_position(0)) / 2);
-
+    
+    // finds average motor position
+    std::vector<double> positions = all_motors.get_position_all();
+    double currentPosition = std::accumulate(positions.begin(), positions.end(), 0.0) / positions.size();
+    
     // Calculate the current error
     currentDelta = target - currentPosition;
 
@@ -85,8 +87,7 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     // Use totalPID to move motors proportionally
     totalPID = std::clamp(totalPID,-127.0,127.0);
 
-    left_motors.move(totalPID);
-    right_motors.move(totalPID);
+    all_motors.move(totalPID);
 
     // Check if the error is small enough to stop
     if (fabs(currentDelta) < goalThreshold)
@@ -131,8 +132,7 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     delay(pollingRate);
   }
   // Stop the motors once goal is met
-  left_motors.brake();
-  right_motors.brake();
+  all_motors.brake();
 }
 
 // alias for clamping

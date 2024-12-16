@@ -9,7 +9,7 @@ void drivePIDLL(double goalInches)
   double nextMovement;
 
   // account for gear ratio
-  goalInches *= 48 / 36;
+  goalInches *= 48.0 / 36;
 
   // reset encoder before usage
   left_motors.set_zero_position(left_motors.get_position(0), 0);
@@ -29,8 +29,7 @@ void drivePIDLL(double goalInches)
     nextMovement = std::clamp(nextMovement, -127.0, 127.0);
 
     // move arm motors based on PID
-    left_motors.move(nextMovement);
-    right_motors.move(nextMovement);
+    all_motors.move(nextMovement);
 
     pros::delay(20);
   }
@@ -39,8 +38,7 @@ void drivePIDLL(double goalInches)
   lateralPID.reset();
 
   // stop arm motors in place
-  left_motors.brake();
-  right_motors.brake();
+  all_motors.brake();
 }
 
 // function for inert using lemlib pids
@@ -67,8 +65,7 @@ void inertLL(double degrees)
     nextMovement = std::clamp(nextMovement, -127.0, 127.0);
 
     // move arm motors based on PID
-    left_motors.move(nextMovement);
-    right_motors.move(-nextMovement);
+    all_motors.move(nextMovement);
 
     pros::delay(20);
 
@@ -82,8 +79,7 @@ void inertLL(double degrees)
   angularPID.reset();
 
   // stop arm motors in place
-  left_motors.brake();
-  right_motors.brake();
+  all_motors.brake();
 }
 
 // This is a really jenk implementation of drivePID with odometry
