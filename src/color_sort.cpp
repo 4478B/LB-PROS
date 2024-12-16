@@ -65,6 +65,9 @@ void waitUntilRingDetected(int msecTimeout, bool getRed = isRedAlliance){
         }
 
         // Print debug information
+        pros::lcd::print(2, "Sensor hue %f", ringSens.get_hue());
+        pros::lcd::print(3, "Sensor dist: %f", ringSens.get_proximity());
+        pros::lcd::print(4, "Error: %s", strerror(errno)); 
 
         pros::delay(20); // Wait briefly before the next sensor reading to prevent excessive polling
     }
@@ -185,7 +188,7 @@ void color_sort_task(void *param)
     
 }
 
-bool scoreDetectorActive = true;
+/*bool scoreDetectorActive = true;
 void score_detect_thread(void param*){
 
     bool isIntakeMoving;
@@ -211,3 +214,4 @@ void score_detect_thread(void param*){
 
 
 
+*/

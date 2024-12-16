@@ -94,9 +94,9 @@ void endSection(int delay)
                   << std::endl;
         
         // print timer positions on controller and screen for temporary logging
-        pros::lcd::print(5, "Auton Section: %f", autonSection);
-        pros::lcd::print(5, "Section Time: %f", deltaTime);
-        pros::lcd::print(5, "Total Time: %f", totalTime);
+        //pros::lcd::print(5, "Auton Section: %f", autonSection);
+        //pros::lcd::print(5, "Section Time: %f", deltaTime);
+        //pros::lcd::print(5, "Total Time: %f", totalTime);
 
         //controller.set_text(2,1,std) // controller WIP bc set_text is bad
 

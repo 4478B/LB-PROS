@@ -127,7 +127,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        redGoalSide();
+        testRandom();
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();
@@ -253,7 +253,7 @@ void testRandom() // just for testing quick code
     while (true)
     {
 
-        intake.move(20);
+        intake.move(40);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for red...");
         waitUntilRedIntake(100000);
