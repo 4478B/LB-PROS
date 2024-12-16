@@ -123,9 +123,14 @@ void testOdometryStraight(){
     chassis.setPose(0,0,0);
     while(true){
         chassis.moveToPoint(0,72,3000,{.minSpeed=1,.earlyExitRange=1},false);
+        delay(500);
+        chassis.printPose();
         endSection(1000000);
         chassis.moveToPoint(0,0,3000,{.minSpeed=1,.earlyExitRange=1},false);
+        delay(500);
+        chassis.printPose();
         endSection(1000000);
+        
     }
 }
 
@@ -134,13 +139,21 @@ void testOdometryTurn(){
     chassis.setPose(0,0,0);
     while(true){
         chassis.moveToPose(0,0,90,3000,{},false);
+        delay(500);
+        chassis.printPose();
         endSection(1000000);
         chassis.moveToPose(0,0,0,3000,{},false);
+        delay(500);
+        chassis.printPose();
         endSection(1000000);
 
         chassis.moveToPose(0,0,180,3000,{},false);
+        delay(500);
+        chassis.printPose();
         endSection(1000000);
         chassis.moveToPose(0,0,0,3000,{},false);
+        delay(500);
+        chassis.printPose();
         endSection(1000000);
     }
 }
@@ -149,8 +162,12 @@ void testOdometryBoth(){
     chassis.setPose(0,0,0);
     while(true){
         chassis.moveToPose(24,24,90,3000,{},false);
+        delay(500);
+        chassis.printPose();
         endSection(1000000);
         chassis.moveToPose(0,0,0,3000,{},false);
+        delay(500);
+        chassis.printPose();
         endSection(1000000);
     }
 }
