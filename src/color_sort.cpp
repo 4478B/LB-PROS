@@ -185,3 +185,29 @@ void color_sort_task(void *param)
     
 }
 
+bool scoreDetectorActive = true;
+void score_detect_thread(void param*){
+
+    bool isIntakeMoving;
+    bool isRingDetected;
+    int lastScoreTime = pros::millis(); // for cooldown
+
+    while(scoreDetectorActive){
+
+        bool isIntakeMoving = true;
+        
+        
+        if(isIntakeMoving || isRingDetected){
+
+            delay(20);
+        }
+        else{
+            delay(100);
+        }
+
+    }
+
+}
+
+
+
