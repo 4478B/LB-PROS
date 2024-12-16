@@ -1,4 +1,5 @@
 #include "testing.h"
+#include "goal_sensor.h"
 #include "lemlib/chassis/chassis.hpp"
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
@@ -16,7 +17,7 @@
 #include <iomanip>
 #include "color_sort.h"
 
-void testCombinedPID()
+/*void testCombinedPID()
 {
     double nextMovement = 0;
 
@@ -87,7 +88,81 @@ void testCombinedPID()
 
         pros::delay(100);
     }
+}*/
+
+void testRingSens(){
+    while (true)
+    {
+
+        intake.move(40);
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "Waiting for red...");
+        waitUntilRedIntake(100000);
+        intake.brake();
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "Got red!");
+        endSection(1000000);
+    }
 }
+
+void testGoalSens(){
+    while (true)
+    {
+
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "Waiting for goal...");
+        driveClamp(0,48000000,1000000);
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "Got goal!");
+        endSection(1000000);
+    }
+}
+
+void testOdometryStraight(){
+
+    chassis.setPose(0,0,0);
+    while(true){
+        chassis.moveToPoint(0,72,3000,{.minSpeed=1,.earlyExitRange=1},false);
+        endSection(1000000);
+        chassis.moveToPoint(0,0,3000,{.minSpeed=1,.earlyExitRange=1},false);
+        endSection(1000000);
+    }
+}
+
+void testOdometryTurn(){
+
+    chassis.setPose(0,0,0);
+    while(true){
+        chassis.moveToPose(0,0,90,3000,{},false);
+        endSection(1000000);
+        chassis.moveToPose(0,0,0,3000,{},false);
+        endSection(1000000);
+
+        chassis.moveToPose(0,0,180,3000,{},false);
+        endSection(1000000);
+        chassis.moveToPose(0,0,0,3000,{},false);
+        endSection(1000000);
+    }
+}
+
+void testOdometryBoth(){
+    chassis.setPose(0,0,0);
+    while(true){
+        chassis.moveToPose(24,24,90,3000,{},false);
+        endSection(1000000);
+        chassis.moveToPose(0,0,0,3000,{},false);
+        endSection(1000000);
+    }
+}
+
+/*
+
+
+        NON-RUNNER CODE
+
+
+
+*/
 
 int totalTime;
 int prevTime;
@@ -127,7 +202,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        testRandom();
+        testRingSens();
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();
@@ -245,21 +320,5 @@ void tunePID()
             }
             updateController(currentConst, valMag, PID);
         }
-    }
-}
-
-void testRandom() // just for testing quick code
-{
-    while (true)
-    {
-
-        intake.move(40);
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Waiting for red...");
-        waitUntilRedIntake(100000);
-        intake.brake();
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Got red!");
-        endSection(1000000);
     }
 }
