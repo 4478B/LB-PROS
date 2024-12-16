@@ -51,12 +51,12 @@ void waitUntilRingDetected(int msecTimeout, bool getRed = isRedAlliance){
         int currentDist = ringSens.get_proximity(); // Get the current proximity value from the sensor
 
         // Determine if the current hue falls within the valid range, considering wrapping around 360 degrees
-        bool inRange = (hueMin <= hueMax) ? 
+        bool inHueRange = (hueMin <= hueMax) ? 
                         (currentHue >= hueMin && currentHue <= hueMax) : 
                         (currentHue >= hueMin || currentHue <= hueMax);
 
-        if(inRange && currentDist < MAX_RING_DISTANCE) {
-            // Increment the detection counter if the ring is within range and proximity threshold is met
+        if(inHueRange && currentDist < MAX_RING_DISTANCE) {
+            // Increment the detection counter if the conditions are met
             ringDetected++;
         }
         else {
@@ -156,12 +156,12 @@ void color_sort_task(void *param)
             int currentDist = ringSens.get_proximity(); // Get the current proximity value from the sensor
 
             // Determine if the current hue falls within the valid range, considering wrapping around 360 degrees
-            bool inRange = (sorter.hueMin <= sorter.hueMax) ? 
+            bool inHueRange = (sorter.hueMin <= sorter.hueMax) ? 
                            (currentHue >= sorter.hueMin && currentHue <= sorter.hueMax) : 
                            (currentHue >= sorter.hueMin || currentHue <= sorter.hueMax);
 
-            if(inRange && currentDist < MAX_RING_DISTANCE) {
-                // Increment the detection counter if the ring is within range and proximity threshold is met
+            if(inHueRange && currentDist < MAX_RING_DISTANCE) {
+                // Increment the detection counter if the conditions are met
                 ringDetected++;
             }
             else {

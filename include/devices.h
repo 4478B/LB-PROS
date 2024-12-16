@@ -19,6 +19,7 @@ extern Controller controller;
 extern Motor intake;
 extern adi::Port clamp;
 extern pros::Optical ringSens;
+extern pros::Distance goalSens;
 extern adi::Port doinker;
 
 extern PID armPID;

@@ -1,5 +1,6 @@
 #include "devices.h"
 #include "extended_chassis.h"
+#include "pros/distance.hpp"
 
 // left motor group
 MotorGroup left_motors({-8, -9, -10}, pros::MotorGearset::blue);
@@ -24,6 +25,8 @@ PID angularPID(0.499, 0, 0.002);
 Rotation armRot(11);
 
 Optical ringSens(19);
+
+Distance goalSens(20);
 
 // drivetrain settings
 Drivetrain drivetrain(&left_motors,               // left motor group
