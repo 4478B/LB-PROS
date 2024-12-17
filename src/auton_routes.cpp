@@ -630,3 +630,96 @@ void allianceBlueRingSide(){
     
 
 }
+
+void fullawpV1(){
+
+    // initial pose
+    chassis.setPose(-58.622, 23.677, 180);
+    clamp.set_value(HIGH);
+    
+
+    // push blue ring in front of alliance stake
+    chassis.moveToPoint(-58.622, 5.504, 4321,{},false);
+    endSection(987654321);
+
+    // align with alliance stake and score
+    chassis.turnToHeading(240, 4321,{},true);
+    setArmAlliance();
+    delay(1000);
+    endSection(987654321);
+
+    // back up to goal and clamp
+    chassis.moveToPoint(-23.622, 23.622, 4321,{.forwards=false},true);
+    chassis.waitUntil(5);
+    setArmBottom();
+    chassis.waitUntilDone();
+    clamp.set_value(LOW);
+    endSection(987654321);
+
+
+    // turn to face ring1 for goal1
+    chassis.turnToHeading(0,4321);
+    endSection(987654321);
+
+    // goto ring1 and score it
+    intake.move(127);
+    chassis.moveToPoint(-23.622, 47, 4321,{},false);
+    endSection(987654321);
+
+    // turn to ring2 intermediate point
+    chassis.turnToHeading(225,4321,{},true);
+    waitUntilRedIntake(1000);
+    intake.brake();
+    chassis.waitUntilDone();
+    endSection(987654321);
+    
+    // goto ring2 intermediate point
+    intake.move(127);
+    chassis.moveToPoint(-47, 23.622, 4321,{},false);
+    intake.brake();
+    endSection(987654321);
+
+    // turnto ring2
+    chassis.turnToHeading(180,4321);
+    endSection(987654321);
+
+    // hold ring2
+    chassis.moveToPoint(-47.229, -9.762, 4321,{},true);
+    chassis.waitUntil(5);
+    clamp.set_value(HIGH);
+    waitUntilRedIntake(3000);
+    chassis.waitUntilDone();
+    endSection(987654321);
+
+
+    // turnto goal2
+    chassis.turnToHeading(300, 4321);
+    endSection(987654321);
+
+    // goto goal2 and clamp
+    chassis.moveToPoint(-23.686, -23.686, 4321,{.forwards=false},false);
+    clamp.set_value(LOW);
+    endSection(987654321);
+
+    // turnto ring1 for goal2
+    chassis.turnToHeading(180,4321);
+    endSection(987654321);
+
+    // goto ring1 and score
+    intake.move(127);
+    chassis.moveToPoint(-23.622, -47.227, 4321,{},true);
+    waitUntilRedIntake(1000);
+    chassis.waitUntilDone();
+    endSection(987654321);
+
+    // turn to ladder
+    chassis.turnToHeading(20,4321);
+    endSection(987654321);
+
+    // move arm up and score on ladder
+    setArmTop();
+    chassis.moveToPoint(-5, -5, 4321);
+    endSection(987654321);
+
+
+}

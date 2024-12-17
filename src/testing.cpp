@@ -120,7 +120,9 @@ void testGoalSens(){
 
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for goal...");
-        driveClamp(0,48000000,1000000);
+        all_motors.move(40);
+        waitUntilClamp(0,48000000,1000000);
+        all_motors.brake();
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got goal!");
         endSection(1000000);
@@ -228,7 +230,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        testRingSens();
+        allianceRedRingSide();
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();
