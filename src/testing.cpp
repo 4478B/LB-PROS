@@ -94,13 +94,22 @@ void testRingSens(){
     while (true)
     {
 
-        intake.move(40);
+        intake.move(80);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for red...");
         waitUntilRedIntake(100000);
         intake.brake();
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got red!");
+        endSection(1000000);
+        
+        intake.move(80);
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "Waiting for blue...");
+        waitUntilBlueIntake(100000);
+        intake.brake();
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "Got blue!");
         endSection(1000000);
     }
 }

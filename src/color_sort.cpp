@@ -55,7 +55,7 @@ void waitUntilRingDetected(int msecTimeout, bool getRed = isRedAlliance){
                         (currentHue >= hueMin && currentHue <= hueMax) : 
                         (currentHue >= hueMin || currentHue <= hueMax);
 
-        if(inHueRange && currentDist < MAX_RING_DISTANCE) {
+        if(inHueRange && currentDist > 255 - MAX_RING_DISTANCE) {
             // Increment the detection counter if the conditions are met
             ringDetected++;
         }
@@ -66,8 +66,8 @@ void waitUntilRingDetected(int msecTimeout, bool getRed = isRedAlliance){
 
         // Print debug information
         pros::lcd::print(2, "Sensor hue %f", ringSens.get_hue());
-        pros::lcd::print(3, "Sensor dist: %f", ringSens.get_proximity());
-        pros::lcd::print(4, "Error: %s", strerror(errno)); 
+        pros::lcd::print(3, "Sensor dist: %i", ringSens.get_proximity());
+        //pros::lcd::print(4, "Error: %s", strerror(ringSens.get_proximity())); 
 
         pros::delay(20); // Wait briefly before the next sensor reading to prevent excessive polling
     }
@@ -187,6 +187,17 @@ void color_sort_task(void *param)
     }
     
 }
+
+/*void color_sort_task_2(void param*){
+
+    waitUntilRingDetected(1000){
+
+            if(inHueRange && currentDist < MAX_RING_DISTANCE) {
+        if(ringSens.)
+        tossRing();
+    }
+
+}*/
 
 /*bool scoreDetectorActive = true;
 void score_detect_thread(void param*){

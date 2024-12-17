@@ -9,15 +9,12 @@ const int MAX_GOAL_DISTANCE = 10; // maximum distance goal is to be counted
 
 
 
-void driveClamp(int volts, int maxDist, int maxTime){
+void waitUntilClamp(int volts, int maxDist, int maxTime){
     int startTime = pros::millis(); // Record the start time of the function
     int goalDetected = 0; // Counter for consecutive ring detections
 
     // ensure clamp is up
     clamp.set_value(HIGH);
-    
-    // start moving at user specified speed
-    all_motors.move(-volts);
 
     // set up motor for distance tracking
     left_motors.tare_position(0);
@@ -57,12 +54,8 @@ void driveClamp(int volts, int maxDist, int maxTime){
         pros::delay(20);
 
     }
-    
-    // stop moving when goal is detected or timeouts are reached
-    all_motors.brake();
     // clamp goal
     clamp.set_value(LOW);
-
 }
 
 bool isGoalClamped(){
