@@ -17,6 +17,7 @@
 const double WHEEL_RADIUS = 1.375;               // Inches
 const double WHEEL_CIRCUMFERENCE = 2 * M_PI * WHEEL_RADIUS; // Circumference in inches
 const double GEAR_RATIO = 48.0 / 36;            // Ratio for gear adjustment
+const double CLAMP_DISTANCE = 1;
 
 
 
@@ -100,7 +101,7 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     }
     
     // Check if should clamp
-    if (clamping && clampState == HIGH && fabs(currentDelta) < 2){
+    if (clamping && clampState == HIGH && fabs(currentDelta) < CLAMP_DISTANCE){
 
       clamp.set_value(LOW);
       clampState = LOW;

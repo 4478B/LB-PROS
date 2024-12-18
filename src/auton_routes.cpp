@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include "devices.h"
 #include "old_systems.h"
+#include "pros/rtos.h"
 #include "testing.h"
 #include <iomanip>
 #include "color_sort.h"
@@ -721,5 +722,33 @@ void fullawpV1(){
     chassis.moveToPoint(-5, -5, 4321);
     endSection(987654321);
 
+
+}
+
+void redRingRush(){
+
+    // initial pose
+    clamp.set_value(HIGH);
+    
+    setArmAlliance();
+    endSection(987654321);
+
+    // back up to goal and clamp
+    chassis.setPose(0,0,248);
+    drivePID(-6);
+    chassis.turnToHeading(295,4321);
+    drivePID(-27);
+    delay(200);
+    clamp.set_value(LOW);
+    setArmBottom();
+    endSection(987654321);
+
+    // turn to ring rush
+    chassis.turnToHeading(60, 4321);
+
+    // rush rings
+    intake.move(127);
+    chassis.moveToPose(-6.5,35.027,0,4321,{.maxSpeed=30},false);
+    chassis.moveToPoint(-6.5, 60.508, 4321, {.maxSpeed=30}, false);
 
 }
