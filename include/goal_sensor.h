@@ -2,7 +2,7 @@
 #define GOAL_SENSOR_H
 
 
-void waitUntilClamp(int volts, int maxDist, int maxTime);
+void waitUntilClamp(int maxDist, int maxTime);
 bool isGoalClamped();
 
 #endif // GOAL_SENSOR_H

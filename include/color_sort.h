@@ -3,9 +3,9 @@
 
 
 // Waits until either red ring is in intake or it times out based on the timeout
-void waitUntilRedIntake(int timeout);
+bool waitUntilRedIntake(int timeout);
 // Waits until either blue ring is in intake or it times out based on the timeout
-void waitUntilBlueIntake(int timeout);
+bool waitUntilBlueIntake(int timeout);
 // color sort object structure
 // Singleton class for handling color sorting
 class colorSortHandler {

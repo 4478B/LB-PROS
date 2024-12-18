@@ -9,7 +9,7 @@ const int MAX_GOAL_DISTANCE = 10; // maximum distance goal is to be counted
 
 
 
-void waitUntilClamp(int volts, int maxDist, int maxTime){
+void waitUntilClamp(int maxDist, int maxTime){
     int startTime = pros::millis(); // Record the start time of the function
     int goalDetected = 0; // Counter for consecutive ring detections
 
@@ -22,9 +22,9 @@ void waitUntilClamp(int volts, int maxDist, int maxTime){
     // convert maxDist from inches to rotations
     maxDist /= lemlib::Omniwheel::NEW_275 * M_PI;
 
-    pros::lcd::print(1, "Volts: %d", volts);
-    pros::lcd::print(2, "Max Distance (rotations): %f", maxDist);
-    pros::lcd::print(3, "Max Time: %d ms", maxTime);
+
+    pros::lcd::print(1, "Max Distance (rotations): %f", maxDist);
+    pros::lcd::print(2, "Max Time: %d ms", maxTime);
     
     // loop until goal is detected enough times or it times out
     while( pros::millis() - startTime < maxTime 
@@ -47,9 +47,9 @@ void waitUntilClamp(int volts, int maxDist, int maxTime){
         }
 
 
-        pros::lcd::print(4, "Current Goal Distance: %d", currentGoalDist);
-        pros::lcd::print(5, "Goal Detected Count: %d", goalDetected);
-        pros::lcd::print(6, "Left Motor Position: %f", left_motors.get_position());
+        pros::lcd::print(3, "Current Goal Distance: %d", currentGoalDist);
+        pros::lcd::print(4, "Goal Detected Count: %d", goalDetected);
+        pros::lcd::print(5, "Left Motor Position: %f", left_motors.get_position());
 
         pros::delay(20);
 

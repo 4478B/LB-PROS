@@ -17,7 +17,7 @@ const int BLUE_RING_HUE = 210;
 // one sided hue range that is considered close enough
 const int HUE_RANGE = 10;
 
-const int MIN_RING_DETECTION = 3; // Amount of detections needed to quit loop
+const int MIN_RING_DETECTION = 1; // Amount of detections needed to quit loop
 const int MAX_RING_DISTANCE = 10; // maximum distance ring is on intake from optical sensor
 
 
@@ -30,7 +30,7 @@ AUTONOMOUS
 
 */
 
-void waitUntilRingDetected(int msecTimeout, bool getRed = isRedAlliance){
+bool waitUntilRingDetected(int msecTimeout, bool getRed = isRedAlliance){
     int startTime = pros::millis(); // Record the start time of the function
     int ringDetected = 0; // Counter for consecutive ring detections
 
@@ -65,30 +65,29 @@ void waitUntilRingDetected(int msecTimeout, bool getRed = isRedAlliance){
         }
 
         // Print debug information
-        pros::lcd::print(2, "Sensor hue %f", ringSens.get_hue());
-        pros::lcd::print(3, "Sensor dist: %i", ringSens.get_proximity());
+        //pros::lcd::print(2, "Sensor hue %f", ringSens.get_hue());
+        //pros::lcd::print(3, "Sensor dist: %i", ringSens.get_proximity());
         //pros::lcd::print(4, "Error: %s", strerror(ringSens.get_proximity())); 
 
         pros::delay(20); // Wait briefly before the next sensor reading to prevent excessive polling
     }
     ringSens.set_led_pwm(0);
+    if(ringDetected>=3){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
-/*
-pros::lcd::print(1, "Detecting color %s", isRed ? "Red" : "Blue");
-pros::lcd::print(2, "Sensor hue %f", currentHue);
-pros::lcd::print(3, "Sensor dist: %f", currentDist);
-pros::lcd::print(4, "Times detected: %f", ringDetected);
-*/
-
-void waitUntilRedIntake(int timeout) {
+bool waitUntilRedIntake(int timeout) {
     // Wait until red rings are detected using the specified timeout
-    waitUntilRingDetected(timeout, true);
+    return waitUntilRingDetected(timeout, true);
 }
 
-void waitUntilBlueIntake(int timeout) {
+bool waitUntilBlueIntake(int timeout) {
     // Wait until blue rings are detected using the specified timeout
-    waitUntilRingDetected(timeout, false);
+    return waitUntilRingDetected(timeout, false);
 }
 
 /*
