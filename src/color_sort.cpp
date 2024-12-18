@@ -72,7 +72,7 @@ bool waitUntilRingDetected(int msecTimeout, bool getRed = isRedAlliance){
         pros::delay(20); // Wait briefly before the next sensor reading to prevent excessive polling
     }
     ringSens.set_led_pwm(0);
-    if(ringDetected>=3){
+    if(ringDetected>=MIN_RING_DETECTION){
         return true;
     }
     else{
