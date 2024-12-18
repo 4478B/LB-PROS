@@ -51,7 +51,7 @@ void arm_control_task(void *param)
                     armPID.reset();
 
                     // stop arm motors in place
-                    arm_motors.move_velocity(0);
+                    arm_motors.move(0);
                     arm_motors.brake();
 
                     // stop running the PID code
@@ -289,15 +289,15 @@ void handleIntake()
     }
 }
 
-void handleColorSort(){
-    
+void handleColorSort()
+{
+
     /*if(controller.get_digital_new_press()){
         colorSortHandler::getInstance().killSwitch();
     }
     else if (controller.get_digital_new_press()){
         colorSortHandler::getInstance().swapTeam();
     }*/
-
 }
 
 void handleClamp()
@@ -383,7 +383,7 @@ void opcontrol()
         {
             testAuton();
         }
-        //handleColorSort();
+        // handleColorSort();
         handleDriveTrain();
         handleIntake();
         handleClamp();
