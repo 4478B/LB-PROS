@@ -121,7 +121,7 @@ void testGoalSens(){
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for goal...");
         all_motors.move(40);
-        waitUntilClamp(0,48000000,1000000);
+        waitUntilClamp(48000000,1000000);
         all_motors.brake();
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got goal!");

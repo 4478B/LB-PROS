@@ -62,6 +62,7 @@
 extern "C" {
 #endif
 
+void setArm(int position);
 void setArmBottom();
 void setArmMid();
 void setArmTop();
