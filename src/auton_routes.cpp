@@ -782,3 +782,46 @@ void redRingRush()
     chassis.moveToPose(-6.5, 35.027, 0, 4321, {.maxSpeed = 30}, false);
     chassis.moveToPoint(-6.5, 60.508, 4321, {.maxSpeed = 30}, false);
 }
+
+void oldRedRingSide() // 4 ring, red ringside, ported from vexcode
+{
+ 
+// drive and clamp, also start running the intake 
+  drivePID(-32);
+  //driveInchesClamp(-7, 30);
+  drivePID(-4,3000,40);
+  clamp.set_value(LOW);
+  delay(500);
+  intake.move(127);
+
+  // turns the robot, moves toward ring1 to inake it
+  chassis.turnToHeading(-55,2000);
+  drivePID(27);
+  delay(500);
+  drivePID(-4);
+
+// robot turns again, heads toward ring2, intakes
+// then the robot turns, drives, and intakes the next ring, before turning again
+  chassis.turnToHeading(-145,2000);
+  drivePID(12.9,3000,20);
+  delay(500);
+  drivePID(-25);
+  chassis.turnToHeading(-123,2000);
+  drivePID(10);
+  drivePID(6.4, 20);
+  delay(1000);
+  drivePID(-48);
+  chassis.turnToHeading(120,2000);
+
+ //arm moves up, then turns toward the middle in order to touch the ladder
+  setArmTop();
+  drivePID(47);
+  intake.move(63);;
+  setArmBottom();
+  delay(300);
+  intake.brake();
+  delay(200);
+  drivePID(-10);
+  intake.move(127);;
+  chassis.turnToHeading(-60,2000);
+}
