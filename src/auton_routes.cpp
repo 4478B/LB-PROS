@@ -787,22 +787,23 @@ void oldRedRingSide() // 4 ring, red ringside, ported from vexcode
 {
  
 // drive and clamp, also start running the intake 
-  drivePID(-32);
+  clamp.set_value(HIGH);
+  drivePID(-27);
   //driveInchesClamp(-7, 30);
-  drivePID(-4,3000,40);
+  drivePID(-4,1500,40);
   clamp.set_value(LOW);
   delay(500);
   intake.move(127);
 
   // turns the robot, moves toward ring1 to inake it
-  chassis.turnToHeading(-55,2000);
-  drivePID(27);
+  chassis.turnToHeading(75,2000);
+  drivePID(15);
   delay(500);
-  drivePID(-4);
+ // drivePID(-4);
 
 // robot turns again, heads toward ring2, intakes
 // then the robot turns, drives, and intakes the next ring, before turning again
-  chassis.turnToHeading(-145,2000);
+  chassis.turnToHeading(145,2000);
   drivePID(12.9,3000,20);
   delay(500);
   drivePID(-25);
