@@ -90,7 +90,8 @@
     }
 }*/
 
-void testRingSens(){
+void testRingSens()
+{
     while (true)
     {
 
@@ -102,7 +103,7 @@ void testRingSens(){
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got red!");
         endSection(1000000);
-        
+
         intake.move(80);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for blue...");
@@ -114,14 +115,15 @@ void testRingSens(){
     }
 }
 
-void testGoalSens(){
+void testGoalSens()
+{
     while (true)
     {
 
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for goal...");
         all_motors.move(40);
-        waitUntilClamp(48000000,1000000);
+        waitUntilClamp(48000000, 1000000);
         all_motors.brake();
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got goal!");
@@ -129,54 +131,59 @@ void testGoalSens(){
     }
 }
 
-void testOdometryStraight(){
+void testOdometryStraight()
+{
 
-    chassis.setPose(0,0,0);
-    while(true){
-        chassis.moveToPoint(0,72,3000,{.minSpeed=1,.earlyExitRange=1},false);
+    chassis.setPose(0, 0, 0);
+    while (true)
+    {
+        chassis.moveToPoint(0, 72, 3000, {.minSpeed = 1, .earlyExitRange = 1}, false);
         delay(500);
         chassis.printPose();
         endSection(1000000);
-        chassis.moveToPoint(0,0,3000,{.minSpeed=1,.earlyExitRange=1},false);
-        delay(500);
-        chassis.printPose();
-        endSection(1000000);
-        
-    }
-}
-
-void testOdometryTurn(){
-
-    chassis.setPose(0,0,0);
-    while(true){
-        chassis.moveToPose(0,0,90,3000,{},false);
-        delay(500);
-        chassis.printPose();
-        endSection(1000000);
-        chassis.moveToPose(0,0,0,3000,{},false);
-        delay(500);
-        chassis.printPose();
-        endSection(1000000);
-
-        chassis.moveToPose(0,0,180,3000,{},false);
-        delay(500);
-        chassis.printPose();
-        endSection(1000000);
-        chassis.moveToPose(0,0,0,3000,{},false);
+        chassis.moveToPoint(0, 0, 3000, {.minSpeed = 1, .earlyExitRange = 1}, false);
         delay(500);
         chassis.printPose();
         endSection(1000000);
     }
 }
 
-void testOdometryBoth(){
-    chassis.setPose(0,0,0);
-    while(true){
-        chassis.moveToPose(24,24,90,3000,{},false);
+void testOdometryTurn()
+{
+
+    chassis.setPose(0, 0, 0);
+    while (true)
+    {
+        chassis.moveToPose(0, 0, 90, 3000, {}, false);
         delay(500);
         chassis.printPose();
         endSection(1000000);
-        chassis.moveToPose(0,0,0,3000,{},false);
+        chassis.moveToPose(0, 0, 0, 3000, {}, false);
+        delay(500);
+        chassis.printPose();
+        endSection(1000000);
+
+        chassis.moveToPose(0, 0, 180, 3000, {}, false);
+        delay(500);
+        chassis.printPose();
+        endSection(1000000);
+        chassis.moveToPose(0, 0, 0, 3000, {}, false);
+        delay(500);
+        chassis.printPose();
+        endSection(1000000);
+    }
+}
+
+void testOdometryBoth()
+{
+    chassis.setPose(0, 0, 0);
+    while (true)
+    {
+        chassis.moveToPose(24, 24, 90, 3000, {}, false);
+        delay(500);
+        chassis.printPose();
+        endSection(1000000);
+        chassis.moveToPose(0, 0, 0, 3000, {}, false);
         delay(500);
         chassis.printPose();
         endSection(1000000);
@@ -230,7 +237,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        oldRedRingSide();
+        progSkills();
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();

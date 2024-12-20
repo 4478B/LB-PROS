@@ -142,7 +142,7 @@ void progSkills()
     drivePID(25);
     delay(300);
     chassis.turnToHeading(120, 2000);
-    drivePID(31);
+    drivePID(37);
     endSection(50000);
     chassis.turnToHeading(180, 2000);
     setArmMid();
@@ -157,9 +157,9 @@ void progSkills()
     chassis.turnToHeading(270, 2000);
     chassis.turnToHeading(270, 500);
     intake.move(127);
-    drivePID(65, 6000, 25);
+    drivePID(60, 6000, 25);
     delay(500);
-    drivePID(-23);
+    drivePID(-15);
     chassis.turnToHeading(180, 2000);
     drivePID(20);
     delay(150);
