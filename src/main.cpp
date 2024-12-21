@@ -150,6 +150,7 @@ void initialize_arm_position()
 void initialize()
 {
 
+    controller.clear();
     lcd::initialize();   // initialize brain screen
     chassis.calibrate(); // calibrate sensors
 
@@ -184,7 +185,7 @@ void initialize()
 void autonomous()
 {
     all_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
-    getAutonSelector().runSelectedAuton();
+    competitionSelector.runSelection();
     all_motors.brake();
     delay(2000);
     all_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
@@ -215,7 +216,7 @@ void competition_initialize()
 
     inCompetition = true;
     // show current route on brain screen
-    getAutonSelector().displayCurrentSelection();
+    competitionSelector.displaySelectionBrain();
 
     // run buttons once to print values on screen
     on_left_button();
@@ -312,25 +313,19 @@ void handleClamp()
         clamp.set_value(clamp.get_value() == LOW ? HIGH : LOW);
 
         // print the state of the clamp on the controller screen
-        controller.clear_line(1);
-        controller.set_text(1, 1, clamp.get_value() == LOW ? "Clamped" : "Uncl");
+        controller.print(0, 0, clamp.get_value() == LOW ? "Clamped" : "Uncl         ");
     }
 }
 
 void handleDoinky()
 {
 
-    // activates on pressing B
+    // activates on pressing LEFT
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT))
     {
 
-        // clamp or unclamp based on toggled variable
-
         doinker.set_value(doinker.get_value() == LOW ? HIGH : LOW);
 
-        // print the state of the clamp on the controller screen
-        // controller.clear_line(1);
-        // controller.print(1,1,.get_value() == LOW ? "Clamped" : "");
     }
 }
 

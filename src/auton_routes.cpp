@@ -121,7 +121,7 @@ void endSection(int delay)
 // This file includes all of the routes coded in PROS for our robot
 // The routes should have linked path.jerryio files for reference
 
-void progSkills()
+void progSkills(int i)
 {
     chassis.setPose(-54, 0, 270);
     setArmAlliance();
@@ -256,7 +256,7 @@ void progSkills()
 
     */
 }
-void blueGoalSide()
+void blueGoalSide(int i)
 {
 
     // mapped in redGoalSide.txt
@@ -322,7 +322,7 @@ void blueGoalSide()
     chassis.moveToPoint(5, 0, 3000, {.maxSpeed = 70}, false);
 }
 
-void redGoalSide() // edit this one and mirror it for the other part
+void redGoalSide(int i) // edit this one and mirror it for the other part
 {
 
     // mapped in redGoalSide.txt
@@ -386,7 +386,7 @@ void redGoalSide() // edit this one and mirror it for the other part
     setArmTop();
     chassis.moveToPoint(-5, 0, 2000, {.maxSpeed = 70}, false);
 }
-void blueRingSide()
+void blueRingSide(int i)
 {
 
     drivePID(-27);
@@ -436,10 +436,10 @@ void blueRingSide()
     clamp.set_value(LOW);
     chassis.moveToPose(23,-54,180,5000,{.forwards=true,.lead=.2,.minSpeed=20},false);*/
 }
-void redRingSide()
+void redRingSide(int i)
 {
 }
-void redGoalSidePostWPI()
+void redGoalSidePostWPI(int i)
 { // in tylers routes, scores 5 on goalside, doinkers goalside without clamping
 
     // rush goal and set doinker down
@@ -483,7 +483,7 @@ void redGoalSidePostWPI()
     // back up to line up with corner
     chassis.moveToPoint(-33, -62, 2000, {.forwards = false, .minSpeed = 40}, false);
 }
-void WPIAWP()
+void WPIAWP(int i)
 {
 
     clamp.set_value(HIGH);
@@ -562,7 +562,7 @@ void WPIAWP()
     */
 }
 
-void allianceRedRingSide()
+void allianceRedRingSide(int i)
 {
 
     clamp.set_value(HIGH);
@@ -612,7 +612,7 @@ void allianceRedRingSide()
     right_motors.brake();
 }
 
-void allianceBlueRingSide()
+void allianceBlueRingSide(int i)
 {
     clamp.set_value(HIGH);
     chassis.setPose(0, 0, -221);
@@ -666,7 +666,7 @@ void allianceBlueRingSide()
     right_motors.brake();
 }
 
-void fullawpV1()
+void fullawpV1(int i)
 {
 
     // initial pose
@@ -755,7 +755,7 @@ void fullawpV1()
     endSection(987654321);
 }
 
-void redRingRush()
+void redRingRush(int i)
 {
 
     // initial pose
@@ -783,7 +783,7 @@ void redRingRush()
     chassis.moveToPoint(-6.5, 60.508, 4321, {.maxSpeed = 30}, false);
 }
 
-void oldRedRingSide() // 4 ring, red ringside, ported from vexcode
+void oldRedRingSide(int i) // 4 ring, red ringside, ported from vexcode
 {
  
 // drive and clamp, also start running the intake 

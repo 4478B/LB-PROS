@@ -90,7 +90,7 @@
     }
 }*/
 
-void testRingSens()
+void testRingSens(int i)
 {
     while (true)
     {
@@ -115,7 +115,7 @@ void testRingSens()
     }
 }
 
-void testGoalSens()
+void testGoalSens(int i)
 {
     while (true)
     {
@@ -131,7 +131,7 @@ void testGoalSens()
     }
 }
 
-void testOdometryStraight()
+void testOdometryStraight(int i)
 {
 
     chassis.setPose(0, 0, 0);
@@ -148,7 +148,7 @@ void testOdometryStraight()
     }
 }
 
-void testOdometryTurn()
+void testOdometryTurn(int i)
 {
 
     chassis.setPose(0, 0, 0);
@@ -174,7 +174,7 @@ void testOdometryTurn()
     }
 }
 
-void testOdometryBoth()
+void testOdometryBoth(int i)
 {
     chassis.setPose(0, 0, 0);
     while (true)
@@ -237,7 +237,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        progSkills();
+        progSkills(1);
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();
