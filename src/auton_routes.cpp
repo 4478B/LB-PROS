@@ -755,34 +755,6 @@ void fullawpV1(int i)
     endSection(987654321);
 }
 
-void redRingRush(int i)
-{
-
-    // initial pose
-    clamp.set_value(HIGH);
-
-    setArmAlliance();
-    endSection(987654321);
-
-    // back up to goal and clamp
-    chassis.setPose(0, 0, 248);
-    drivePID(-6);
-    chassis.turnToHeading(295, 4321);
-    drivePID(-27);
-    delay(200);
-    clamp.set_value(LOW);
-    setArmBottom();
-    endSection(987654321);
-
-    // turn to ring rush
-    chassis.turnToHeading(60, 4321);
-
-    // rush rings
-    intake.move(127);
-    chassis.moveToPose(-6.5, 35.027, 0, 4321, {.maxSpeed = 30}, false);
-    chassis.moveToPoint(-6.5, 60.508, 4321, {.maxSpeed = 30}, false);
-}
-
 void oldRedRingSide(int i) // 4 ring, red ringside, ported from vexcode
 {
  
@@ -825,4 +797,59 @@ void oldRedRingSide(int i) // 4 ring, red ringside, ported from vexcode
   drivePID(-10);
   intake.move(127);;
   chassis.turnToHeading(-60,2000);
+}
+
+void redRingRush(int i){ // this route uses the new doinker mech to rush rings very fast
+
+    // initial states
+    chassis.setPose(0,0,66);
+    clamp.set_value(HIGH);
+    endSection(987654321);
+
+    /*
+    // put down ringrush mech
+    doinker.set_value(HIGH);
+    endSection(987654321);
+
+    // approach rings
+    drivePID(45);
+    endSection(987654321);
+
+    // back up with rings
+    drivePID(-11);
+    endSection(100);
+
+    // turn to be perpendicular to ring line
+    chassis.turnToHeading(90,2000);
+    endSection(100);
+
+    // back up with rings and lift doinker
+    drivePID(-14);
+    doinker.set_value(LOW);
+    endSection(100);
+
+    // drive back a little more to align with goal
+    drivePID(-5);
+    endSection(100);
+
+    // align to back up into goal
+    chassis.turnToHeading(307, 2000);
+    endSection(987654321);
+*/
+    // back up into goal and clamp
+    drivePID(-35, 2000, 35);
+    clamp.set_value(LOW);
+    endSection(987654321);
+
+    // turn to ring line
+    chassis.turnToHeading(0,2000);
+    endSection(100);
+
+    // intake ring line
+    intake.move(127);
+    drivePID(48,3000,10);
+    endSection(2000);
+    intake.brake();
+    endSection(987654321);
+
 }

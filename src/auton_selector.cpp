@@ -81,7 +81,8 @@ const AutonRoutine COMPETITION_ROUTINES[] = {
     {"Blue Goal Side", blueGoalSide},                     
     {"Red Goal Side", redGoalSide},                       
     {"Blue Ring Side", blueRingSide},                     
-    {"Red Ring Side", redRingSide}
+    {"Red Ring Side", redRingSide},
+    {"Red Ring Rush", redRingRush}
 };
 
 const AutonRoutine TESTING_ROUTINES[] = {
