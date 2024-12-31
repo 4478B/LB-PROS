@@ -806,17 +806,17 @@ void redRingRush(int i){ // this route uses the new doinker mech to rush rings v
     clamp.set_value(HIGH);
     endSection(987654321);
 
-    /*
+    
     // put down ringrush mech
     doinker.set_value(HIGH);
     endSection(987654321);
 
     // approach rings
-    drivePID(45);
+    drivePID(43);
     endSection(987654321);
 
     // back up with rings
-    drivePID(-11);
+    drivePID(-10);
     endSection(100);
 
     // turn to be perpendicular to ring line
@@ -834,22 +834,32 @@ void redRingRush(int i){ // this route uses the new doinker mech to rush rings v
 
     // align to back up into goal
     chassis.turnToHeading(307, 2000);
-    endSection(987654321);
-*/
+    delay(100);
+
     // back up into goal and clamp
     drivePID(-35, 2000, 35);
     clamp.set_value(LOW);
-    endSection(987654321);
+    delay(150);
+    drivePID(6 ,1000);
+    endSection(100);
 
     // turn to ring line
-    chassis.turnToHeading(0,2000);
+    chassis.turnToHeading(-1,2000);
     endSection(100);
+
 
     // intake ring line
     intake.move(127);
-    drivePID(48,3000,10);
-    endSection(2000);
-    intake.brake();
-    endSection(987654321);
+    chassis.turnToHeading(2,2000);
+    drivePID(48,4000,2);
+    endSection(1000);
+    intake.brake();\
+
+    // turn to peload
+    endSection(100);
+    drivePID(-10,2000);
+    chassis.turnToHeading(-100,2000);
+    intake.move(127);
+    drivePID(65,3000,10);
 
 }
