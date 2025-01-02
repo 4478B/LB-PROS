@@ -851,9 +851,9 @@ void redRingRush(int i){ // this route uses the new doinker mech to rush rings v
     // intake ring line
     intake.move(127);
     chassis.turnToHeading(2,2000);
-    drivePID(48,4000,2);
+    drivePID(48,5000,5);
     endSection(1000);
-    intake.brake();\
+    intake.brake();
 
     // turn to peload
     endSection(100);
