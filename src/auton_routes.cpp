@@ -129,8 +129,9 @@ void progSkills(int i)
     clamp.set_value(HIGH);
     drivePID(-4, 1000);
     // endSection(50000);
-    setArmBottom();
+    setArmMid();
     chassis.turnToHeading(0, 2000);
+    setArmBottom();
     drivePID(-22);
     drivePID(-10, 1000, 42.5);
     clamp.set_value(LOW);
@@ -142,18 +143,14 @@ void progSkills(int i)
     drivePID(25);
     delay(300);
     chassis.turnToHeading(120, 2000);
-    drivePID(37);
+    drivePID(31);
     endSection(50000);
     chassis.turnToHeading(180, 2000);
-    setArmMid();
-    drivePID(24);
+    drivePID(20);
     delay(3000);
     intake.brake();
-    setArmTop();
-    drivePID(10, 1000);
     endSection(50000);
-    drivePID(-15);
-    setArmBottom();
+    drivePID(-10);
     chassis.turnToHeading(270, 2000);
     chassis.turnToHeading(270, 500);
     intake.move(127);
@@ -757,56 +754,58 @@ void fullawpV1(int i)
 
 void oldRedRingSide(int i) // 4 ring, red ringside, ported from vexcode
 {
- 
-// drive and clamp, also start running the intake 
-  clamp.set_value(HIGH);
-  drivePID(-27);
-  //driveInchesClamp(-7, 30);
-  drivePID(-4,1500,40);
-  clamp.set_value(LOW);
-  delay(500);
-  intake.move(127);
 
-  // turns the robot, moves toward ring1 to inake it
-  chassis.turnToHeading(75,2000);
-  drivePID(15);
-  delay(500);
- // drivePID(-4);
+    // drive and clamp, also start running the intake
+    clamp.set_value(HIGH);
+    drivePID(-27);
+    // driveInchesClamp(-7, 30);
+    drivePID(-4, 1500, 40);
+    clamp.set_value(LOW);
+    delay(500);
+    intake.move(127);
 
-// robot turns again, heads toward ring2, intakes
-// then the robot turns, drives, and intakes the next ring, before turning again
-  chassis.turnToHeading(145,2000);
-  drivePID(12.9,3000,20);
-  delay(500);
-  drivePID(-25);
-  chassis.turnToHeading(-123,2000);
-  drivePID(10);
-  drivePID(6.4, 20);
-  delay(1000);
-  drivePID(-48);
-  chassis.turnToHeading(120,2000);
+    // turns the robot, moves toward ring1 to inake it
+    chassis.turnToHeading(75, 2000);
+    drivePID(15);
+    delay(500);
+    // drivePID(-4);
 
- //arm moves up, then turns toward the middle in order to touch the ladder
-  setArmTop();
-  drivePID(47);
-  intake.move(63);;
-  setArmBottom();
-  delay(300);
-  intake.brake();
-  delay(200);
-  drivePID(-10);
-  intake.move(127);;
-  chassis.turnToHeading(-60,2000);
+    // robot turns again, heads toward ring2, intakes
+    // then the robot turns, drives, and intakes the next ring, before turning again
+    chassis.turnToHeading(145, 2000);
+    drivePID(12.9, 3000, 20);
+    delay(500);
+    drivePID(-25);
+    chassis.turnToHeading(-123, 2000);
+    drivePID(10);
+    drivePID(6.4, 20);
+    delay(1000);
+    drivePID(-48);
+    chassis.turnToHeading(120, 2000);
+
+    // arm moves up, then turns toward the middle in order to touch the ladder
+    setArmTop();
+    drivePID(47);
+    intake.move(63);
+    ;
+    setArmBottom();
+    delay(300);
+    intake.brake();
+    delay(200);
+    drivePID(-10);
+    intake.move(127);
+    ;
+    chassis.turnToHeading(-60, 2000);
 }
 
-void redRingRush(int i){ // this route uses the new doinker mech to rush rings very fast
+void redRingRush(int i)
+{ // this route uses the new doinker mech to rush rings very fast
 
     // initial states
-    chassis.setPose(0,0,66);
+    chassis.setPose(0, 0, 66);
     clamp.set_value(HIGH);
     endSection(987654321);
 
-    
     // put down ringrush mech
     doinker.set_value(HIGH);
     endSection(987654321);
@@ -820,7 +819,7 @@ void redRingRush(int i){ // this route uses the new doinker mech to rush rings v
     endSection(100);
 
     // turn to be perpendicular to ring line
-    chassis.turnToHeading(90,2000);
+    chassis.turnToHeading(90, 2000);
     endSection(100);
 
     // back up with rings and lift doinker
@@ -840,26 +839,24 @@ void redRingRush(int i){ // this route uses the new doinker mech to rush rings v
     drivePID(-35, 2000, 35);
     clamp.set_value(LOW);
     delay(150);
-    drivePID(6 ,1000);
+    drivePID(6, 1000);
     endSection(100);
 
     // turn to ring line
-    chassis.turnToHeading(-1,2000);
+    chassis.turnToHeading(-1, 2000);
     endSection(100);
-
 
     // intake ring line
     intake.move(127);
-    chassis.turnToHeading(2,2000);
-    drivePID(48,5000,5);
+    chassis.turnToHeading(2, 2000);
+    drivePID(48, 5000, 5);
     endSection(1000);
     intake.brake();
 
     // turn to peload
     endSection(100);
-    drivePID(-10,2000);
-    chassis.turnToHeading(-100,2000);
+    drivePID(-10, 2000);
+    chassis.turnToHeading(-100, 2000);
     intake.move(127);
-    drivePID(65,3000,10);
-
+    drivePID(65, 3000, 10);
 }
