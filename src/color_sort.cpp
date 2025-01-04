@@ -9,7 +9,6 @@
 #include "testing.h"
 #include <iomanip>
 
-
 // exact values of hues to detect
 const int RED_RING_HUE = 0;
 const int BLUE_RING_HUE = 210;
@@ -20,7 +19,6 @@ const int HUE_RANGE = 10;
 const int MIN_RING_DETECTION = 1; // Amount of detections needed to quit loop
 const int MAX_RING_DISTANCE = 10; // maximum distance ring is on intake from optical sensor
 
-
 // global setter for color sort detector
 bool isRedAlliance = true;
 
@@ -30,80 +28,114 @@ AUTONOMOUS
 
 */
 
-bool waitUntilRingDetected(int msecTimeout, bool getRed = isRedAlliance){
+bool waitUntilRingDetected(int msecTimeout, int targetHue)
+{
     int startTime = pros::millis(); // Record the start time of the function
-    int ringDetected = 0; // Counter for consecutive ring detections
+    int ringDetected = 0;           // Counter for consecutive ring detections
 
     // Define acceptable hue range based on the desired ring color
-    int targetHue, hueMin, hueMax; 
-    
+    int hueMin, hueMax;
+
     // set target hue to correct team
-    targetHue = getRed ? RED_RING_HUE : BLUE_RING_HUE; 
-    hueMin = (targetHue - HUE_RANGE + 360) % 360; // Wrap around to ensure valid range
-    hueMax = (targetHue + HUE_RANGE) % 360; // Wrap around to ensure valid range
+    if (targetHue == -1)
+    {
+        // detecting any hue if no team is specified
+        hueMin = 0;
+        hueMax = 360;
+    }
+    else
+    {
+        // detecting specific hue
+        hueMin = (targetHue - HUE_RANGE + 360) % 360; // Wrap around to ensure valid range
+        hueMax = (targetHue + HUE_RANGE) % 360;       // Wrap around to ensure valid range
+    }
 
     ringSens.set_led_pwm(100); // Set the LED brightness to maximum for better detection
 
-    while(pros::millis() - startTime < msecTimeout && ringDetected < MIN_RING_DETECTION){
+    while (pros::millis() - startTime < msecTimeout && ringDetected < MIN_RING_DETECTION)
+    {
         // Calculate elapsed time and check if detection target is met
 
-        int currentHue = ringSens.get_hue(); // Get the current hue value from the sensor
+        int currentHue = ringSens.get_hue();        // Get the current hue value from the sensor
         int currentDist = ringSens.get_proximity(); // Get the current proximity value from the sensor
 
         // Determine if the current hue falls within the valid range, considering wrapping around 360 degrees
-        bool inHueRange = (hueMin <= hueMax) ? 
-                        (currentHue >= hueMin && currentHue <= hueMax) : 
-                        (currentHue >= hueMin || currentHue <= hueMax);
 
-        if(inHueRange && currentDist > 255 - MAX_RING_DISTANCE) {
+        bool inHueRange;
+        if (targetHue == -1)
+        {
+            inHueRange = true;
+        }
+        else
+        {
+            inHueRange = (hueMin <= hueMax) ? (currentHue >= hueMin && currentHue <= hueMax) : (currentHue >= hueMin || currentHue <= hueMax);
+        }
+
+        bool inDist = currentDist > 255 - MAX_RING_DISTANCE;
+        if ((inHueRange || targetHue == -1) && inDist)
+        {
             // Increment the detection counter if the conditions are met
             ringDetected++;
         }
-        else {
+        else
+        {
             // Reset the detection counter if the conditions are not met
             ringDetected = 0;
         }
 
         // Print debug information
-        //pros::lcd::print(2, "Sensor hue %f", ringSens.get_hue());
-        //pros::lcd::print(3, "Sensor dist: %i", ringSens.get_proximity());
-        //pros::lcd::print(4, "Error: %s", strerror(ringSens.get_proximity())); 
+        pros::lcd::print(2, "Sensor hue %f", ringSens.get_hue());
+        pros::lcd::print(3, "Sensor dist: %i", ringSens.get_proximity());
+        pros::lcd::print(4, "Detections: %i", ringDetected);
+
+        // pros::lcd::print(4, "Error: %s", strerror(ringSens.get_proximity()));
 
         pros::delay(20); // Wait briefly before the next sensor reading to prevent excessive polling
     }
     ringSens.set_led_pwm(0);
-    if(ringDetected>=MIN_RING_DETECTION){
+    if (ringDetected >= MIN_RING_DETECTION)
+    {
         return true;
     }
-    else{
+    else
+    {
         return false;
     }
 }
 
-bool waitUntilRedIntake(int timeout) {
+bool waitUntilRedIntake(int timeout)
+{
     // Wait until red rings are detected using the specified timeout
-    return waitUntilRingDetected(timeout, true);
+    return waitUntilRingDetected(timeout, RED_RING_HUE);
 }
 
-bool waitUntilBlueIntake(int timeout) {
+bool waitUntilBlueIntake(int timeout)
+{
     // Wait until blue rings are detected using the specified timeout
-    return waitUntilRingDetected(timeout, false);
+    return waitUntilRingDetected(timeout, BLUE_RING_HUE);
 }
 
+bool waitUntilAnyIntake(int timeout)
+{
+    // Wait until blue rings are detected using the specified timeout
+    return waitUntilRingDetected(timeout, -1);
+}
 /*
 
 DRIVER CONTROL
 
 */
 // Singleton instance
-colorSortHandler& colorSortHandler::getInstance() {
+colorSortHandler &colorSortHandler::getInstance()
+{
     static colorSortHandler instance;
     return instance;
 }
 
 // Constructor
-colorSortHandler::colorSortHandler() 
-    : targetHue(0), hueMin(0), hueMax(0), isRedAlliance(true), isCurrentlySorting(false) {
+colorSortHandler::colorSortHandler()
+    : targetHue(0), hueMin(0), hueMax(0), isRedAlliance(true), isCurrentlySorting(false)
+{
     swapTeam();
     swapTeam(); // Initialize correct hue values
     killSwitch();
@@ -111,23 +143,29 @@ colorSortHandler::colorSortHandler()
 }
 
 // Toggle kill switch
-void colorSortHandler::killSwitch() {
+void colorSortHandler::killSwitch()
+{
     isCurrentlySorting = !isCurrentlySorting;
-    if (isCurrentlySorting) {
+    if (isCurrentlySorting)
+    {
         ringSens.set_led_pwm(100);
-    } else {
+    }
+    else
+    {
         ringSens.set_led_pwm(0);
     }
 }
 
 // Toss a ring
-void colorSortHandler::tossRing() {
+void colorSortHandler::tossRing()
+{
     intake.move(-127);
     delay(1000);
 }
 
 // Swap team
-void colorSortHandler::swapTeam() {
+void colorSortHandler::swapTeam()
+{
     isRedAlliance = !isRedAlliance;
     targetHue = isRedAlliance ? RED_RING_HUE : BLUE_RING_HUE;
     hueMin = (targetHue - HUE_RANGE + 360) % 360;
@@ -135,56 +173,59 @@ void colorSortHandler::swapTeam() {
 }
 
 // Accessor methods
-bool colorSortHandler::getIsRedAlliance() const {
+bool colorSortHandler::getIsRedAlliance() const
+{
     return isRedAlliance;
 }
 
-bool colorSortHandler::getIsCurrentlySorting() const {
+bool colorSortHandler::getIsCurrentlySorting() const
+{
     return isCurrentlySorting;
 }
 
-colorSortHandler& sorter = colorSortHandler::getInstance();
+colorSortHandler &sorter = colorSortHandler::getInstance();
 
 void color_sort_task(void *param)
 {
     int ringDetected = 0; // Counter for consecutive ring detections
 
-    
-    while(true){
+    while (true)
+    {
 
-        if(sorter.getIsCurrentlySorting()) {
+        if (sorter.getIsCurrentlySorting())
+        {
 
-            int currentHue = ringSens.get_hue(); // Get the current hue value from the sensor
+            int currentHue = ringSens.get_hue();        // Get the current hue value from the sensor
             int currentDist = ringSens.get_proximity(); // Get the current proximity value from the sensor
 
             // Determine if the current hue falls within the valid range, considering wrapping around 360 degrees
-            bool inHueRange = (sorter.hueMin <= sorter.hueMax) ? 
-                           (currentHue >= sorter.hueMin && currentHue <= sorter.hueMax) : 
-                           (currentHue >= sorter.hueMin || currentHue <= sorter.hueMax);
+            bool inHueRange = (sorter.hueMin <= sorter.hueMax) ? (currentHue >= sorter.hueMin && currentHue <= sorter.hueMax) : (currentHue >= sorter.hueMin || currentHue <= sorter.hueMax);
 
-            if(inHueRange && currentDist < MAX_RING_DISTANCE) {
+            if (inHueRange && currentDist < MAX_RING_DISTANCE)
+            {
                 // Increment the detection counter if the conditions are met
                 ringDetected++;
             }
-            else {
+            else
+            {
                 // Reset the detection counter if the conditions are not met
                 ringDetected = 0;
             }
 
-            if(ringDetected > MIN_RING_DETECTION){
+            if (ringDetected > MIN_RING_DETECTION)
+            {
                 sorter.tossRing();
                 ringDetected = 0;
             }
         }
-        else {
+        else
+        {
             delay(480);
         }
         delay(20);
 
         // print debug information
-
     }
-    
 }
 
 /*void color_sort_task_2(void param*){
@@ -208,8 +249,8 @@ void score_detect_thread(void param*){
     while(scoreDetectorActive){
 
         bool isIntakeMoving = true;
-        
-        
+
+
         if(isIntakeMoving || isRingDetected){
 
             delay(20);

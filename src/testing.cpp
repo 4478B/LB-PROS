@@ -95,7 +95,17 @@ void testRingSens(int i)
     while (true)
     {
 
-        intake.move(80);
+        
+        intake.move_velocity(75);
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "Waiting for any...");
+        waitUntilAnyIntake(100000);
+        intake.brake();
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "Got any!");
+        endSection(1000000);
+
+        intake.move_velocity(75);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for red...");
         waitUntilRedIntake(100000);
@@ -104,7 +114,7 @@ void testRingSens(int i)
         pros::lcd::print(1, "Got red!");
         endSection(1000000);
 
-        intake.move(80);
+        intake.move_velocity(75);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for blue...");
         waitUntilBlueIntake(100000);
@@ -237,7 +247,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        progSkills(1);
+        testRingSens(1);
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();

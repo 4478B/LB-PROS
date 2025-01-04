@@ -104,7 +104,7 @@ void setArm(int position)
     }
     else if (position == 3)
     {
-        targetPos = 134; // Top position
+        targetPos = 136; // Top position
     }
     else if (position == 4)
     {
@@ -158,6 +158,10 @@ void initialize()
 
     // initialize_arm_position();
     arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
+
+    // toggle clamp states to initialize clamp
+    //clamp.set_value(LOW);
+    //clamp.set_value(HIGH);
 
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
@@ -379,7 +383,7 @@ void opcontrol()
             testAuton();
         }
         // handleColorSort();
-        handleDriveTrain();
+        // handleDriveTrain();
         handleIntake();
         handleClamp();
         handleArm();

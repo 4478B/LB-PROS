@@ -1,14 +1,16 @@
 #ifndef COLOR_SORT_H
 #define COLOR_SORT_H
 
-
 // Waits until either red ring is in intake or it times out based on the timeout
 bool waitUntilRedIntake(int timeout);
 // Waits until either blue ring is in intake or it times out based on the timeout
 bool waitUntilBlueIntake(int timeout);
+// Waits until either any ring is in intake or it times out based on the timeout
+bool waitUntilAnyIntake(int timeout);
 // color sort object structure
 // Singleton class for handling color sorting
-class colorSortHandler {
+class colorSortHandler
+{
 public:
     int targetHue;
     int hueMin;
@@ -23,11 +25,11 @@ private:
 
 public:
     // Static method to access the singleton instance
-    static colorSortHandler& getInstance();
+    static colorSortHandler &getInstance();
 
     // Prevent copying and assignment
-    colorSortHandler(const colorSortHandler&) = delete;
-    void operator=(const colorSortHandler&) = delete;
+    colorSortHandler(const colorSortHandler &) = delete;
+    void operator=(const colorSortHandler &) = delete;
 
     // Public methods
     void killSwitch();
