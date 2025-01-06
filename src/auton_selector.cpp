@@ -77,9 +77,9 @@ int AutonSelector::getRoutineCount() const {
 const AutonRoutine COMPETITION_ROUTINES[] = {
     {"Prog Skills", progSkills},                          
     {"Alliance Red Ringside AWP", allianceRedRingSide},   
-    {"Alliance Red Goalside AWP", allianceRedRingSide, -1}, 
-    {"Alliance Blue Ringside AWP", allianceRedRingSide, -2}, 
-    {"Alliance Blue Goalside AWP", allianceBlueRingSide, 2}, 
+    {"Alliance Blue Ringside AWP", allianceBlueRingSide}, 
+    {"Red Goal Side SUGARRUSH", redGoalSideSugarRush},        
+    {"Red Goal Side SUGARRUSH", blueGoalSideSugarRush},        
     {"Blue Goal Side", blueGoalSide},                     
     {"Red Goal Side", redGoalSide},                       
     {"Blue Ring Side", blueRingSide},                     

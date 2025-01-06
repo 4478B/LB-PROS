@@ -383,7 +383,7 @@ void opcontrol()
             testAuton();
         }
         // handleColorSort();
-        // handleDriveTrain();
+        handleDriveTrain();
         handleIntake();
         handleClamp();
         handleArm();

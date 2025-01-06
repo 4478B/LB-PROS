@@ -92,10 +92,11 @@
 
 void testRingSens(int i)
 {
+    /*
     while (true)
     {
 
-        
+
         intake.move_velocity(75);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for any...");
@@ -122,7 +123,15 @@ void testRingSens(int i)
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got blue!");
         endSection(1000000);
-    }
+    }*/
+    setArmTop();
+    delay(1000);
+    intake.move_velocity(70);
+    drivePID(27, 1000, 45);
+    setArmBottom();
+    drivePID(-10, 1000, 45);
+    waitUntilAnyIntake(2000);
+    intake.brake();
 }
 
 void testGoalSens(int i)
@@ -247,7 +256,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        testRingSens(1);
+        blueGoalSideSugarRush(1);
 
         // stops motors to prevent rogue movements after auton
         left_motors.brake();

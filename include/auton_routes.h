@@ -16,5 +16,7 @@ void allianceRedRingSide(int i);
 void allianceBlueRingSide(int i);
 void redRingRush(int i);
 void oldRedRingSide(int i);
+void redGoalSideSugarRush(int i);
+void blueGoalSideSugarRush(int i);
 
 #endif // AUTON_ROUTES_H
