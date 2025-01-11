@@ -79,7 +79,7 @@ const AutonRoutine COMPETITION_ROUTINES[] = {
     {"Alliance Red Ringside AWP", allianceRedRingSide},   
     {"Alliance Blue Ringside AWP", allianceBlueRingSide}, 
     {"Red Goal Side SUGARRUSH", redGoalSideSugarRush},        
-    {"Red Goal Side SUGARRUSH", blueGoalSideSugarRush},        
+    {"Blue Goal Side SUGARRUSH", blueGoalSideSugarRush},        
     {"Blue Goal Side", blueGoalSide},                     
     {"Red Goal Side", redGoalSide},                       
     {"Blue Ring Side", blueRingSide},                     

@@ -104,7 +104,7 @@ void setArm(int position)
     }
     else if (position == 3)
     {
-        targetPos = 136; // Top position
+        targetPos = 138; // Top position
     }
     else if (position == 4)
     {
@@ -150,11 +150,12 @@ void initialize_arm_position()
 void initialize()
 {
 
-    controller.clear();
+    //controller.clear(); // clear controller screen
     lcd::initialize();   // initialize brain screen
     chassis.calibrate(); // calibrate sensors
 
     clamp.set_value(HIGH);
+    doinker.set_value(LOW);
 
     // initialize_arm_position();
     arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
@@ -317,7 +318,7 @@ void handleClamp()
         clamp.set_value(clamp.get_value() == LOW ? HIGH : LOW);
 
         // print the state of the clamp on the controller screen
-        controller.print(0, 0, clamp.get_value() == LOW ? "Clamped" : "Uncl         ");
+        controller.print(0, 0, clamp.get_value() == HIGH ? "Clamped" : "Uncl         ");
     }
 }
 

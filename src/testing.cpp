@@ -256,9 +256,9 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        blueGoalSideSugarRush(1);
+        redGoalSideSugarRush(1);
 
-        // stops motors to prevent rogue movements after auton
+        // stops motors to prevent rogue movements after autonl
         left_motors.brake();
         right_motors.brake();
 
