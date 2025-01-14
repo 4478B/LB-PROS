@@ -72,6 +72,10 @@ void arm_control_task(void *param)
             // move arm motors based on PID
             arm_motors.move_velocity(nextMovement);
         }
+        else
+        {
+            arm_motors.brake();
+        }
 
         // collect and print data involving pid on screen
         /*
@@ -88,36 +92,15 @@ void arm_control_task(void *param)
 
 void setArm(int position)
 {
-    // Validate input
-    if (position < 1 || position > 4)
-    {
-        return; // Invalid position
-    }
-
-    if (position == 1)
-    {
-        targetPos = 5; // Bottom position
-    }
-    else if (position == 2)
-    {
-        targetPos = 33; // Middle position
-    }
-    else if (position == 3)
-    {
-        targetPos = 138; // Top position
-    }
-    else if (position == 4)
-    {
-        targetPos = 200; // Alliance stake position
-    }
+    targetPos = position;
     armMoving = true;
 }
 
 // aliases for specific positions
-void setArmBottom() { setArm(1); }
-void setArmMid() { setArm(2); }
-void setArmTop() { setArm(3); }
-void setArmAlliance() { setArm(4); }
+void setArmBottom() { setArm(5); }
+void setArmMid() { setArm(33); }
+void setArmTop() { setArm(138); }
+void setArmAlliance() { setArm(200); }
 
 void initialize_arm_position()
 {
@@ -150,7 +133,7 @@ void initialize_arm_position()
 void initialize()
 {
 
-    //controller.clear(); // clear controller screen
+    // controller.clear(); // clear controller screen
     lcd::initialize();   // initialize brain screen
     chassis.calibrate(); // calibrate sensors
 
@@ -161,8 +144,8 @@ void initialize()
     arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
 
     // toggle clamp states to initialize clamp
-    //clamp.set_value(LOW);
-    //clamp.set_value(HIGH);
+    // clamp.set_value(LOW);
+    // clamp.set_value(HIGH);
 
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
@@ -330,7 +313,6 @@ void handleDoinky()
     {
 
         doinker.set_value(doinker.get_value() == LOW ? HIGH : LOW);
-
     }
 }
 
