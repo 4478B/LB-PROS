@@ -61,14 +61,14 @@ ControllerSettings lateral_controller(10,  // proportional gain (kP)
 );
 
 // angular PID controller
-ControllerSettings angular_controller(2,   // proportional gain (kP)
+ControllerSettings angular_controller(2.5,   // proportional gain (kP)
                                       0,   // integral gain (kI)
-                                      10,  // derivative gain (kD)
+                                      15,  // derivative gain (kD)
                                       3,   // anti windup
                                       0.3,   // small error range, in inches
-                                      1000, // small error range timeout, in milliseconds
+                                      600, // small error range timeout, in milliseconds
                                       0.5,   // large error range, in inches
-                                      1000, // large error range timeout, in milliseconds
+                                      600, // large error range timeout, in milliseconds
                                       0    // maximum acceleration (slew)
 );
 

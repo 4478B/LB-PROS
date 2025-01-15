@@ -147,10 +147,10 @@ void progSkills(int i)
     drivePID(30);
     endSection(500);
     chassis.turnToHeading(180, 2000);
-    drivePID(18);
+    drivePID(16);
     delay(3000);
     endSection(500);
-    drivePID(-10);
+    drivePID(-9);
     chassis.turnToHeading(266, 2000);
     drivePID(64, 6000, 10);
     delay(500);
@@ -160,21 +160,23 @@ void progSkills(int i)
     delay(150);
     drivePID(-16);
     chassis.turnToHeading(45, 2000);
-    drivePID(-23,3000,25);
+    drivePID(-21,3000,25);
     intake.move(-90);
     clamp.set_value(HIGH);
     endSection(1000);
-    drivePID(25);
+    drivePID(19);
     intake.move(127);
-    chassis.turnToHeading(170, 2000);
-    drivePID(-50);
+    chassis.turnToHeading(165, 2000);
+    
+    drivePID(-52,5000,35);
 
-    chassis.turnToHeading(178, 2000);
+    chassis.turnToHeading(175,2000);
 
     drivePID(-22);
     drivePID(-10, 1000, 42.5);
     clamp.set_value(LOW);
     delay(150);
+    endSection(50000);
     drivePID(5, 600);
     endSection(500);
     chassis.turnToHeading(90, 2000);

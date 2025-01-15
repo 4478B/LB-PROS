@@ -16,7 +16,18 @@
 #include "color_sort.h"
 
 // Global variables needed for arm control
+
+namespace ArmPos{
+
+    const double bottom = 5;
+    const double mid = 34;
+    const double top = 138;
+    const double push_top = 158;
+    const double alliance = 200;
+
+}
 static double targetPos = 0;
+static double lastPos = 0;
 static bool armMoving = false;
 static const double armThreshold = 0.25; // Adjust as needed
 
@@ -40,7 +51,12 @@ void arm_control_task(void *param)
 
             // calculate how far arm is from target
             error = targetPos - currentPos;
-
+            if(targetPos == ArmPos::push_top && error >5){
+                arm_motors.move(127);
+                delay(20);
+                continue;
+            }
+    
             if (fabs(error) < armThreshold)
             { // goal has been met
 
@@ -67,8 +83,10 @@ void arm_control_task(void *param)
 
                 // clamps movements to [-600,600]
                 nextMovement = std::clamp(nextMovement, -600.0, 600.0);
+                
             }
 
+            
             // move arm motors based on PID
             arm_motors.move_velocity(nextMovement);
         }
@@ -92,15 +110,16 @@ void arm_control_task(void *param)
 
 void setArm(int position)
 {
+    lastPos = targetPos;
     targetPos = position;
     armMoving = true;
 }
 
 // aliases for specific positions
-void setArmBottom() { setArm(5); }
-void setArmMid() { setArm(33); }
-void setArmTop() { setArm(138); }
-void setArmAlliance() { setArm(200); }
+void setArmBottom() { setArm(ArmPos::bottom); }
+void setArmMid() { setArm(ArmPos::mid); }
+void setArmTop() { setArm(ArmPos::top); }
+void setArmAlliance() { setArm(ArmPos::alliance); }
 
 void initialize_arm_position()
 {
@@ -328,7 +347,12 @@ void handleArm()
     }
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
     {
-        setArmTop();
+        if(targetPos == ArmPos::top){
+            setArm(ArmPos::push_top);
+        }
+        else{
+            setArmTop();
+        }
     }
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
     {
