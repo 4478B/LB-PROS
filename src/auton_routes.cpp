@@ -130,45 +130,66 @@ void progSkills(int i)
     setArmAlliance();
     delay(1000);
     clamp.set_value(HIGH);
-    
+
     // back up to align with goal
-    drivePID(-5, 1000);
-    endSection(50000);
+    drivePID(-6, 1000);
+    // endSection(50000);
     setArmMid();
     delay(300);
     chassis.turnToHeading(0, 2000);
     setArmBottom();
+
+    // go to clamp
     drivePID(-22);
     drivePID(-10, 1000, 42.5);
     clamp.set_value(LOW);
     delay(150);
     drivePID(5, 600);
     endSection(500);
+
+    // turn & go to ring1
     chassis.turnToHeading(90, 2000);
     intake.move(127);
     drivePID(25);
     delay(300);
+
+    // turn to approach wall stake
     chassis.turnToHeading(125, 2000);
-    drivePID(34);
+    drivePID(33);
     endSection(500);
+    
+    // turn & go to wall stake
     chassis.turnToHeading(180, 2000);
     drivePID(16);
     delay(3000);
     endSection(500);
+
+    //back up to align with 3 rings
     drivePID(-9);
+
+    // turn and go to 3 rings
     chassis.turnToHeading(270, 2000);
     drivePID(66, 6000, 10);
     delay(500);
+
+    // back up to align with last ring
     drivePID(-13);
+    // turn & go to last ring
     chassis.turnToHeading(180, 2000);
     drivePID(16, 3000, 30);
     delay(150);
+    // back up to align with corner
     drivePID(-16);
+
+    // turn and go to corner
     chassis.turnToHeading(45, 2000);
     drivePID(-21, 3000, 25);
     intake.move(-90);
     clamp.set_value(HIGH);
     endSection(1000);
+
+    // move forward to align with 
+    chassis.turnToHeading(45, 2000);
     drivePID(19);
     intake.move(127);
     chassis.turnToHeading(180, 2000);
