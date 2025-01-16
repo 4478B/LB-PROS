@@ -7,7 +7,7 @@ MotorGroup left_motors({-8, -9, -10}, pros::MotorGearset::blue);
 // right motor group
 MotorGroup right_motors({5, 6, 7}, pros::MotorGearset::blue);
 
-MotorGroup all_motors({-8,-9,-10,5,6,7},pros::MotorGearset::blue);
+MotorGroup all_motors({-8, -9, -10, 5, 6, 7}, pros::MotorGearset::blue);
 
 MotorGroup arm_motors({-3, 4}, pros::MotorGearset::blue);
 
@@ -53,22 +53,22 @@ ControllerSettings lateral_controller(10,  // proportional gain (kP)
                                       0,   // integral gain (kI)
                                       3,   // derivative gain (kD)
                                       3,   // anti windup
-                                      1,   // small error range, in inches
+                                      0.1, // small error range, in inches
                                       100, // small error range timeout, in milliseconds
-                                      3,   // large error range, in inches
+                                      0.5, // large error range, in inches
                                       500, // large error range timeout, in milliseconds
                                       20   // maximum acceleration (slew)
 );
 
 // angular PID controller
-ControllerSettings angular_controller(2.5,   // proportional gain (kP)
-                                      0,   // integral gain (kI)
-                                      15,  // derivative gain (kD)
-                                      3,   // anti windup
-                                      0.3,   // small error range, in inches
-                                      600, // small error range timeout, in milliseconds
-                                      0.5,   // large error range, in inches
-                                      600, // large error range timeout, in milliseconds
+ControllerSettings angular_controller(2.5, // proportional gain (kP)
+                                      0.2,   // integral gain (kI)
+                                      20,  // derivative gain (kD)
+                                      5,   // anti windup
+                                      0.2, // small error range, in inches
+                                      250, // small error range timeout, in milliseconds
+                                      0.4,   // large error range, in inches
+                                      250, // large error range timeout, in milliseconds
                                       0    // maximum acceleration (slew)
 );
 

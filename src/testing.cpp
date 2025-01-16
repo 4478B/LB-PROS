@@ -170,26 +170,16 @@ void testOdometryStraight(int i)
 void testOdometryTurn(int i)
 {
 
-    chassis.setPose(0, 0, 0);
     while (true)
     {
-        chassis.moveToPose(0, 0, 90, 3000, {}, false);
-        delay(500);
-        chassis.printPose();
-        endSection(1000000);
-        chassis.moveToPose(0, 0, 0, 3000, {}, false);
-        delay(500);
-        chassis.printPose();
-        endSection(1000000);
-
-        chassis.moveToPose(0, 0, 180, 3000, {}, false);
-        delay(500);
-        chassis.printPose();
-        endSection(1000000);
-        chassis.moveToPose(0, 0, 0, 3000, {}, false);
-        delay(500);
-        chassis.printPose();
-        endSection(1000000);
+        endSection(500000);
+        chassis.turnToHeading(180, 50000, {.direction = AngularDirection::CW_CLOCKWISE});
+        endSection(500000);
+        chassis.turnToHeading(270, 50000);
+        endSection(500000);
+        chassis.turnToHeading(270 + 60, 50000);
+        endSection(500000);
+        chassis.turnToHeading(0, 50000);
     }
 }
 
@@ -256,9 +246,9 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        progSkills(1);
-
-        // stops motors to prevent rogue movements after autonl
+        testOdometryTurn(1);
+        // progSkills(1);
+        //  stops motors to prevent rogue movements after autonl
         left_motors.brake();
         right_motors.brake();
 

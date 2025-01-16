@@ -123,15 +123,20 @@ void endSection(int delay)
 
 void progSkills(int i)
 {
+    // initial setup
     chassis.setPose(-54, 0, 270);
+
+    // score on alliance stake
     setArmAlliance();
     delay(1000);
     clamp.set_value(HIGH);
+    
+    // back up to align with goal
     drivePID(-5, 1000);
-    // endSection(50000);
+    endSection(50000);
     setArmMid();
     delay(300);
-    chassis.turnToHeading(358, 2000);
+    chassis.turnToHeading(0, 2000);
     setArmBottom();
     drivePID(-22);
     drivePID(-10, 1000, 42.5);
@@ -144,33 +149,33 @@ void progSkills(int i)
     drivePID(25);
     delay(300);
     chassis.turnToHeading(125, 2000);
-    drivePID(30);
+    drivePID(34);
     endSection(500);
     chassis.turnToHeading(180, 2000);
     drivePID(16);
     delay(3000);
     endSection(500);
     drivePID(-9);
-    chassis.turnToHeading(266, 2000);
-    drivePID(64, 6000, 10);
+    chassis.turnToHeading(270, 2000);
+    drivePID(66, 6000, 10);
     delay(500);
     drivePID(-13);
     chassis.turnToHeading(180, 2000);
-    drivePID(16,3000,30);
+    drivePID(16, 3000, 30);
     delay(150);
     drivePID(-16);
     chassis.turnToHeading(45, 2000);
-    drivePID(-21,3000,25);
+    drivePID(-21, 3000, 25);
     intake.move(-90);
     clamp.set_value(HIGH);
     endSection(1000);
     drivePID(19);
     intake.move(127);
-    chassis.turnToHeading(165, 2000);
-    
-    drivePID(-52,5000,35);
+    chassis.turnToHeading(180, 2000);
 
-    chassis.turnToHeading(175,2000);
+    drivePID(-52, 5000, 35);
+
+    chassis.turnToHeading(180, 2000);
 
     drivePID(-22);
     drivePID(-10, 1000, 42.5);
@@ -196,19 +201,25 @@ void progSkills(int i)
     delay(500);
     drivePID(-13);
     chassis.turnToHeading(0, 2000);
-    drivePID(16,3000,30);
+    drivePID(16, 3000, 30);
     delay(150);
     drivePID(-16);
     chassis.turnToHeading(135, 2000);
-    drivePID(-23,3000,25);
+    drivePID(-23, 3000, 25);
     intake.move(-90);
     clamp.set_value(HIGH);
     endSection(1000);
     drivePID(25);
     intake.move(127);
 
-
-
+    /*
+        chassis.setPose(-54, 0, 270);
+        int startTime = pros::millis();
+        chassis.turnToHeading(270 + 180, 2000);
+        endSection(50000);
+        chassis.turnToHeading(270 + 180 + 90, 2000);
+        endSection(50000);
+        chassis.turnToHeading(270 + 180 + 90 + 45, 2000);*/
 
     /*
     // PROG SKILLS ROUTE 1 (reference is skills_aio.txt)
@@ -1018,7 +1029,7 @@ void redGoalSideSugarRush(int i)
     drivePID(15);
     delay(270);
     intake.brake();
-    //drivePID(8);
+    // drivePID(8);
     endSection(100);
 
     chassis.turnToHeading(180, 1000, {}, false);
