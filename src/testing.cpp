@@ -170,26 +170,15 @@ void testOdometryStraight(int i)
 void testOdometryTurn(int i)
 {
 
-    chassis.setPose(0, 0, 0);
     while (true)
     {
-        chassis.moveToPose(0, 0, 90, 3000, {}, false);
-        delay(500);
-        chassis.printPose();
         endSection(1000000);
-        chassis.moveToPose(0, 0, 0, 3000, {}, false);
-        delay(500);
-        chassis.printPose();
+        chassis.turnToHeading(180, 4000,{.direction=lemlib::AngularDirection::CW_CLOCKWISE},false);
         endSection(1000000);
-
-        chassis.moveToPose(0, 0, 180, 3000, {}, false);
-        delay(500);
-        chassis.printPose();
+        chassis.turnToHeading(270, 4000,{},false);
         endSection(1000000);
-        chassis.moveToPose(0, 0, 0, 3000, {}, false);
-        delay(500);
-        chassis.printPose();
-        endSection(1000000);
+        chassis.turnToHeading(0, 4000,{},false);
+        
     }
 }
 

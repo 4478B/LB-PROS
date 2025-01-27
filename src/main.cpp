@@ -22,6 +22,7 @@ namespace ArmPos{
     const double bottom = 5;
     const double mid = 34;
     const double top = 138;
+    const double mid_high = 66;
     const double push_top = 158;
     const double alliance = 200;
 
@@ -334,7 +335,6 @@ void handleDoinky()
         doinker.set_value(doinker.get_value() == LOW ? HIGH : LOW);
     }
 }
-
 void handleArm()
 {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
@@ -343,7 +343,12 @@ void handleArm()
     }
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
     {
+        if(targetPos == ArmPos::mid){
+            setArm(ArmPos::mid_high);
+        }
+        else{
         setArmMid();
+        }
     }
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
     {
