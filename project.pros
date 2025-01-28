@@ -300,7 +300,7 @@
     "upload_options": {
       "icon": "power",
       "description": "50 point auton!!!!!",
-      "slot": 2
+      "slot": 1
     },
     "use_early_access": false
   }

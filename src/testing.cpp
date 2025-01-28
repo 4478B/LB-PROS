@@ -179,6 +179,14 @@ void testOdometryTurn(int i)
         endSection(1000000);
         chassis.turnToHeading(0, 4000,{},false);
         
+        endSection(500000);
+        chassis.turnToHeading(180, 50000, {.direction = AngularDirection::CW_CLOCKWISE});
+        endSection(500000);
+        chassis.turnToHeading(270, 50000);
+        endSection(500000);
+        chassis.turnToHeading(270 + 60, 50000);
+        endSection(500000);
+        chassis.turnToHeading(0, 50000);
     }
 }
 
@@ -245,9 +253,9 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
+        // testOdometryTurn(1);
         progSkills(1);
-
-        // stops motors to prevent rogue movements after autonl
+        //  stops motors to prevent rogue movements after autonl
         left_motors.brake();
         right_motors.brake();
 
