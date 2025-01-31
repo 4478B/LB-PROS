@@ -6,6 +6,7 @@
 #include "lemlib/pid.hpp"
 #include "liblvgl/llemu.hpp"
 #include "pros/adi.h"
+#include "pros/llemu.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
 #include "pros/rotation.hpp"
@@ -156,13 +157,9 @@ void testOdometryStraight(int i)
     chassis.setPose(0, 0, 0);
     while (true)
     {
-        chassis.moveToPoint(0, 72, 3000, {.minSpeed = 1, .earlyExitRange = 1}, false);
-        delay(500);
-        chassis.printPose();
+        drivePID(10,9000);
         endSection(1000000);
-        chassis.moveToPoint(0, 0, 3000, {.minSpeed = 1, .earlyExitRange = 1}, false);
-        delay(500);
-        chassis.printPose();
+        drivePID(-10,9000);
         endSection(1000000);
     }
 }
@@ -170,6 +167,9 @@ void testOdometryStraight(int i)
 void testOdometryTurn(int i)
 {
 
+    clamp.set_value(HIGH);
+    delay(500);
+    clamp.set_value(LOW);
     while (true)
     {
         endSection(1000000);
@@ -205,6 +205,35 @@ void testOdometryBoth(int i)
         endSection(1000000);
     }
 }
+
+void testTempRiseRate(){
+
+    int startTime = pros::millis();
+    int startTemp = intake.get_temperature();
+
+    std::cout << "currentTemp" << ", " << "elapsedTime" << ", " << "tempRiseRate" << std::endl;
+
+    while(true){
+        intake.move(20);
+        // print intake temp on pros screen
+        double currentTemp = intake.get_temperature();
+        double elapsedTime = (pros::millis() - startTime) / 1000.0;
+        double tempRiseRate = (currentTemp - startTemp) / elapsedTime;
+
+        pros::lcd::print(1, "Intake Temp: %f", currentTemp);
+        pros::lcd::print(2, "Time: %f", elapsedTime);
+        pros::lcd::print(3, "Temp Rise Rate: %f", tempRiseRate);
+
+        std::cout << currentTemp << ", " << elapsedTime << ", " << tempRiseRate << std::endl;
+
+
+
+        pros::delay(1000);
+        
+    }
+}
+
+
 
 /*
 
@@ -255,6 +284,8 @@ void testAuton(bool inputReq)
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
         // testOdometryTurn(1);
         progSkills(1);
+        //intake.move(127);
+        //endSection(99999);
         //  stops motors to prevent rogue movements after autonl
         left_motors.brake();
         right_motors.brake();

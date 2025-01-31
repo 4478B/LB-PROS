@@ -32,6 +32,46 @@ static double lastPos = 0;
 static bool armMoving = false;
 static const double armThreshold = 0.25; // Adjust as needed
 
+void intake_control_task(void* param){
+    
+    int stuckCount = 0;
+    int requiredStuck = 10;
+    int lastReset = pros::millis();
+    int resetCD = 5000;
+    while(true){
+
+        if(abs(intake.get_voltage()) > 0 && intake.get_torque() > 1 && lastReset + resetCD < pros::millis()){
+            stuckCount++;
+        }
+        else{
+            stuckCount = 0;
+        }
+
+        if(stuckCount > requiredStuck){
+            int initVoltage = intake.get_voltage();
+            intake.move(-127);
+            delay(200);
+            if(intake.get_voltage() == -127){
+                intake.move(initVoltage);
+            }
+            intake.move(0);
+            lastReset = pros::millis();
+            stuckCount = 0;
+        }
+
+        delay(100);
+        
+        //print all variables used
+        pros::lcd::print(0, "Intake Voltage: %d", intake.get_voltage());
+        pros::lcd::print(1, "Intake Torque: %f", intake.get_torque());
+        pros::lcd::print(2, "Stuck Count: %d", stuckCount);
+        pros::lcd::print(3, "Last Reset: %d", lastReset);
+        pros::lcd::print(4, "Current Time: %d", pros::millis());
+        pros::lcd::print(5, "Reset CD: %d", resetCD);
+
+    }
+
+}
 // Task function for arm control
 void arm_control_task(void *param)
 {
@@ -169,6 +209,7 @@ void initialize()
 
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
+    Task intake_task(intake_control_task, nullptr, "Intake Control Task");
 
     // create color sort task
     // colorSortHandler& sorter = colorSortHandler::getInstance();

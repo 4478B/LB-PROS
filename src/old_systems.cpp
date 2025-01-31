@@ -64,9 +64,16 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     // Read motor position (you can average left and right motor values for straight driving)
     
     // finds average motor position
-    std::vector<double> positions = all_motors.get_position_all();
-    double currentPosition = std::accumulate(positions.begin(), positions.end(), 0.0) / positions.size();
+    double currentPosition = (all_motors.get_position(0) + all_motors.get_position(1) + all_motors.get_position(2) + all_motors.get_position(3) + all_motors.get_position(4) + all_motors.get_position(5)) / 6.0;
     
+    /*pros::lcd::print(0, "LM1 Pos: %f", all_motors.get_position(0));
+    pros::lcd::print(1, "LM2 Pos: %f", all_motors.get_position(1));
+    pros::lcd::print(2, "LM3 Pos: %f", all_motors.get_position(2));
+    pros::lcd::print(3, "RM1 Pos: %f", all_motors.get_position(3));
+    pros::lcd::print(4, "RM2 Pos: %f", all_motors.get_position(4));
+    pros::lcd::print(5, "RM3 Pos: %f", all_motors.get_position(5));
+  */
+
     // Calculate the current error
     currentDelta = target - currentPosition;
 
@@ -118,14 +125,14 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     /*
     // Convert currentPosition back to inches
     double currentPositionInInches = currentPosition * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
-    pros::lcd::print(3, "Current Pos: %f inches", currentPositionInInches);
+    pros::lcd::print(6, "Current Pos: %f inches", currentPositionInInches);
 
     // Convert currentDelta back to inches
     double currentDeltaInInches = currentDelta * WHEEL_CIRCUMFERENCE / GEAR_RATIO;
-    pros::lcd::print(4, "Target Delta: %f inches", currentDeltaInInches);
+    pros::lcd::print(7, "Target Delta: %f inches", currentDeltaInInches);
 
     // Display the PID output (already in motor velocity units, no conversion needed)
-    pros::lcd::print(6, "Next Movement: %f", totalPID);
+    pros::lcd::print(8, "Next Movement: %f", totalPID);
     */
 
     // Wait for the polling rate before next iteration
