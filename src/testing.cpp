@@ -93,12 +93,12 @@
 
 void testRingSens(int i)
 {
-    /*
+
     while (true)
     {
 
-
-        intake.move_velocity(75);
+        // * TEST COLORS AND GENERAL FUNCTIONALITY
+        /*intake.move_velocity(75);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for any...");
         waitUntilAnyIntake(100000);
@@ -123,16 +123,24 @@ void testRingSens(int i)
         intake.brake();
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got blue!");
+        endSection(1000000);*/
+
+        // * TEST INTAKE JERKING
+        intake.move(127);
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "Waiting for any... (jerking)");
+        waitUntilAnyIntake(100000);
+        pros::lcd::print(1, "jerking");
+        delay(10);
+        intake.brake();
+        delay(50);
+        intake.move(127);
+        pros::lcd::clear_line(1);
+        pros::lcd::print(1, "Got any! (jerked)");
         endSection(1000000);
-    }*/
-    setArmTop();
-    delay(1000);
-    intake.move_velocity(70);
-    drivePID(27, 1000, 45);
-    setArmBottom();
-    drivePID(-10, 1000, 45);
-    waitUntilAnyIntake(2000);
-    intake.brake();
+
+    }
+
 }
 
 void testGoalSens(int i)
@@ -288,7 +296,7 @@ void testAuton(bool inputReq)
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
         // testOdometryTurn(1);
-        progSkills(1);
+        safeAWPLeft(1);
         //intake.move(127);
         //endSection(99999);
         //  stops motors to prevent rogue movements after autonl

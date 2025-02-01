@@ -21,7 +21,8 @@ extern Motor intake;
 extern adi::Port clamp;
 extern pros::Optical ringSens;
 extern pros::Distance goalSens;
-extern adi::Port doinker;
+extern adi::Port left_doinker;
+extern adi::Port right_doinker;
 
 extern PID armPID;
 extern PID lateralPID;

@@ -19,12 +19,12 @@
 
 namespace ArmPos{
 
-    const double bottom = 5;
-    const double mid = 34;
-    const double top = 138;
-    const double mid_high = 66;
-    const double push_top = 158;
-    const double alliance = 200;
+    const double bottom = 0;
+    const double mid = 21;
+    const double top = 132;
+    const double mid_high = 44;
+    const double push_top = 152;
+    const double alliance = 205;
 
 }
 static double targetPos = 0;
@@ -198,7 +198,7 @@ void initialize()
     chassis.calibrate(); // calibrate sensors
 
     clamp.set_value(HIGH);
-    doinker.set_value(LOW);
+    right_doinker.set_value(LOW);
 
     // initialize_arm_position();
     arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
@@ -209,7 +209,7 @@ void initialize()
 
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
-    Task intake_task(intake_control_task, nullptr, "Intake Control Task");
+    //Task intake_task(intake_control_task, nullptr, "Intake Control Task");
 
     // create color sort task
     // colorSortHandler& sorter = colorSortHandler::getInstance();
@@ -366,25 +366,41 @@ void handleClamp()
     }
 }
 
-void handleDoinky()
+void handleLeftDoinker()
 {
 
     // activates on pressing LEFT
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT))
     {
 
-        doinker.set_value(doinker.get_value() == LOW ? HIGH : LOW);
+        left_doinker.set_value(left_doinker.get_value() == LOW ? HIGH : LOW);
+    }
+}
+
+void handleRightDoinker()
+{
+
+    // activates on pressing LEFT
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
+    {
+
+        right_doinker.set_value(right_doinker.get_value() == LOW ? HIGH : LOW);
     }
 }
 void handleArm()
 {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
     {
+        
         setArmBottom();
     }
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
     {
         if(targetPos == ArmPos::mid){
+            int initVoltage = intake.get_voltage();
+            intake.move(-127);
+            delay(30);
+            intake.move(initVoltage);
             setArm(ArmPos::mid_high);
         }
         else{
@@ -397,6 +413,10 @@ void handleArm()
             setArm(ArmPos::push_top);
         }
         else{
+            int initVoltage = intake.get_voltage();
+            intake.move(-127);
+            delay(30);
+            intake.move(initVoltage);
             setArmTop();
         }
     }
@@ -425,6 +445,7 @@ void opcontrol()
     // left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     // right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
 
     // loop forever
     while (true)
@@ -440,7 +461,8 @@ void opcontrol()
         handleIntake();
         handleClamp();
         handleArm();
-        handleDoinky();
+        handleLeftDoinker();
+        handleRightDoinker();
 
         // delay to save resources
         pros::delay(20);

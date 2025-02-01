@@ -3,32 +3,34 @@
 #include "pros/distance.hpp"
 
 // left motor group
-MotorGroup left_motors({-8, -9, -10}, pros::MotorGearset::blue);
+MotorGroup left_motors({-17, -16, -15}, pros::MotorGearset::blue);
 // right motor group
-MotorGroup right_motors({5, 18, 7}, pros::MotorGearset::blue);
+MotorGroup right_motors({18, 19, 20}, pros::MotorGearset::blue);
 
-MotorGroup all_motors({-8, -9, -10, 5, 18, 7}, pros::MotorGearset::blue);
+MotorGroup all_motors({-17, -16, -15, 18, 19, 20}, pros::MotorGearset::blue);
 
-MotorGroup arm_motors({-3, 4}, pros::MotorGearset::blue);
+MotorGroup arm_motors({12, -13}, pros::MotorGearset::blue);
 
 // controller definition
 Controller controller(pros::E_CONTROLLER_MASTER);
 
-Motor intake(1);
+Motor intake(14);
 
 adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
 
-adi::Port doinker('C', pros::E_ADI_DIGITAL_OUT);
+adi::Port left_doinker('H', pros::E_ADI_DIGITAL_OUT);
+adi::Port right_doinker('C', pros::E_ADI_DIGITAL_OUT);
 
-PID armPID(2.9, 0, 2.5);
+
+PID armPID(2.9, 0, 2.5); // old 2.9 2.5
 PID lateralPID(.11, 0, 0.15);
 PID angularPID(0.499, 0, 0.002);
 
-Rotation armRot(11);
+Rotation armRot(10);
 
-Optical ringSens(19);
+Optical ringSens(0);
 
-Distance goalSens(20);
+Distance goalSens(0);
 
 // drivetrain settings
 Drivetrain drivetrain(&left_motors,               // left motor group
@@ -39,7 +41,7 @@ Drivetrain drivetrain(&left_motors,               // left motor group
                       8                           // horizontal drift is 8 (center traction wheel drivebase)
 );
 
-Imu imu(20);
+Imu imu(4);
 
 OdomSensors sensors(nullptr, // vertical tracking wheel 1
                     nullptr, // vertical tracking wheel 2
