@@ -78,6 +78,8 @@ const AutonRoutine COMPETITION_ROUTINES[] = {
     {"Prog Skills", progSkills},                          
     {"Safe AWP Left", safeAWPLeft},   
     {"Safe AWP Right", safeAWPRight}, 
+    {"Danbury Blue RS", danburyBlueRS},   
+    {"Danbury Red RS", danburyRedRS}, 
     {"Red Goal Side SUGARRUSH", redGoalSideSugarRush},        
     {"Blue Goal Side SUGARRUSH", blueGoalSideSugarRush},        
     {"Blue Goal Side", blueGoalSide},                     

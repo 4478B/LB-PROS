@@ -43,9 +43,16 @@ Drivetrain drivetrain(&left_motors,               // left motor group
 
 Imu imu(4);
 
-OdomSensors sensors(nullptr, // vertical tracking wheel 1
+
+pros::Rotation vertical_encoder(-9);
+pros::Rotation horizontal_encoder(-8);
+
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -2.44);
+lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, .375);
+
+OdomSensors sensors(&vertical_tracking_wheel, // vertical tracking wheel 1
                     nullptr, // vertical tracking wheel 2
-                    nullptr, // horizontal tracking wheel 1
+                    &horizontal_tracking_wheel, // horizontal tracking wheel 1
                     nullptr, // horizontal tracking wheel 2
                     &imu     // inertial sensor
 );

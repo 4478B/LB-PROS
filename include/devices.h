@@ -30,6 +30,10 @@ extern PID angularPID;
 
 extern Rotation armRot;
 extern Drivetrain drivetrain;
+
+extern pros::Rotation vertical_encoder;
+extern pros::Rotation horizontal_encoder;
+
 extern Imu imu;
 extern OdomSensors sensors;
 extern ControllerSettings lateral_controller;

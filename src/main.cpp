@@ -218,17 +218,22 @@ void initialize()
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
 
     // print odometry position to brain screen
-    /*pros::Task screen_task([&]() {
+    pros::Task screen_task([&]() {
         while (true) {
             // print robot location to the brain screen
             pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
             pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-
             // delay to save resources
+
+            if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+                chassis.setPose(0,0,imu.get_heading());
+            }
             pros::delay(20);
+
+            
         }
-    });*/
+    });
 }
 
 void autonomous()
@@ -420,7 +425,7 @@ void handleArm()
             setArmTop();
         }
     }
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
     {
         setArmAlliance();
     }
