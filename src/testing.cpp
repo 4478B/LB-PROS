@@ -229,40 +229,6 @@ void testOdometryBoth(int i)
     }
 }
 
-void testTempRiseRate() {
-    // Record the start time and initial temperature of the intake motor
-    int startTime = pros::millis();
-    int startTemp = intake.get_temperature();
-
-    // Print the header for the console output
-    std::cout << "currentTemp" << ", " << "elapsedTime" << ", " << "tempRiseRate" << std::endl;
-
-    while (true) {
-        // Move the intake motor at a velocity of 20
-        intake.move(20);
-
-        // Get the current temperature of the intake motor
-        double currentTemp = intake.get_temperature();
-        // Calculate the elapsed time in seconds
-        double elapsedTime = (pros::millis() - startTime) / 1000.0;
-        // Calculate the rate of temperature rise
-        double tempRiseRate = (currentTemp - startTemp) / elapsedTime;
-
-        // Display the current temperature, elapsed time, and temperature rise rate on the LCD
-        pros::lcd::print(1, "Intake Temp: %f", currentTemp);
-        pros::lcd::print(2, "Time: %f", elapsedTime);
-        pros::lcd::print(3, "Temp Rise Rate: %f", tempRiseRate);
-
-        // Print the current temperature, elapsed time, and temperature rise rate to the console
-        std::cout << currentTemp << ", " << elapsedTime << ", " << tempRiseRate << std::endl;
-
-        // Delay for 1 second before the next iteration
-        pros::delay(1000);
-    }
-}
-
-
-
 /*
 
 
