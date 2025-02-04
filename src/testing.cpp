@@ -278,6 +278,8 @@ void testAuton(bool inputReq)
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
         // testOdometryTurn(1);
         safeAWPRight(1);
+        //chassis.setPose(0,0,0);
+        //chassis.moveToPose(24,24,0,3000,{.forwards = true, .minSpeed = 70}, false);
         //intake.move(127);
         //endSection(99999);
         //  stops motors to prevent rogue movements after autonl

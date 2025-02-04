@@ -790,7 +790,7 @@ void safeAWPRight(int i)
     // move to alliance ring and score it
     chassis.turnToHeading(-140, 1000, {}, false);
     intake.move(80);
-    drivePID(33, 1000, 45);
+    drivePID(33, 1500, 45);
     setArmBottom();
     delay(150);
     intake.move(20);
@@ -804,8 +804,8 @@ void safeAWPRight(int i)
     intake.move(20);
 
     // go to goal and clamp
-    drivePID(-20, 1500,40);
-    drivePID(-18, 1000, 35);
+    drivePID(-20, 1500);
+    drivePID(-15, 1000, 35);
     clamp.set_value(LOW);
     waitUntilAnyIntake(300);
     intake.move(127);
@@ -817,21 +817,28 @@ void safeAWPRight(int i)
 
     // score ring 2
     drivePID(29, 1000, 45);
-    endSection(500);
+    //endSection(500);
 
-    /*   THIS IS REQUIRED FOR AWP
     // go to middle
-    chassis.turnToHeading(-160, 1000, {}, false);
-    drivePID(30);
+    chassis.turnToHeading(-168, 1000, {}, false);
+    drivePID(40);
+    chassis.turnToHeading(-125, 1000, {}, false);
+    right_doinker.set_value(HIGH);
+    endSection(50000);
+    chassis.turnToHeading(-105, 1000, {}, false);
+    left_doinker.set_value(HIGH);
+    endSection(50000);
+    //chassis.turnToHeading(10, 1000, {}, false);
     arm_motors.move(30);
     left_motors.brake();
-    right_motors.brake();*/
+    right_motors.brake();
 
+    /* THIRD GOAL LINEUP
     chassis.turnToHeading(-90, 1000, {}, false);
     drivePID(-24,1700,70);
     clamp.set_value(HIGH);
     chassis.turnToHeading(-270, 1000, {}, false);
-    drivePID(-28,1700,70);
+    drivePID(-28,1700,70);*/
 
     /*clamp.set_value(HIGH);
     chassis.setPose(0, 0, 221);
