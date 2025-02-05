@@ -93,12 +93,13 @@
 
 void testRingSens(int i)
 {
-
+    double dist = 300;
+    clamp.set_value(LOW);
     while (true)
     {
-
+        /*
         // * TEST COLORS AND GENERAL FUNCTIONALITY
-        intake.move_velocity(75);
+        intake.move(127);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for any...");
         waitUntilAnyIntake(100000);
@@ -106,8 +107,8 @@ void testRingSens(int i)
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got any!");
         endSection(1000000);
-
-        intake.move_velocity(75);
+        
+        intake.move(127);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for red...");
         waitUntilRedIntake(100000);
@@ -116,7 +117,7 @@ void testRingSens(int i)
         pros::lcd::print(1, "Got red!");
         endSection(1000000);
 
-        intake.move_velocity(75);
+        intake.move(127);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for blue...");
         waitUntilBlueIntake(100000);
@@ -124,22 +125,39 @@ void testRingSens(int i)
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got blue!");
         endSection(1000000);
-
-        /*
+        */
+        
         // * TEST INTAKE JERKING
+        
+
         intake.move(127);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for any... (jerk)");
         waitUntilAnyIntake(100000);
         pros::lcd::print(1, "jerking");
-        delay(10);
+        intake.tare_position();
+        if(dist == 0){
+            while(!controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
+                intake.brake();
+                pros::lcd::print(5,"Dist: %f",intake.get_position());
+                dist = intake.get_position();
+                pros::delay(50);
+            }
+        }
+        else{
+            while(intake.get_position() < dist){
+                delay(20);
+                pros::lcd::print(6,"Error: %f",dist - intake.get_position());
+            }
+        }
+        
         intake.brake();
-        delay(50);
+        delay(500);
         intake.move(127);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got any! (jerked)");
-        endSection(1000000);
-
+        endSection( 1000);
+        /*
         // * TEST INTAKE ARM HOLD
         intake.move(127);
         setArm(18);
@@ -277,7 +295,7 @@ void testAuton(bool inputReq)
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
         // testOdometryTurn(1);
-        safeAWPRight(1);
+        testRingSens(1);
         //chassis.setPose(0,0,0);
         //chassis.moveToPose(24,24,0,3000,{.forwards = true, .minSpeed = 70}, false);
         //intake.move(127);

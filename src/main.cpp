@@ -20,7 +20,7 @@
 namespace ArmPos{
 
     const double bottom = 0;
-    const double mid = 21;
+    const double mid = 22;
     const double top = 132;
     const double mid_high = 44;
     const double push_top = 152;
@@ -203,6 +203,9 @@ void initialize()
     // initialize_arm_position();
     arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
 
+    ringSens.set_led_pwm(100); // Set the LED brightness to maximum for better detection
+    ringSens.set_integration_time(10);
+
     // toggle clamp states to initialize clamp
     // clamp.set_value(LOW);
     // clamp.set_value(HIGH);
@@ -218,6 +221,7 @@ void initialize()
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
 
     // print odometry position to brain screen
+    /*
     pros::Task screen_task([&]() {
         while (true) {
             // print robot location to the brain screen
@@ -234,6 +238,7 @@ void initialize()
             
         }
     });
+    */
 }
 
 void autonomous()
@@ -319,17 +324,44 @@ void handleDriveTrain()
     right_motors.move_velocity(rightY);
 }
 
+int tossCounter = 0;
+int detectTimeout = 0;
+const int sortDist = 290;
+double startPos;
 void handleIntake()
 {
 
     // manual controls are overridden if color sort mechanism is active
-    if (!colorSortHandler::getInstance().getIsCurrentlySorting())
-    {
-
-        // intake
+    // intake
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
         {
-            intake.move(127);
+            ringSens.set_led_pwm(100); // Set the LED brightness to maximum for better detection
+            ringSens.set_integration_time(10);
+            if(detectTimeout > 0 && sortDist + startPos > intake.get_position()){
+                intake.move(127);
+                detectTimeout--;
+                tossCounter = 20;
+            }
+            else if(isRingDetected(BLUE_RING_HUE)){
+                intake.move(127);
+                startPos = intake.get_position();
+                detectTimeout = 30;
+            }
+            else{
+
+                if(tossCounter > 0){
+                    intake.brake();
+                    tossCounter--;
+                }
+                else{
+                    intake.move(127);
+                }
+
+            }
+            pros::lcd::print(5, "startPos: %f", startPos);
+            pros::lcd::print(6, "detectTimeout: %d", detectTimeout);
+            pros::lcd::print(7, "tossCounter: %d", tossCounter);
+
         }
         // outtake
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
@@ -341,7 +373,6 @@ void handleIntake()
         {
             intake.brake();
         }
-    }
 }
 
 void handleColorSort()

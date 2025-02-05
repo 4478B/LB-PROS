@@ -783,53 +783,65 @@ void safeAWPRight(int i)
 
     // arm functions
     setArmAlliance();
-    delay(1000);
-    drivePID(-6,1500);
+    delay(500);
+    drivePID(-6,500,110);
     //endSection(700);
 
     // move to alliance ring and score it
-    chassis.turnToHeading(-140, 1000, {}, false);
+    chassis.turnToHeading(-140, 600, {}, false);
     intake.move(80);
-    drivePID(33, 1500, 45);
+    drivePID(33, 800);
     setArmBottom();
-    delay(150);
+    delay(100);
     intake.move(20);
     // chassis.turnToHeading(180 ,1000,{},false);
 
-    drivePID(-21, 1000);
-    delay(500);
+    drivePID(-21, 600);
     intake.brake();
-    chassis.turnToHeading(-243, 700, {}, false);
+    chassis.turnToHeading(-243, 600, {}, false);
     intake.brake();
     intake.move(20);
 
     // go to goal and clamp
-    drivePID(-20, 1500);
+    drivePID(-20, 800,150);
     drivePID(-15, 1000, 35);
     clamp.set_value(LOW);
-    waitUntilAnyIntake(300);
+    //waitUntilAnyIntake(300);
     intake.move(127);
-    endSection(500);
+    //endSection(500);
     chassis.turnToHeading(0, 1000, {}, false);
     intake.move(-50);
-    delay(100);
+    //delay(100);
     intake.move(127);
 
     // score ring 2
-    drivePID(29, 1000, 45);
+    drivePID(29, 800, 45);
     //endSection(500);
 
     // go to middle
-    chassis.turnToHeading(-168, 1000, {}, false);
-    drivePID(40);
-    chassis.turnToHeading(-125, 1000, {}, false);
+    chassis.turnToHeading(-168, 700, {}, false);
+    drivePID(40,1000,120);
+    chassis.turnToHeading(-135, 700, {}, false);
     right_doinker.set_value(HIGH);
-    endSection(50000);
-    chassis.turnToHeading(-105, 1000, {}, false);
+    intake.brake();
+    drivePID(9,700,120);
+    //endSection(50000);
+    chassis.turnToHeading(-105, 800, {}, false);
     left_doinker.set_value(HIGH);
-    endSection(50000);
+   //endSection(50000);
     //chassis.turnToHeading(10, 1000, {}, false);
+    drivePID(-9,1000,120);
+    chassis.turnToHeading(-168, 800, {}, false);
+    drivePID(-20,1000,130);
+    right_doinker.set_value(LOW);
+    intake.move(127);
+    drivePID(-10,800,130);
+    chassis.turnToHeading(-145, 800, {}, false);
+    left_doinker.set_value(LOW);
+    chassis.turnToHeading(-160, 800, {}, false);
+    drivePID(20,800,130);
     arm_motors.move(30);
+    
     left_motors.brake();
     right_motors.brake();
 
