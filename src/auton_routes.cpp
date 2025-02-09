@@ -17,7 +17,7 @@
 #include "color_sort.h"
 
 // These our functions made for backwards-compatibility with VEXCode routes
-
+ 
 void drivePIDOdom(double goalInches, bool clamping, double clampDistInches)
 {
     // Step 1: Get the current robot pose from odometry.
@@ -120,7 +120,122 @@ void endSection(int delay)
 
 // This file includes all of the routes coded in PROS for our robot
 // The routes should have linked path.jerryio files for reference
+void soloPushRight(int i){
+    ringSens.set_led_pwm(100);
+    clamp.set_value(HIGH);
+    chassis.setPose(0,0,-212);
+    setArmAlliance();
+    delay(500);
+    drivePID(-6,600,120);
+    chassis.turnToHeading(-32,800,{}, false);
+    setArmBottom();
+    intake.move(90);
+    drivePID(24,700,120);
+    waitUntilAnyIntake(700);
+    intake.brake();
+    chassis.turnToHeading(63,600,{}, false);
+    drivePID(-26,800,35);
+    clamp.set_value(LOW);
+    chassis.turnToHeading(-2,600,{}, false);
+    intake.move(127);
+    drivePID(26,800,130);
+    chassis.turnToHeading(157,700,{}, false);
+    intake.move(127);
+    clamp.set_value(HIGH);
+    drivePID(65,1300,130);
+    intake.move(127);
+    drivePID(17,800,120);
+    intake.move(80);
+    waitUntilAnyIntake(500);
+    intake.brake();
+    drivePID(-17,800,120);
+    chassis.turnToHeading(60,700,{}, false);
+    drivePID(-34,800,35);
+    clamp.set_value(LOW);
+    intake.move(127);
+    chassis.turnToHeading(180,700,{}, false);
+    drivePID(26,800,130);
+    setArm(70);
+    drivePID(-55,800,120);
+}
+void ladyBrownRushRight(int i){
+    
+    ringSens.set_led_pwm(100);
+    clamp.set_value(HIGH);
+    chassis.setPose(0,0,291);
+    setArm(60);
+    intake.move(127);
+    //waitUntilRedIntake();
+    left_doinker.set_value(HIGH);
+    drivePID(36,1000);
+    intake.brake();
+   drivePID(-16,800,30);
+   left_doinker.set_value(LOW);
+   chassis.turnToHeading(273,400);
+   drivePID(6,600);
+   setArm(220);
+ delay(350);
+   chassis.turnToHeading(10,650);
+   setArm(80);
+drivePID(-22,1000);
+clamp.set_value(LOW);
+chassis.turnToHeading(50,700);
+intake.move(127);
+left_doinker.set_value(HIGH);
+drivePID(20,700);
+intake.move(-40);
+drivePID(50,1300,50);
+drivePID(-10,600,50);
+chassis.turnToHeading(195,700);
+intake.move(127);
+left_doinker.set_value(LOW);
+chassis.turnToHeading(180,250);
+drivePID(20,1000);
 
+}
+void newRingSideRight(int i){
+    clamp.set_value(HIGH);
+    chassis.setPose(0,0,293);
+    intake.move(127);
+    //waitUntilRedIntake();
+    right_doinker.set_value(HIGH);
+    drivePID(44,1250);
+   
+    endSection(100000);
+   
+    intake.move(90);
+   drivePID(-27,950,66);
+   intake.brake();
+   right_doinker.set_value(LOW);
+   
+   endSection(100000);
+   
+   chassis.turnToHeading(55,600);
+   drivePID(-28,900);
+   clamp.set_value(LOW);
+
+   endSection(100000);
+   
+   intake.move(127);
+   chassis.turnToHeading(0,650);
+   drivePID(32,1250,25);
+   chassis.turnToHeading(125,600);
+   drivePID(36,1300);
+   
+   endSection(100000);
+   
+   chassis.turnToHeading(18,650);
+   right_doinker.set_value(HIGH);
+   drivePID(20,1500);
+   chassis.turnToHeading(-10,800);
+   
+   endSection(100000);
+   
+   drivePID(-20,1000);
+   chassis.turnToHeading(-175,1000);
+   chassis.turnToHeading(200,400);
+   right_doinker.set_value(LOW);
+}
 void progSkills(int i)
 {
     // initial setup
