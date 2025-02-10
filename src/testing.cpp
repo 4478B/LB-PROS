@@ -93,7 +93,7 @@
 
 void testRingSens(int i)
 {
-    double dist = 300;
+    double dist = 305;
     clamp.set_value(LOW);
     while (true)
     {
@@ -130,9 +130,13 @@ void testRingSens(int i)
         // * TEST INTAKE JERKING
         
 
-        intake.move(127);
+        intake.move(70);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for any... (jerk)");
+        for(int i = 0; i < 100; i++){
+            ringSens.set_led_pwm(100);
+            delay(10);
+        }
         waitUntilAnyIntake(100000);
         pros::lcd::print(1, "jerking");
         intake.tare_position();
@@ -153,7 +157,7 @@ void testRingSens(int i)
         
         intake.brake();
         delay(500);
-        intake.move(127);
+        intake.move(100);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got any! (jerked)");
         endSection( 1000);

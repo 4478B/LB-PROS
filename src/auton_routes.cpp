@@ -911,14 +911,14 @@ void safeAWPRight(int i)
     intake.move(20);
     // chassis.turnToHeading(180 ,1000,{},false);
 
-    drivePID(-21, 600);
+    drivePID(-19, 600);
     intake.brake();
-    chassis.turnToHeading(-243, 600, {}, false);
+    chassis.turnToHeading(-245, 800, {}, false);
     intake.brake();
     intake.move(20);
 
     // go to goal and clamp
-    drivePID(-20, 800,150);
+    drivePID(-19, 800,150);
     drivePID(-15, 1000, 35);
     clamp.set_value(LOW);
     //waitUntilAnyIntake(300);
@@ -930,22 +930,23 @@ void safeAWPRight(int i)
     intake.move(127);
 
     // score ring 2
-    drivePID(29, 800, 45);
+    drivePID(30, 800, 45);
     //endSection(500);
 
     // go to middle
-    chassis.turnToHeading(-168, 700, {}, false);
+    chassis.turnToHeading(-164, 700, {}, false);
     drivePID(40,1000,120);
-    chassis.turnToHeading(-135, 700, {}, false);
+    chassis.turnToHeading(-130, 700, {}, false);
     right_doinker.set_value(HIGH);
-    intake.brake();
-    drivePID(9,700,120);
+    //intake.brake();
+    drivePID(7,700,120);
     //endSection(50000);
-    chassis.turnToHeading(-105, 800, {}, false);
+    chassis.turnToHeading(-106, 800, {}, false);
     left_doinker.set_value(HIGH);
+    drivePID(5,500,120);
    //endSection(50000);
     //chassis.turnToHeading(10, 1000, {}, false);
-    drivePID(-9,1000,120);
+    drivePID(-14,1000,120);
     chassis.turnToHeading(-168, 800, {}, false);
     drivePID(-20,1000,130);
     right_doinker.set_value(LOW);
