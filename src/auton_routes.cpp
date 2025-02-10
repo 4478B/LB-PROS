@@ -199,37 +199,37 @@ void newRingSideRight(int i){
     intake.move(127);
     //waitUntilRedIntake();
     right_doinker.set_value(HIGH);
-    drivePID(44,1250);
+    drivePID(45,1250);
    
-    endSection(100000);
+    
    
     intake.move(90);
    drivePID(-27,950,66);
    intake.brake();
    right_doinker.set_value(LOW);
    
-   endSection(100000);
+   
    
    chassis.turnToHeading(55,600);
    drivePID(-28,900);
    clamp.set_value(LOW);
 
-   endSection(100000);
+  
    
    intake.move(127);
    chassis.turnToHeading(0,650);
-   drivePID(32,1250,25);
+   drivePID(34,1250,25);
    chassis.turnToHeading(125,600);
    drivePID(36,1300);
    
-   endSection(100000);
+   
    
    chassis.turnToHeading(18,650);
    right_doinker.set_value(HIGH);
-   drivePID(20,1500);
+   drivePID(23,1550);
    chassis.turnToHeading(-10,800);
    
-   endSection(100000);
+ 
    
    drivePID(-20,1000);
    chassis.turnToHeading(-175,1000);
