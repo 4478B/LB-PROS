@@ -69,8 +69,6 @@ bool waitUntilRingDetected(int msecTimeout, Hue targetHue)
 
         pros::delay(10); // Wait briefly before the next sensor reading to prevent excessive polling
     }
-    ringSens.set_led_pwm(0);
-    ringSens.set_integration_time(100);
     if (ringDetected >= MIN_RING_DETECTION)
     {
         return true;

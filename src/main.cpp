@@ -7,6 +7,7 @@
 #include "pros/misc.h"
 #include "pros/motors.h"
 #include "pros/rotation.hpp"
+#include <algorithm>
 #include <cstdlib>
 #include "devices.h"
 #include "auton_selector.h"
@@ -148,6 +149,24 @@ void arm_control_task(void *param)
         pros::delay(20);
     }
 }
+namespace csort {
+    bool sortingEnabled = false;
+    Hue targetHue = BLUE_RING_HUE;
+    int lastRingDetectionTime = 0;
+
+    void color_sort_task(void* param) {
+        while (true) {
+            if (sortingEnabled) {
+                if(isRingDetected(targetHue)){
+                    lastRingDetectionTime = pros::millis();
+                }
+                delay(10);
+            } else {
+                delay(100);
+            }
+        }
+    }
+}
 
 void setArm(int position)
 {
@@ -161,33 +180,6 @@ void setArmBottom() { setArm(ArmPos::bottom); }
 void setArmMid() { setArm(ArmPos::mid); }
 void setArmTop() { setArm(ArmPos::top); }
 void setArmAlliance() { setArm(ArmPos::alliance); }
-
-void initialize_arm_position()
-{
-    // Move arm down at moderate speed but low power
-    arm_motors.set_voltage_limit(4000); // Limit to 4V for gentle movement
-    arm_motors.move_velocity(-50);      // Move down at moderate speed
-    arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
-
-    // Wait until arm stalls (high current, low velocity)
-    while (true)
-    {
-        // Get current draw and velocity
-        double velocity = arm_motors.get_actual_velocity();
-        int current = arm_motors.get_current_draw();
-
-        // If we detect high current (stall) and low velocity, we've hit bottom
-        if (current > 1500 && std::abs(velocity) < 5)
-        {
-            arm_motors.brake();
-            arm_motors.set_voltage_limit(12000); // Reset to full voltage
-            armRot.reset_position();
-            break;
-        }
-
-        pros::delay(20); // Small delay to prevent hogging CPU
-    }
-}
 
 // initialize function. Runs on program startup
 void initialize()
@@ -206,17 +198,12 @@ void initialize()
     ringSens.set_led_pwm(100); // Set the LED brightness to maximum for better detection
     ringSens.set_integration_time(10);
 
-    // toggle clamp states to initialize clamp
-    // clamp.set_value(LOW);
-    // clamp.set_value(HIGH);
 
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
+    // color sort task
+    //Task csort_task(csort::color_sort_task, nullptr, "Color Sort Task");
     //Task intake_task(intake_control_task, nullptr, "Intake Control Task");
-
-    // create color sort task
-    // colorSortHandler& sorter = colorSortHandler::getInstance();
-    // Task csort_task(color_sort_task, nullptr, "Color Sort Task");
 
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
 
@@ -323,68 +310,103 @@ void handleDriveTrain()
     left_motors.move_velocity(leftY);
     right_motors.move_velocity(rightY);
 }
+namespace csort {
 
-int tossCounter = 0;
-int detectTimeout = 0;
-const int sortDist = 290;
-double startPos;
-void handleIntake()
-{
+    int ringTossCounter = 0;
+    int detectionTimeout = 0;
+    const int sortingDistance = 290;
+    double intakeStartPosition;
 
-    // manual controls are overridden if color sort mechanism is active
-    // intake
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
-        {
-            ringSens.set_led_pwm(100); // Set the LED brightness to maximum for better detection
-            ringSens.set_integration_time(10);
-            if(detectTimeout > 0 && sortDist + startPos > intake.get_position()){
+    void handleIntake() {
+        if (!sortingEnabled) {
+            // Simple intake control without sorting
+            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
                 intake.move(127);
-                detectTimeout--;
-                tossCounter = 20;
+            } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+                intake.move(-127);
+            } else {
+                intake.brake();
             }
-            else if(isRingDetected(BLUE_RING_HUE)){
-                intake.move(127);
-                startPos = intake.get_position();
-                detectTimeout = 30;
-            }
-            else{
+        } else {
+            // Manual controls are overridden if color sort mechanism is active
+            // Intake
+            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 
-                if(tossCounter > 0){
-                    intake.brake();
-                    tossCounter--;
-                }
-                else{
+                // If a ring is detected within the sorting distance, continue intake
+                if (detectionTimeout > 0 && sortingDistance + intakeStartPosition > intake.get_position()) {
                     intake.move(127);
+                    detectionTimeout--;
+                    ringTossCounter = 20;
+                }
+                // If a ring is detected, start the intake and set the start position
+                else if (lastRingDetectionTime + 50 > pros::millis()) {
+                    intake.move(127);
+                    intakeStartPosition = intake.get_position();
+                    detectionTimeout = 30;
+                } else {
+                    // If toss counter is active, brake the intake
+                    if (ringTossCounter > 0) {
+                        intake.brake();
+                        ringTossCounter--;
+                    } else {
+                        // Continue intake if no ring is detected
+                        intake.move(127);
+                    }
                 }
 
+                // Print debug information to the LCD
+                pros::lcd::print(4, "Time since last detection: %d", pros::millis() - lastRingDetectionTime);
+                pros::lcd::print(5, "Intake start position: %f", intakeStartPosition);
+                pros::lcd::print(6, "Detection timeout: %d", detectionTimeout);
+                pros::lcd::print(7, "Ring toss counter: %d", ringTossCounter);
             }
-            pros::lcd::print(5, "startPos: %f", startPos);
-            pros::lcd::print(6, "detectTimeout: %d", detectTimeout);
-            pros::lcd::print(7, "tossCounter: %d", tossCounter);
-
+            // Outtake
+            else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+                intake.move(-127);
+            }
+            // No movement without button pressed
+            else {
+                intake.brake();
+            }
         }
-        // outtake
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
-        {
-            intake.move(-127);
-        }
-        // no movement without button pressed
-        else
-        {
-            intake.brake();
-        }
-}
-
-void handleColorSort()
-{
-
-    /*if(controller.get_digital_new_press()){
-        colorSortHandler::getInstance().killSwitch();
     }
-    else if (controller.get_digital_new_press()){
-        colorSortHandler::getInstance().swapTeam();
-    }*/
+
+    int sortHoldDuration = 0;
+
+    void handleColorSort() {
+        // Set the LED brightness to maximum for better detection
+        ringSens.set_led_pwm(100);
+        ringSens.set_integration_time(10);
+
+        // Toggle the hue to be tossed when X is pressed
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+            targetHue = (targetHue.hue == BLUE_RING_HUE.hue) ? RED_RING_HUE : BLUE_RING_HUE;
+            // print hue to the brain screen
+            lcd::print(2, "Sorting out: %s", targetHue.hue == BLUE_RING_HUE.hue ? "Blue" : "Red");
+        }
+        // Hold X to enable/disable sorting
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+            sortHoldDuration++;
+            if (sortHoldDuration > 30) {
+                sortingEnabled = !sortingEnabled;
+                if (sortingEnabled) {
+                    // Enable LED for better detection
+                    ringSens.set_led_pwm(100);
+                    ringSens.set_integration_time(10);
+                } else {
+                    // Disable LED to save power
+                    //ringSens.set_led_pwm(0);
+                    //ringSens.set_integration_time(100);
+                    // print sorting status to the brain screen
+                    lcd::print(2, "Sorting out: Disabled");
+                }
+            }
+        } else {
+            sortHoldDuration = 0;
+        }
+    }
 }
+
 
 void handleClamp()
 {
@@ -492,9 +514,10 @@ void opcontrol()
         {
             testAuton();
         }
-        // handleColorSort();
+        
         handleDriveTrain();
-        handleIntake();
+        csort::handleIntake();
+        //csort::handleColorSort();
         handleClamp();
         handleArm();
         handleLeftDoinker();

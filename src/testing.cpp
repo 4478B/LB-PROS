@@ -93,7 +93,7 @@
 
 void testRingSens(int i)
 {
-    double dist = 300;
+    double dist = 305;
     clamp.set_value(LOW);
     while (true)
     {
@@ -130,9 +130,13 @@ void testRingSens(int i)
         // * TEST INTAKE JERKING
         
 
-        intake.move(127);
+        intake.move(70);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for any... (jerk)");
+        for(int i = 0; i < 100; i++){
+            ringSens.set_led_pwm(100);
+            delay(10);
+        }
         waitUntilAnyIntake(100000);
         pros::lcd::print(1, "jerking");
         intake.tare_position();
@@ -153,7 +157,7 @@ void testRingSens(int i)
         
         intake.brake();
         delay(500);
-        intake.move(127);
+        intake.move(100);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got any! (jerked)");
         endSection( 1000);
@@ -296,6 +300,7 @@ void testAuton(bool inputReq)
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
         // testOdometryTurn(1);
         testRingSens(1);
+        //safeAWPRight(1);
         //chassis.setPose(0,0,0);
         //chassis.moveToPose(24,24,0,3000,{.forwards = true, .minSpeed = 70}, false);
         //intake.move(127);

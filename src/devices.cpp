@@ -18,7 +18,7 @@ Motor intake(14);
 
 adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
 
-adi::Port left_doinker('H', pros::E_ADI_DIGITAL_OUT);
+adi::Port left_doinker('D', pros::E_ADI_DIGITAL_OUT);
 adi::Port right_doinker('C', pros::E_ADI_DIGITAL_OUT);
 
 
