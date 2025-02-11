@@ -349,7 +349,7 @@ void progSkills(int i)
     drivePID(-19,1500);
     // turn & go to last ring
     chassis.turnToHeading(180, 900,{}, false);
-    drivePID(20, 2000, 30);
+    drivePID(17, 2000, 30);
     delay(150);
     // back up to align with corner
     drivePID(-18);
@@ -368,10 +368,10 @@ void progSkills(int i)
 
     // move forward to align with 
     
-    drivePID(19,800);
+    drivePID(17,800);
     intake.move(127);
     chassis.turnToHeading(175, 900,{}, false);
-    chassis.turnToHeading(175, 900,{}, false);
+    chassis.turnToHeading(178, 900,{}, false);
     //chassis.moveToPose(-48,-36,180,7000,{.forwards=false, .maxSpeed = 50},false);
     drivePID(-78,4000,40);
     drivePID(3,700);
@@ -431,6 +431,8 @@ void progSkills(int i)
     drivePID(-23, 2000, 25);
     intake.move(-90);
     clamp.set_value(HIGH);
+    chassis.turnToHeading(135, 900,{}, false);
+   
     endSection(1000);
     drivePID(25);
     intake.move(127);
@@ -440,6 +442,8 @@ void progSkills(int i)
     drivePID(-20,1000);
     drivePID(-10,1000,35);
     clamp.set_value(LOW);
+    
+    
 
     
 
