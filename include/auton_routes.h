@@ -6,6 +6,7 @@ extern int autonSection;
 void drivePIDOdom(double goalInches, bool clamping = false, double clampDistInches = 2);
 void endSection(int delay = 0);
 void soloPushRight(int i);
+void soloPushLeft(int i);
 void ladyBrownRushRight(int i);
 void newRingSideRight(int i);
 void progSkills(int i);

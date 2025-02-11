@@ -300,7 +300,8 @@ void testAuton(bool inputReq)
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
         // testOdometryTurn(1);
         //soloPushRight(1);
-        newRingSideRight(1);
+        //newRingSideRight(1);
+        soloPushRight(1);
         //safeAWPRight(1);
         //testRingSens(1);
         //chassis.setPose(0,0,0);
