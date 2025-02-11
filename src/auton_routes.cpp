@@ -313,8 +313,9 @@ void progSkills(int i)
     drivePID(26,1500);
 
     // turn & go to wall stake
-    chassis.turnToHeading(180, 900,{}, false);
     setArmMid();
+    chassis.turnToHeading(180, 900,{}, false);
+    
 
     intake.move(127);
     
@@ -398,8 +399,8 @@ void progSkills(int i)
     chassis.turnToHeading(50, 900,{}, false);
     drivePID(30,1500);
     endSection(500);
-    chassis.turnToHeading(0, 900,{}, false);
     setArmMid();
+    chassis.turnToHeading(0, 900,{}, false);
     drivePID(23,1000);
     delay(500);
     delay(500);
