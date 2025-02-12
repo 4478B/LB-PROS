@@ -77,10 +77,15 @@ void driveInchesClamp(double gDist, double cDist = .5)
 // in the future we can make it print information about ending positions
 
 int autonSection = 0;
-void endSection(int delay)
+void storePose(Pose Pose, std::string name){
+    pros::lcd::print(1, "X: %f", Pose.x);
+    pros::lcd::print(2, "Y: %f", Pose.y);
+    pros::lcd::print(3, "Theta: %f", Pose.theta);
+    pros::lcd::print(4, "Stored %s", name.c_str());
+}
+bool endSection(int delay)
 {
-
-    // functions as normal delay
+    // functions as normal delay during competition
     if (inCompetition)
     {
         pros::delay(delay);
@@ -99,25 +104,72 @@ void endSection(int delay)
                   << std::setw(14) << totalTime << " | "
                   << std::endl;
 
-        // print timer positions on controller and screen for temporary logging
-        // pros::lcd::print(5, "Auton Section: %f", autonSection);
-        // pros::lcd::print(5, "Section Time: %f", deltaTime);
-        // pros::lcd::print(5, "Total Time: %f", totalTime);
-
-        // controller.set_text(2,1,std) // controller WIP bc set_text is bad
+        // print timer positions on screen for temporary logging
+        pros::lcd::print(1, "Auton Section: %f", autonSection);
+        pros::lcd::print(2, "Section Time: %f", deltaTime);
+        pros::lcd::print(3, "Total Time: %f", totalTime);
 
         // while button hasn't been pressed and hasn't timed out
-        while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X) && pros::millis() - startTime < delay)
+        while (pros::millis() - startTime < delay)
         {
+            // get current pose and store it
+            Pose poseInit = chassis.getPose();
+            storePose(poseInit, &"End of Section " [autonSection]);
+
+            // TIMEOUT OVERRIDE: Break if X button is pressed
+            if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X))
+            {
+                break;
+            }
+            // HEADING OVERRIDE: Adjust heading if Y button is pressed
+            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y))
+            {
+                while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y))
+                {
+                    // get right joystick values
+                    double leftX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+                    double leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+                    // convert joystick values into heading
+                    double theta = atan2(leftX, leftY) * 180 / M_PI;
+                    // turn to heading
+                    chassis.turnToHeading(theta, 2000);
+                    pros::delay(20);
+                }
+                // store corrected pose
+                Pose poseCorrected = chassis.getPose();
+                storePose(poseCorrected, "Heading Override");
+                break;
+            }
+            // POSITION OVERRIDE: Adjust position if B button is pressed
+            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
+            {
+                float initHeading = poseInit.theta;
+                while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
+                {
+                    pros::delay(20);
+                }
+                // turn back to initial heading
+                chassis.turnToHeading(initHeading, 2000);
+                // store corrected pose
+                Pose poseCorrected = chassis.getPose();
+                storePose(poseCorrected, "Position Override");
+                break;
+            }
+            // ALTERNATE PATH OVERRIDE: Return alternate route indicator if A button is pressed
+            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
+            {
+                // return true if alternate path is taken
+                return true;
+            }
+            
             pros::delay(20);
         }
         // updates controller screen with section information
         autonSection++;
-        controller.clear_line(1);
-        controller.set_text(1, 1, std::to_string(autonSection).c_str());
     }
+    // returns false if no alternate path is taken
+    return false;
 }
-
 // This file includes all of the routes coded in PROS for our robot
 // The routes should have linked path.jerryio files for reference
 void soloPushRight(int i){
