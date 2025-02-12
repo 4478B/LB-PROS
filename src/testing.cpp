@@ -251,6 +251,74 @@ void testOdometryBoth(int i)
     }
 }
 
+void testEndSection(){
+
+
+    // Test 1: Timeout
+    // -- Delay for 3000ms
+    pros::lcd::print(1,"Test 1: Timeout (None)");
+    delay(1000);
+    pros::lcd::print(2,"Test 1 START");
+    endSection(3000);
+    pros::lcd::print(2,"Test 1 END");
+    delay(1000);
+
+    // Test 2: Default Override
+    // -- press X, return def path
+    pros::lcd::print(1,"Test 2: Default Override (X)");
+    delay(1000);
+    pros::lcd::print(2,"Test 2 START");
+    bool path = endSection(100000000);
+    if(path){
+        pros::lcd::print(2,"Alternate Path Taken");
+    }
+    else{
+        pros::lcd::print(2,"Default Path Taken");
+    }
+    pros::lcd::print(2,"Test 2 END");
+    delay(1000);
+
+    // Test 3: Alternate Override
+    // -- press A, return alt path
+    pros::lcd::print(1,"Test 3: Alternate Override (A)");
+    delay(1000);
+    pros::lcd::print(2,"Test 3 START");
+    path = endSection(100000000);
+    if(path){
+        pros::lcd::print(2,"Alternate Path Taken");
+    }
+    else{
+        pros::lcd::print(2,"Default Path Taken");
+    }
+    pros::lcd::print(2,"Test 3 END");
+    delay(1000);
+    
+    // Test 4: Position Override
+    // Press B, move robot, press B again, return to original heading
+    pros::lcd::print(1,"Test 4: Position Override (B)");
+    delay(1000);
+    pros::lcd::print(2,"Test 4 START");
+    pros::lcd::print(3,"Initial heading %f",chassis.getPose().theta);
+    endSection(100000000);
+    delay(400);
+    pros::lcd::print(3,"Final heading %f",chassis.getPose().theta);
+    pros::lcd::print(2,"Test 4 END");
+    delay(1000);
+
+    // Test 5: Heading Override
+    // Press Y, move joystick, press Y again, return to new heading
+    pros::lcd::print(1,"Test 5: Heading Override (Y)");
+    delay(1000);
+    pros::lcd::print(2,"Test 5 START");
+    pros::lcd::print(3,"Initial heading %f",chassis.getPose().theta);
+    endSection(100000000);
+    delay(400);
+    pros::lcd::print(3,"Final heading %f",chassis.getPose().theta);
+    pros::lcd::print(2,"Test 5 END");
+
+}
+
+
 /*
 
 
@@ -277,8 +345,7 @@ void testAuton(bool inputReq)
     {
 
         // prints information about section to controller
-        autonSection = 0;
-        endSection();
+        autonSection = 1;
 
         // sets motor brake type to hold (standard for auton)
         left_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
@@ -290,15 +357,18 @@ void testAuton(bool inputReq)
 
         // set up permanent console logging for auton timers
         std::cout << std::fixed << std::setprecision(2);
-        std::cout << std::setw(14) << "section" << " | "
-                  << std::setw(14) << "time" << " | "
-                  << std::setw(14) << "total" << " | "
+        std::cout << std::setw(10) << "section" << " | "
+                  << std::setw(10) << "time" << " | "
+                  << std::setw(10) << "total" << " | "
+                  << std::setw(10) << "X" << " | "
+                  << std::setw(10) << "Y" << " | "
+                  << std::setw(10) << "theta" << " | "
                   << std::endl;
-        std::cout << std::string(15 * 3 + 4, '-')
+        std::cout << std::string(11 * 6 + 4, '-')
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        progSkills(1);
+        testEndSection();
         //chassis.setPose(0,0,0);
         //chassis.moveToPose(24,24,0,3000,{.forwards = true, .minSpeed = 70}, false);
         //intake.move(127);
