@@ -254,6 +254,7 @@ void testOdometryBoth(int i)
 void testEndSection(){
 
 
+    chassis.setPose(0,0,0);
     // Test 1: Timeout
     // -- Delay for 3000ms
     pros::lcd::print(1,"Test 1: Timeout (None)");
@@ -368,7 +369,7 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        testEndSection();
+        progSkills(1);
         //chassis.setPose(0,0,0);
         //chassis.moveToPose(24,24,0,3000,{.forwards = true, .minSpeed = 70}, false);
         //intake.move(127);

@@ -225,41 +225,55 @@ void soloPushRight(int i){
 }
 
 void soloPushLeft(int i){
+    //set the pose at the beginnng
     ringSens.set_led_pwm(100);
     clamp.set_value(HIGH);
     chassis.setPose(0,0,212);
+    //alliance stake
     setArmAlliance();
     delay(500);
     drivePID(-6,600,120);
+    //align with alliance's preload
     chassis.turnToHeading(32,800,{}, false);
     setArmBottom();
     intake.move(90);
     drivePID(24,700,120);
+    //sensor to stop at top
     waitUntilAnyIntake(700);
     intake.brake();
+    //align with goal
     chassis.turnToHeading(-63,600,{}, false);
     drivePID(-26,800,35);
+    //clamp goal
     clamp.set_value(LOW);
     chassis.turnToHeading(2,600,{}, false);
     intake.move(127);
+    //grab bottom ring from stack
     drivePID(26,800,130);
+    //align with ring stack, drive through it 
     chassis.turnToHeading(-157,700,{}, false);
     intake.move(127);
     clamp.set_value(HIGH);
+    //drive past the stack, spit out bottom ring
     drivePID(62,1300,80);
     intake.move(127);
+    setArm(70);
     drivePID(26,800,120);
+    //hold top ring of stack in intake
     intake.move(80);
     waitUntilAnyIntake(500);
     intake.brake();
     drivePID(-24,800,120);
+    //align with goal
     chassis.turnToHeading(-60,700,{}, false);
+    //clamp goal
     drivePID(-38,1000,35);
     clamp.set_value(LOW);
     intake.move(127);
+    //grab ring stack
     chassis.turnToHeading(-165,700,{}, false);
     drivePID(26,800,130);
-    setArm(70);
+    //touch mid
     drivePID(-55,800,120);
 }
 void ladyBrownRushRight(int i){
@@ -389,6 +403,7 @@ void progSkills(int i)
     delay(500);
     intake.brake();
     setArm(150);
+    delay(500);
     chassis.turnToHeading(177, 300,{}, false);
     chassis.turnToHeading(183, 300,{}, false);
     chassis.turnToHeading(177, 300,{}, false);
@@ -407,11 +422,11 @@ void progSkills(int i)
     //setArmBottom();
     intake.move(127);
     chassis.turnToHeading(270, 900,{}, false);
-    drivePID(77, 1500, 40);
+    drivePID(77, 1500, 30);
     delay(500);
 
     // back up to align with last ring
-    drivePID(-19,1500);
+    drivePID(-17,1500);
     // turn & go to last ring
     chassis.turnToHeading(180, 900,{}, false);
     drivePID(17, 1000, 40);
@@ -433,7 +448,7 @@ void progSkills(int i)
 
     // move forward to align with goal 2
     
-    drivePID(17,800);
+    drivePID(12,800);
     intake.move(127);
     chassis.turnToHeading(175, 900,{}, false);
     chassis.turnToHeading(178, 900,{}, false);
@@ -458,7 +473,7 @@ void progSkills(int i)
     //endSection(50000);
     drivePID(5, 600);
     endSection(500);
-    chassis.turnToHeading(90, 900,{}, false);
+    chassis.turnToHeading(84, 900,{}, false);
     intake.move(127);
     //grab first ring
     drivePID(22,1500);
@@ -489,7 +504,7 @@ void progSkills(int i)
     intake.move(127);
     chassis.turnToHeading(267, 900,{}, false);
     //pick up line of 3 rings
-    drivePID(75, 1500, 40);
+    drivePID(75, 1500, 30);
     delay(500);
     drivePID(-16,800);
     chassis.turnToHeading(0, 900,{}, false);
