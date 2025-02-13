@@ -76,110 +76,90 @@ void driveInchesClamp(double gDist, double cDist = .5)
 
 // in the future we can make it print information about ending positions
 
+/*******************************************************
+ *              Section Based Functions                *
+ *******************************************************/
+
+// Global variables for auton section tracking
 int autonSection = 0;
-void storePose(Pose Pose, std::string name){
-    //pros::lcd::print(1, "X: %f", Pose.x);
-    //pros::lcd::print(2, "Y: %f", Pose.y);
-    //pros::lcd::print(3, "Theta: %f", Pose.theta);
-    //pros::lcd::print(4, "Stored %s", name.c_str());
-}
-void printTimes(int section, int deltaTime, int totalTime, Pose pose){
+
+// Function to print times and pose information
+void printTimes(int section, int deltaTime, int totalTime, Pose pose) {
     std::cout << std::setw(10) << section << " | "
-    << std::setw(10) << deltaTime << " | "
-    << std::setw(10) << totalTime << " | "
-    << std::setw(10) << pose.x << " | "
-    << std::setw(10) << pose.y << " | "
-    << std::setw(10) << pose.theta << " | "
-    << std::endl;
+              << std::setw(10) << deltaTime << " | "
+              << std::setw(10) << totalTime << " | "
+              << std::setw(10) << pose.x << " | "
+              << std::setw(10) << pose.y << " | "
+              << std::setw(10) << pose.theta << " | "
+              << std::endl;
 }
-bool endSection(int delay)
-{
-    // functions as normal delay during competition
-    if (inCompetition)
-    {
+
+// Function to handle end of section logic
+bool endSection(int delay) {
+    // Functions as normal delay during competition
+    if (inCompetition) {
         pros::delay(delay);
         return false;
-    }
-    else
-    {
-        
+    } else {
         bool altPath = false;
-        // handle updating timers
+        // Handle updating timers
         int startTime = pros::millis();
         int deltaTime = startTime - prevTime;
         totalTime += deltaTime;
         prevTime = startTime;
 
-        // print timer positions to console for permanent logging
+        // Print timer positions to console for permanent logging
         Pose poseInit = chassis.getPose();
         printTimes(autonSection, deltaTime, totalTime, poseInit);
 
-        // print timer positions on screen for temporary logging
+        // Print timer positions on screen for temporary logging
         pros::lcd::print(5, "Auton Section: %i", autonSection);
         pros::lcd::print(6, "Section Time: %i", deltaTime);
         pros::lcd::print(7, "Total Time: %i", totalTime);
 
-        // while button hasn't been pressed and hasn't timed out
-        while (pros::millis() - startTime < delay)
-        {
-
-            // TIMEOUT OVERRIDE: Break if X button is pressed
-            if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X))
-            {
+        // While button hasn't been pressed and hasn't timed out
+        while (pros::millis() - startTime < delay) {
+            // Timeout override: Break if X button is pressed
+            if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
                 break;
             }
-            // ALTERNATE PATH OVERRIDE: Return alternate route indicator if A button is pressed
-            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
-            {
-                // return true if alternate path is taken
+            // Alternate path override: Return alternate route indicator if A button is pressed
+            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
                 altPath = true;
                 break;
             }
-            // HEADING OVERRIDE: Adjust heading if Y button is pressed
-            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y))
-            {
+            // Heading override: Adjust heading if Y button is pressed
+            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
                 pros::lcd::print(1, "Old Heading: %f", chassis.getPose().theta);
-                
-                while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y))
-                {
+                while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
                     pros::lcd::print(2, "New Heading: %f", chassis.getPose().theta);
                     pros::delay(20);
                 }
-                
-                // store corrected pose
-                Pose poseCorrected = Pose(poseInit.x,poseInit.y,chassis.getPose().theta);
+                // Store corrected pose
+                Pose poseCorrected = Pose(poseInit.x, poseInit.y, chassis.getPose().theta);
                 printTimes(autonSection, 0, 0, poseCorrected);
                 break;
             }
-            // POSITION OVERRIDE: Adjust position if B button is pressed
-            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
-            {
+            // Position override: Adjust position if B button is pressed
+            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
                 float initHeading = poseInit.theta;
-                while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
-                {
+                while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
                     pros::delay(20);
                 }
-                // turn back to initial heading
+                // Turn back to initial heading
                 chassis.turnToHeading(initHeading, 2000);
-                // store corrected pose
+                // Store corrected pose
                 Pose poseCorrected = Pose(chassis.getPose().x, chassis.getPose().y, poseInit.theta);
                 printTimes(autonSection, 0, 0, poseCorrected);
                 break;
             }
-            
             pros::delay(20);
         }
-        // updates controller screen with section information
+        // Updates controller screen with section information
         autonSection++;
 
-
-        // returns false if no alternate path is taken
-        if(altPath){
-            return true;
-        }
-        else{
-            return false;
-        }
+        // Returns false if no alternate path is taken
+        return altPath;
     }
 }
 
