@@ -41,42 +41,28 @@ bool waitUntilRingDetected(int msecTimeout, Hue targetHue)
 {
     int startTime = pros::millis(); // Record the start time of the function
     int ringDetected = 0;           // Counter for consecutive ring detections
-
     ringSens.set_led_pwm(100); // Set the LED brightness to maximum for better detection
     ringSens.set_integration_time(10);
-
-
     while (pros::millis() - startTime < msecTimeout && ringDetected < MIN_RING_DETECTION)
     {
-        
-        if (isRingDetected(targetHue))
-        {
-            // Increment the detection counter if the conditions are met
-            ringDetected++;
+        if (isRingDetected(targetHue)){
+            ringDetected++; // Increment the detection counter
         }
-        else
-        {
-            // Reset the detection counter if the conditions are not met
-            ringDetected = 0;
+        else{
+            ringDetected = 0; // Reset the detection counter
         }
-
         // Print debug information
         pros::lcd::print(2, "Sensor hue %f", ringSens.get_hue());
         pros::lcd::print(3, "Sensor dist: %i", ringSens.get_proximity());
         pros::lcd::print(4, "Detections: %i", ringDetected);
-
-        // pros::lcd::print(4, "Error: %s", strerror(ringSens.get_proximity()));
-
         pros::delay(10); // Wait briefly before the next sensor reading to prevent excessive polling
     }
     ringSens.set_led_pwm(100);
     ringSens.set_integration_time(100);
-    if (ringDetected >= MIN_RING_DETECTION)
-    {
+    if (ringDetected >= MIN_RING_DETECTION){
         return true;
     }
-    else
-    {
+    else{
         return false;
     }
     
