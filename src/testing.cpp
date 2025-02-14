@@ -298,8 +298,9 @@ void testAuton(bool inputReq)
                   << std::endl;
 
         // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        progSkills(1);
+        //progSkills(1);
         //chassis.setPose(0,0,0);
+        newRingSideRight(1);
         //chassis.moveToPose(24,24,0,3000,{.forwards = true, .minSpeed = 70}, false);
         //intake.move(127);
         //endSection(99999);
