@@ -76,100 +76,93 @@ void driveInchesClamp(double gDist, double cDist = .5)
 
 // in the future we can make it print information about ending positions
 
+/*******************************************************
+ *              Section Based Functions                *
+ *******************************************************/
+
+// Global variables for auton section tracking
 int autonSection = 0;
-void storePose(Pose Pose, std::string name){
-    pros::lcd::print(1, "X: %f", Pose.x);
-    pros::lcd::print(2, "Y: %f", Pose.y);
-    pros::lcd::print(3, "Theta: %f", Pose.theta);
-    pros::lcd::print(4, "Stored %s", name.c_str());
+
+// Function to print times and pose information
+void printTimes(int section, int deltaTime, int totalTime, Pose pose) {
+    std::cout << std::setw(10) << section << " | "
+              << std::setw(10) << deltaTime << " | "
+              << std::setw(10) << totalTime << " | "
+              << std::setw(10) << pose.x << " | "
+              << std::setw(10) << pose.y << " | "
+              << std::setw(10) << pose.theta << " | "
+              << std::endl;
 }
-bool endSection(int delay)
-{
-    // functions as normal delay during competition
-    if (inCompetition)
-    {
+
+// Function to handle end of section logic
+bool endSection(int delay) {
+    // Functions as normal delay during competition
+    if (inCompetition) {
         pros::delay(delay);
-    }
-    else
-    {
-        // handle updating timers
+        return false;
+    } else {
+        bool altPath = false;
+        // Handle updating timers
         int startTime = pros::millis();
         int deltaTime = startTime - prevTime;
         totalTime += deltaTime;
         prevTime = startTime;
 
-        // print timer positions to console for permanent logging
-        std::cout << std::setw(14) << autonSection << " | "
-                  << std::setw(14) << deltaTime << " | "
-                  << std::setw(14) << totalTime << " | "
-                  << std::endl;
+        // Print timer positions to console for permanent logging
+        Pose poseInit = chassis.getPose();
+        printTimes(autonSection, deltaTime, totalTime, poseInit);
 
-        // print timer positions on screen for temporary logging
-        pros::lcd::print(1, "Auton Section: %f", autonSection);
-        pros::lcd::print(2, "Section Time: %f", deltaTime);
-        pros::lcd::print(3, "Total Time: %f", totalTime);
+        // Print timer positions on screen for temporary logging
+        pros::lcd::print(5, "Auton Section: %i", autonSection);
+        pros::lcd::print(6, "Section Time: %i", deltaTime);
+        pros::lcd::print(7, "Total Time: %i", totalTime);
 
-        // while button hasn't been pressed and hasn't timed out
-        while (pros::millis() - startTime < delay)
-        {
-            // get current pose and store it
-            Pose poseInit = chassis.getPose();
-            storePose(poseInit, &"End of Section " [autonSection]);
-
-            // TIMEOUT OVERRIDE: Break if X button is pressed
-            if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X))
-            {
+        // While button hasn't been pressed and hasn't timed out
+        while (pros::millis() - startTime < delay) {
+            // Timeout override: Break if X button is pressed
+            if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
                 break;
             }
-            // HEADING OVERRIDE: Adjust heading if Y button is pressed
-            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y))
-            {
-                while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y))
-                {
-                    // get right joystick values
-                    double leftX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-                    double leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-                    // convert joystick values into heading
-                    double theta = atan2(leftX, leftY) * 180 / M_PI;
-                    // turn to heading
-                    chassis.turnToHeading(theta, 2000);
+            // Alternate path override: Return alternate route indicator if A button is pressed
+            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+                altPath = true;
+                break;
+            }
+            // Heading override: Adjust heading if Y button is pressed
+            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+                pros::lcd::print(1, "Old Heading: %f", chassis.getPose().theta);
+                while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+                    pros::lcd::print(2, "New Heading: %f", chassis.getPose().theta);
                     pros::delay(20);
                 }
-                // store corrected pose
-                Pose poseCorrected = chassis.getPose();
-                storePose(poseCorrected, "Heading Override");
+                // Store corrected pose
+                Pose poseCorrected = Pose(poseInit.x, poseInit.y, chassis.getPose().theta);
+                printTimes(autonSection, 0, 0, poseCorrected);
                 break;
             }
-            // POSITION OVERRIDE: Adjust position if B button is pressed
-            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
-            {
+            // Position override: Adjust position if B button is pressed
+            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
                 float initHeading = poseInit.theta;
-                while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
-                {
+                while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
                     pros::delay(20);
                 }
-                // turn back to initial heading
+                // Turn back to initial heading
                 chassis.turnToHeading(initHeading, 2000);
-                // store corrected pose
-                Pose poseCorrected = chassis.getPose();
-                storePose(poseCorrected, "Position Override");
+                // Store corrected pose
+                Pose poseCorrected = Pose(chassis.getPose().x, chassis.getPose().y, poseInit.theta);
+                printTimes(autonSection, 0, 0, poseCorrected);
                 break;
             }
-            // ALTERNATE PATH OVERRIDE: Return alternate route indicator if A button is pressed
-            else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
-            {
-                // return true if alternate path is taken
-                return true;
-            }
-            
             pros::delay(20);
         }
-        // updates controller screen with section information
+        // Updates controller screen with section information
         autonSection++;
+
+        // Returns false if no alternate path is taken
+        return altPath;
     }
-    // returns false if no alternate path is taken
-    return false;
 }
+
 // This file includes all of the routes coded in PROS for our robot
 // The routes should have linked path.jerryio files for reference
 void soloPushRight(int i){
@@ -212,41 +205,55 @@ void soloPushRight(int i){
 }
 
 void soloPushLeft(int i){
+    //set the pose at the beginnng
     ringSens.set_led_pwm(100);
     clamp.set_value(HIGH);
     chassis.setPose(0,0,212);
+    //alliance stake
     setArmAlliance();
     delay(500);
     drivePID(-6,600,120);
+    //align with alliance's preload
     chassis.turnToHeading(32,800,{}, false);
     setArmBottom();
     intake.move(90);
     drivePID(24,700,120);
+    //sensor to stop at top
     waitUntilAnyIntake(700);
     intake.brake();
+    //align with goal
     chassis.turnToHeading(-63,600,{}, false);
     drivePID(-26,800,35);
+    //clamp goal
     clamp.set_value(LOW);
     chassis.turnToHeading(2,600,{}, false);
     intake.move(127);
+    //grab bottom ring from stack
     drivePID(26,800,130);
+    //align with ring stack, drive through it 
     chassis.turnToHeading(-157,700,{}, false);
     intake.move(127);
     clamp.set_value(HIGH);
+    //drive past the stack, spit out bottom ring
     drivePID(62,1300,80);
     intake.move(127);
+    setArm(70);
     drivePID(26,800,120);
+    //hold top ring of stack in intake
     intake.move(80);
     waitUntilAnyIntake(500);
     intake.brake();
     drivePID(-24,800,120);
+    //align with goal
     chassis.turnToHeading(-60,700,{}, false);
+    //clamp goal
     drivePID(-38,1000,35);
     clamp.set_value(LOW);
     intake.move(127);
+    //grab ring stack
     chassis.turnToHeading(-165,700,{}, false);
     drivePID(26,800,130);
-    setArm(70);
+    //touch mid
     drivePID(-55,800,120);
 }
 void ladyBrownRushRight(int i){
@@ -370,12 +377,13 @@ void progSkills(int i)
     
 
     intake.move(127);
-    
+    //side stake 1
     drivePID(23,1000);
     delay(500);
     delay(500);
     intake.brake();
     setArm(150);
+    delay(500);
     chassis.turnToHeading(177, 300,{}, false);
     chassis.turnToHeading(183, 300,{}, false);
     chassis.turnToHeading(177, 300,{}, false);
@@ -394,14 +402,14 @@ void progSkills(int i)
     //setArmBottom();
     intake.move(127);
     chassis.turnToHeading(270, 900,{}, false);
-    drivePID(77, 4000, 10);
+    drivePID(77, 1500, 30);
     delay(500);
 
     // back up to align with last ring
-    drivePID(-19,1500);
+    drivePID(-17,1500);
     // turn & go to last ring
     chassis.turnToHeading(180, 900,{}, false);
-    drivePID(17, 2000, 30);
+    drivePID(17, 1000, 40);
     delay(150);
     // back up to align with corner
     drivePID(-18);
@@ -418,9 +426,9 @@ void progSkills(int i)
     //chassis.setPose(0,0,45);
 
 
-    // move forward to align with 
+    // move forward to align with goal 2
     
-    drivePID(17,800);
+    drivePID(12,800);
     intake.move(127);
     chassis.turnToHeading(175, 900,{}, false);
     chassis.turnToHeading(178, 900,{}, false);
@@ -428,6 +436,7 @@ void progSkills(int i)
     drivePID(-78,4000,40);
     drivePID(3,700);
     drivePID(-7,700,30);
+    //clamp goal 2
     clamp.set_value(LOW);
     drivePID(3);
     /*
@@ -444,13 +453,15 @@ void progSkills(int i)
     //endSection(50000);
     drivePID(5, 600);
     endSection(500);
-    chassis.turnToHeading(90, 900,{}, false);
+    chassis.turnToHeading(84, 900,{}, false);
     intake.move(127);
+    //grab first ring
     drivePID(22,1500);
     delay(300);
     chassis.turnToHeading(50, 900,{}, false);
     drivePID(30,1500);
     endSection(500);
+    //side stake 2
     setArmMid();
     chassis.turnToHeading(0, 900,{}, false);
     drivePID(23,1000);
@@ -472,14 +483,16 @@ void progSkills(int i)
     drivePID(-14,800);
     intake.move(127);
     chassis.turnToHeading(267, 900,{}, false);
-    drivePID(75, 4000, 10);
+    //pick up line of 3 rings
+    drivePID(75, 1500, 30);
     delay(500);
     drivePID(-16,800);
     chassis.turnToHeading(0, 900,{}, false);
-    drivePID(20, 2000, 30);
+    drivePID(20, 1000, 40);
     delay(150);
     drivePID(-20,800);
     chassis.turnToHeading(135, 900,{}, false);
+    //drop in corner
     drivePID(-23, 2000, 25);
     intake.move(-90);
     clamp.set_value(HIGH);
@@ -488,8 +501,8 @@ void progSkills(int i)
     endSection(1000);
     drivePID(25);
     intake.move(127);
-
-    drivePID(75);
+    //goal 3
+    drivePID(95,2000,130);
     chassis.turnToHeading(225, 900,{}, false);
     drivePID(-20,1000);
     drivePID(-10,1000,35);
