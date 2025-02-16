@@ -14,7 +14,7 @@ MotorGroup arm_motors({12, -13}, pros::MotorGearset::blue);
 // controller definition
 Controller controller(pros::E_CONTROLLER_MASTER);
 
-Motor intake(-14);
+MotorGroup intake({-14,-5}, pros::MotorGearset::blue);
 
 adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
 

@@ -20,7 +20,7 @@
 
 namespace ArmPos{
 
-    const double bottom = 0;
+    const double bottom = 3;
     const double mid = 22;
     const double top = 150;
     const double mid_high = 44;
