@@ -201,6 +201,8 @@ void initialize()
 
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
+    // create intake stuck task 
+    Task intake_task(intake_stuck_task, nullptr, "Intake Stuck Task");
     // color sort task
     //Task csort_task(csort::color_sort_task, nullptr, "Color Sort Task");
     //Task intake_task(intake_control_task, nullptr, "Intake Control Task");
@@ -318,7 +320,7 @@ namespace csort {
     int detectionTimeout = 0;
     const int sortingDistance = 290;
     double intakeStartPosition;
-
+    
     void handleIntake() {
         if (!sortingEnabled) {
             // Simple intake control without sorting
@@ -524,6 +526,8 @@ void opcontrol()
         handleArm();
         handleLeftDoinker();
         handleRightDoinker();
+        // print value of intakeStuck
+        pros::lcd::print(1, "Intake Stuck: %d", intakeStuck);
 
         // delay to save resources
         pros::delay(20);

@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include "devices.h"
 #include "old_systems.h"
+#include "pros/misc.hpp"
 #include "testing.h"
 #include <iomanip>
 
@@ -87,6 +88,33 @@ bool waitUntilAnyIntake(int timeout)
     // Wait until blue rings are detected using the specified timeout
     return waitUntilRingDetected(timeout, -1);
 }
+
+// global intake stuck detector
+bool intakeStuck = false;
+int stuckCount = 0;
+void intake_stuck_task(void* param){
+
+    while(true){
+
+        if(abs(battery::get_voltage()) > 10 && intake.get_efficiency() < 5){
+            stuckCount++;
+        }
+        else{
+            stuckCount = 0;
+        }
+        if(stuckCount > 10){
+            intakeStuck = true;
+        }
+        else{
+            intakeStuck = false;
+        }
+
+        delay(20);
+    }
+
+}
+
+
 /*
 
 DRIVER CONTROL

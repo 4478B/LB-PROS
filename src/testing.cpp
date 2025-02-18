@@ -251,6 +251,37 @@ void testOdometryBoth(int i)
     }
 }
 
+void testIntakeReadings(){
+    // set up permanent console logging for intake readings
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << std::setw(10) << "time" << " | "
+              << std::setw(10) << "voltage" << " | "
+              << std::setw(10) << "torque" << " | "
+              << std::setw(10) << "position" << " | "
+              << std::setw(10) << "efficiency" << " | "
+              << std::endl;
+    std::cout << std::string(11 * 5 + 4, '-')
+              << std::endl;
+    while(true){
+        std::cout << std::setw(10) << pros::millis() << " | "
+                  << std::setw(10) << intake.get_voltage() << " | "
+                  << std::setw(10) << intake.get_torque() << " | "
+                  << std::setw(10) << intake.get_position() << " | "
+                  << std::setw(10) << intake.get_efficiency() << " | "
+                  << std::endl;
+        // handle regular intake function if r2 pressed forward 
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+            intake.move(127);
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            intake.move(-127);
+        } else {
+            intake.brake();
+        }
+
+        delay(100);
+    }
+}
+
 void testEndSection(){
 
 
@@ -368,13 +399,18 @@ void testAuton(bool inputReq)
         std::cout << std::string(11 * 6 + 4, '-')
                   << std::endl;
 
-        // THIS IS WHERE YOU CHANGE THE ROUTE YOU'RE TESTING
-        progSkills(1);
-        //chassis.setPose(0,0,0);
-        //newRingSideRight(1);
-        //chassis.moveToPose(24,24,0,3000,{.forwards = true, .minSpeed = 70}, false);
-        //intake.move(127);
-        //endSection(99999);
+        // ***********************************************
+        // ************ CHANGE ROUTE HERE ***************
+        // ***********************************************
+        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+            testIntakeReadings();
+        }
+        else{
+            progSkills(1);
+        }
+        // ***********************************************
+        // ***********************************************
+        
         //  stops motors to prevent rogue movements after autonl
         left_motors.brake();
         right_motors.brake();

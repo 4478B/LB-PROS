@@ -46,4 +46,8 @@ bool waitUntilBlueIntake(int timeout);
 // Waits until either any ring is in intake or it times out based on the timeout
 bool waitUntilAnyIntake(int timeout);
 
+extern bool intakeStuck;
+extern void intake_stuck_task(void* param);
+
+
 #endif // COLOR_SORT_H

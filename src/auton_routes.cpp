@@ -292,41 +292,57 @@ drivePID(20,1000);
 
 }
 void newRingSideRight(int i){
+
+    //setup
     ringSens.set_led_pwm(100);
     clamp.set_value(HIGH);
     chassis.setPose(0,0,293);
     intake.move(127);
     //waitUntilRedIntake();
     right_doinker.set_value(HIGH);
+
+    // get to ring stack mid
     drivePID(45,1250);
    
     
-   
-    intake.move(90);
+   // slow intake and grab ring, back up with rings
+    intake.move(40);
    drivePID(-27,950,66);
    intake.brake();
    right_doinker.set_value(LOW);
    
    
-   
-   chassis.turnToHeading(55,600,{}, false);
-   drivePID(-28,900);
+   // turn to face mogo and grab it
+   chassis.turnToHeading(47,600,{}, false);
+
+   drivePID(-20,900,40);
    clamp.set_value(LOW);
+   delay(300);
 
   
-   
+   // intake ring in intake on goal
    intake.move(127);
+
+   //face line of rings
    chassis.turnToHeading(0,650,{}, false);
+
+   // score line of rings
    drivePID(34,1250,25);
+
+   // face corner
    chassis.turnToHeading(125,600,{}, false);
+
+   // go to corner
    drivePID(36,1300);
    
    
-   
+   // doink corner
    chassis.turnToHeading(18,650,{}, false);
    right_doinker.set_value(HIGH);
    drivePID(28,1550);
    drivePID(-1.5,500,160);
+
+   // face 
    chassis.turnToHeading(-10,800,{}, false);
    
  
@@ -370,7 +386,7 @@ void progSkills(int i)
     drivePID(-10, 600, 42.5);
     clamp.set_value(LOW);
     delay(100);
-    drivePID(5, 500,170);
+    drivePID(7, 500,170);
 
     // turn & go to ring1
     chassis.turnToHeading(90, 800,{}, false);
@@ -379,8 +395,8 @@ void progSkills(int i)
     
 
     // turn to approach wall stake
-    chassis.turnToHeading(125, 900,{}, false);
-    drivePID(26,800);
+    chassis.turnToHeading(126, 900,{}, false);
+    drivePID(26.3,800);
 
     // turn & go to wall stake
     setArmMid();
@@ -393,14 +409,14 @@ void progSkills(int i)
     //delay(500);
     //delay(500);
     delay(800);
-    intake.move(-20);
+    intake.move(-32);
     delay(20);
     setArm(150);
     delay(100);
     intake.brake();
     delay(400);
     setArmBottom();
-    delay(200);
+    delay(300);
     setArm(150);
     delay(400);
     //endSection(2000);
@@ -443,8 +459,8 @@ void progSkills(int i)
     chassis.turnToHeading(178, 900,{}, false);
     //chassis.moveToPose(-48,-36,180,7000,{.forwards=false, .maxSpeed = 50},false);
     drivePID(-78,2000,40);
-    drivePID(3,400,160);
-    drivePID(-7,500,30);
+    drivePID(2,400,160);
+    drivePID(-10,500,30);
     //clamp goal 2
     clamp.set_value(LOW);
     /*
@@ -459,14 +475,14 @@ void progSkills(int i)
 
     delay(100);
     //endSection(50000);
-    drivePID(4, 400,170);
+    drivePID(7, 400,170);
     //endSection(500);
     chassis.turnToHeading(84, 900,{}, false);
     intake.move(127);
     //grab first ring
     drivePID(22,800);
     chassis.turnToHeading(50, 900,{}, false);
-    drivePID(32,900);
+    drivePID(30,900);
     //endSection(500);
     //side stake 2
     setArmMid();
@@ -475,14 +491,14 @@ void progSkills(int i)
     delay(800);
     //delay(500);
     //delay(500);
-    intake.move(-20);
+    intake.move(-32);
     delay(20);
     setArm(150);
     delay(100);
     intake.brake();
     delay(400);
     setArmBottom();
-    delay(200);
+    delay(300);
     setArm(150);
     delay(400);
 
@@ -505,7 +521,7 @@ void progSkills(int i)
     chassis.turnToHeading(135, 800,{}, false);
    
     //endSection(1000);
-    drivePID(25);
+    drivePID(25,1000);
     chassis.turnToHeading(130, 900,{}, false);
     intake.move(40);
     //intake.move(127);
@@ -517,37 +533,49 @@ void progSkills(int i)
     setArmMid();
     chassis.turnToHeading(225, 900,{}, false);
     intake.move(127);
+    //drive towards goal 3
     drivePID(-17,700);
     drivePID(-15,700,35);
     clamp.set_value(LOW);
     intake.brake();
     chassis.turnToHeading(90, 900,{}, false);
-    drivePID(10,500,170);
+    //alliance stake 2
+    drivePID(5,500,170);
+    intake.move(-20);
+    delay(30);
     setArmAlliance();
     delay(500);
-    drivePID(-10,500,130);
+    drivePID(-5,500,130);
     setArmBottom();
+    //ring 1 for goal 3
     intake.move(127);
     chassis.turnToHeading(305, 900,{}, false);
     drivePID(40,1000);
+    //ring 2 for goal 3
     chassis.turnToHeading(0, 900,{}, false);
-    drivePID(26,800);
+    drivePID(21,800);
+    //ring 3 and 4
     chassis.turnToHeading(90, 900,{}, false);
     drivePID(33,800);
     drivePID(-6,500,170);
+    //ring 5
     chassis.turnToHeading(0, 900,{}, false);
     drivePID(17,800);
     chassis.turnToHeading(255, 900,{}, false);
+    //drop in corner
     drivePID(-29,800,25);
     intake.move(-90);
     delay(100);
     clamp.set_value(HIGH);
+    //move out of corner
     drivePID(40,900);
-    intake.move(127);
+    intake.move(-127);
     chassis.turnToHeading(142, 900,{}, false);
+    //push goal 4 into corner
     drivePID(150,4000,170);
     drivePID(-20,800,170);
-    chassis.turnToHeading(112, 900,{}, false);
+    //hanf
+    chassis.turnToHeading(120, 900,{}, false);
     setArm(80);
     drivePID(-64,700,170);
     
