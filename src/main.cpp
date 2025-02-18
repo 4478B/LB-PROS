@@ -23,7 +23,7 @@ namespace ArmPos{
     const double bottom = 3;
     const double mid = 22;
     const double top = 150;
-    const double mid_high = 44;
+    const double mid_high = 57;
     const double push_top = 152;
     const double alliance = 205;
 
@@ -306,6 +306,8 @@ void handleDriveTrain()
     // convert to gearset
     leftY *= 6;
     rightY *= 6;
+
+    //skills change
 
     left_motors.move_velocity(leftY);
     right_motors.move_velocity(rightY);
