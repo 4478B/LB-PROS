@@ -324,10 +324,10 @@ namespace csort {
     void handleIntake() {
         if (!sortingEnabled) {
             // Simple intake control without sorting
-            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-                intake.move(127);
-            } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2) || intakeStuck) {
                 intake.move(-127);
+            } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+                intake.move(127);
             } else {
                 intake.brake();
             }
@@ -519,6 +519,7 @@ void opcontrol()
     // right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
+    intakeOverride = false;
 
     // loop forever
     while (true)
@@ -538,7 +539,10 @@ void opcontrol()
         handleLeftDoinker();
         handleRightDoinker();
         // print value of intakeStuck
-        pros::lcd::print(1, "Intake Stuck: %d", intakeStuck);
+        pros::lcd::print(1, "Intake Stuck: %s", intakeStuck ? "YES" : "NO");
+        // print voltage and efficiency of intake
+        pros::lcd::print(2, "Intake Voltage: %i", intake.get_voltage());
+        pros::lcd::print(3, "Intake Efficiency: %f", intake.get_efficiency());
 
         // delay to save resources
         pros::delay(20);

@@ -92,26 +92,39 @@ bool waitUntilAnyIntake(int timeout)
 // global intake stuck detector
 bool intakeStuck = false;
 int stuckCount = 0;
-void intake_stuck_task(void* param){
 
-    while(true){
+// ONLY ENABLE DURING ROUTES WHEN WANTED
+bool intakeOverride = false;
 
-        if(abs(battery::get_voltage()) > 10 && intake.get_efficiency() < 5){
+void intake_stuck_task(void* param) {
+    while (true) {
+        // Check if the intake is stuck based on voltage and efficiency
+        if (abs(intake.get_voltage()) > 4000 && intake.get_efficiency() < 5) {
             stuckCount++;
-        }
-        else{
+        } else {
             stuckCount = 0;
         }
-        if(stuckCount > 10){
+
+        // Set the intakeStuck flag if the stuck count exceeds the threshold
+        if (stuckCount > 20) {
             intakeStuck = true;
-        }
-        else{
+            if(intakeOverride){
+                int initvelo = intake.get_target_velocity();
+                intake.move(-127);
+                pros::delay(400); // Stay stuck for 400ms
+                intake.move(initvelo);
+            }
+            else{
+                pros::delay(400); // Stay stuck for 400ms
+            }
+            
+        } else {
             intakeStuck = false;
         }
 
-        delay(20);
-    }
 
+        pros::delay(20); // Use pros::delay for consistency with the rest of the code
+    }
 }
 
 
