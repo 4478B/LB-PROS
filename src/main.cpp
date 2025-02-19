@@ -487,6 +487,17 @@ void handleArm()
         setArmAlliance();
     }
 }
+static bool macroing = false;
+void handleAllianceMacro(){
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)&&macroing==false){
+        macroing=true;
+    }
+    if(macroing=true){
+        drivePID(-10,400,180);
+        setArmAlliance();
+        macroing=false;
+    }
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
