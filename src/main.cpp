@@ -492,8 +492,9 @@ void handleAllianceMacro(){
     if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)&&macroing==false){
         macroing=true;
     }
-    if(macroing=true){
-        drivePID(-10,400,180);
+    if(macroing==true){
+        intake.move(-25);
+        drivePID(-7,400,180);
         setArmAlliance();
         macroing=false;
     }
@@ -538,6 +539,7 @@ void opcontrol()
         handleArm();
         handleLeftDoinker();
         handleRightDoinker();
+        handleAllianceMacro();
         // print value of intakeStuck
         pros::lcd::print(1, "Intake Stuck: %s", intakeStuck ? "YES" : "NO");
         // print voltage and efficiency of intake

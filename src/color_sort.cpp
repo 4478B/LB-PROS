@@ -106,7 +106,7 @@ void intake_stuck_task(void* param) {
         }
 
         // Set the intakeStuck flag if the stuck count exceeds the threshold
-        if (stuckCount > 20) {
+        if (stuckCount > 50) {
             intakeStuck = true;
             if(intakeOverride){
                 int initvelo = intake.get_target_velocity();

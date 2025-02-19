@@ -56,7 +56,8 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
   }
 
   // Reset motor encoder value to 0
-  all_motors.tare_position_all();
+  left_motors.tare_position_all();
+  right_motors.tare_position_all();
 
   while (inGoal < goalsNeeded) // CHECK IF IT SHOULD BE A < or <=
   {
@@ -64,7 +65,7 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     // Read motor position (you can average left and right motor values for straight driving)
     
     // finds average motor position
-    double currentPosition = (all_motors.get_position(0) + all_motors.get_position(1) + all_motors.get_position(2) + all_motors.get_position(3) + all_motors.get_position(4) + all_motors.get_position(5)) / 6.0;
+    double currentPosition = (left_motors.get_position(0) +left_motors.get_position(1) + left_motors.get_position(2) + right_motors.get_position(0) + right_motors.get_position(1) + right_motors.get_position(2)) / 6.0;
     
     /*pros::lcd::print(0, "LM1 Pos: %f", all_motors.get_position(0));
     pros::lcd::print(1, "LM2 Pos: %f", all_motors.get_position(1));
@@ -95,7 +96,9 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     // Use totalPID to move motors proportionally
     totalPID = std::clamp(totalPID,-127.0,127.0);
 
-    all_motors.move(totalPID);
+    
+    left_motors.move(totalPID);
+    right_motors.move(totalPID);
 
     // Check if the error is small enough to stop
     if (fabs(currentDelta) < goalThreshold)
@@ -139,7 +142,8 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     delay(pollingRate);
   }
   // Stop the motors once goal is met
-  all_motors.brake();
+  left_motors.brake();
+  right_motors.brake();
 }
 
 // alias for clamping
