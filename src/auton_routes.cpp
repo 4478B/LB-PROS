@@ -424,6 +424,7 @@ void progSkills(int i)
     //back up to align with 3 rings
     drivePID(-14,800);
     setArmBottom();
+    intakeOverride = true;
 
     // turn and go to 3 rings
     //setArmBottom();
@@ -485,6 +486,7 @@ void progSkills(int i)
     drivePID(30,900);
     //endSection(500);
     //side stake 2
+    intakeOverride = false;
     setArmMid();
     chassis.turnToHeading(0, 900,{}, false);
     drivePID(23,800);
@@ -505,6 +507,7 @@ void progSkills(int i)
     //endSection(500);
     drivePID(-14,800);
     setArmBottom();
+    intakeOverride = true;
     intake.move(127);
     chassis.turnToHeading(267, 900,{}, false);
     //pick up line of 3 rings
@@ -530,6 +533,7 @@ void progSkills(int i)
     intake.move(-127);
     delay(100);
     intake.move(127);
+    intakeOverride = false;
     setArmMid();
     chassis.turnToHeading(225, 900,{}, false);
     intake.move(127);
@@ -547,6 +551,7 @@ void progSkills(int i)
     delay(500);
     drivePID(-5,500,130);
     setArmBottom();
+    intakeOverride = true;
     //ring 1 for goal 3
     intake.move(127);
     chassis.turnToHeading(305, 900,{}, false);

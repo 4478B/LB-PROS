@@ -47,6 +47,7 @@ bool waitUntilBlueIntake(int timeout);
 bool waitUntilAnyIntake(int timeout);
 
 extern bool intakeStuck;
+extern bool intakeOverride;
 extern void intake_stuck_task(void* param);
 
 
