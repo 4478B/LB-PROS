@@ -487,16 +487,33 @@ void handleArm()
         setArmAlliance();
     }
 }
-static bool macroing = false;
+static bool macroAlliance = false;
 void handleAllianceMacro(){
-    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)&&macroing==false){
-        macroing=true;
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)&&!controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)&&!controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)&&!controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)&&macroAlliance==false){
+        macroAlliance=true;
     }
-    if(macroing==true){
-        intake.move(-25);
-        drivePID(-7,400,180);
+    if(macroAlliance==true){
+        intake.move(-20);
+        drivePID(-6.5,400,180);
+        intake.brake();
         setArmAlliance();
-        macroing=false;
+        macroAlliance=false;
+    }
+}
+static bool macroHang = false;
+void handleHangMacro(){
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)&&macroHang==false){
+        macroHang=true;
+    }
+    if(macroHang==true){
+        double initHeading = imu.get_heading();
+        // put targetHeading to nearest of the following values 45, 135, 225, or 315
+        double targetHeading = round(initHeading/90)*90+45;
+        // turn to target heading
+        chassis.turnToHeading(targetHeading, 800);
+        all_motors.move_velocity(-400);
+        delay(1000);
+        macroHang=false;
     }
 }
 
@@ -540,6 +557,7 @@ void opcontrol()
         handleLeftDoinker();
         handleRightDoinker();
         handleAllianceMacro();
+        //handleHangMacro();
         // print value of intakeStuck
         pros::lcd::print(1, "Heading %f", imu.get_heading());
         // delay to save resources

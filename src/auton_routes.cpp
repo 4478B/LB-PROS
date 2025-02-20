@@ -365,6 +365,7 @@ void newRingSideRight(int i){
 }
 void progSkills(int i)
 {
+
     // initial setup
     chassis.setPose(-54, 0, 270);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
@@ -464,15 +465,6 @@ void progSkills(int i)
     drivePID(-10,500,30);
     //clamp goal 2
     clamp.set_value(LOW);
-    /*
-
-    drivePID(-52, 5000, 35);
-
-    chassis.turnToHeading(180, 2000);
-
-    drivePID(-22);
-    drivePID(-10, 1000, 42.5);
-    */
 
     delay(100);
     //endSection(50000);
@@ -517,6 +509,13 @@ void progSkills(int i)
     drivePID(25, 1000, 40);
     drivePID(-22,800);
     chassis.turnToHeading(135, 800,{}, false);
+    
+    // TEMP POSE
+    /*chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    clamp.set_value(LOW);
+    chassis.setPose(0, 0, imu.get_heading());
+    delay(500);*/
+
     //drop in corner
     drivePID(-28, 2000, 25);
     intake.move(-90);
