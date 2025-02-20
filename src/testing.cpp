@@ -350,6 +350,26 @@ void testEndSection(){
 
 }
 
+void testDriveTrain(){
+
+    while(true){
+        double initHeading = imu.get_heading();
+        pros::lcd::print(1,"Initial Heading: %f",initHeading);
+        drivePID(80,5000);
+        pros::lcd::print(2,"Final Heading: %f",imu.get_heading());
+        pros::lcd::print(3,"Delta Heading: %f",imu.get_heading()-initHeading);
+        endSection(10000000);
+        
+        initHeading = imu.get_heading();
+        pros::lcd::print(1,"Initial Heading: %f",initHeading);
+        drivePID(-80,5000);
+        pros::lcd::print(2,"Final Heading: %f",imu.get_heading());
+        pros::lcd::print(3,"Delta Heading: %f",imu.get_heading()-initHeading);
+        endSection(10000000);
+    }
+
+}
+
 
 /*
 
@@ -403,7 +423,7 @@ void testAuton(bool inputReq)
         // ************ CHANGE ROUTE HERE ***************
         // ***********************************************
         if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-            testIntakeReadings();
+            testDriveTrain();
         }
         else{
             progSkills(1);

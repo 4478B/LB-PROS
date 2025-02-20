@@ -541,11 +541,7 @@ void opcontrol()
         handleRightDoinker();
         handleAllianceMacro();
         // print value of intakeStuck
-        pros::lcd::print(1, "Intake Stuck: %s", intakeStuck ? "YES" : "NO");
-        // print voltage and efficiency of intake
-        pros::lcd::print(2, "Intake Voltage: %i", intake.get_voltage());
-        pros::lcd::print(3, "Intake Efficiency: %f", intake.get_efficiency());
-
+        pros::lcd::print(1, "Heading %f", imu.get_heading());
         // delay to save resources
         pros::delay(20);
     }
