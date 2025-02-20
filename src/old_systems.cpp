@@ -94,8 +94,9 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     // Use totalPID to move motors proportionally
     totalPID = std::clamp(totalPID,-127.0,127.0);
 
-    // convert to motor velocity units
+    // POTENTIAL FIX BELOW
     //totalPID *= 600/127.0;
+    //all_motors.move_velocity(totalPID);
     
     all_motors.move(totalPID);
 

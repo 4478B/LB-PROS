@@ -452,13 +452,13 @@ void progSkills(int i)
     
     //chassis.setPose(0,0,45);
 
-
+ 
     // move forward to align with goal 2
     
     drivePID(14,800);
     intake.move(127);
     chassis.turnToHeading(175, 900,{}, false);
-    chassis.turnToHeading(177.4, 900,{}, false);
+    chassis.turnToHeading(175, 900,{}, false);
     //chassis.moveToPose(-48,-36,180,7000,{.forwards=false, .maxSpeed = 50},false);
     drivePID(-78,2000,40);
     drivePID(2,400,160);
@@ -497,14 +497,14 @@ void progSkills(int i)
     delay(400);
 
     //endSection(500);
-    drivePID(-17,800);
+    drivePID(-19,800);
     setArmBottom();
     intakeOverride = true;
     intake.move(127);
-    chassis.turnToHeading(267, 900,{}, false);
+    chassis.turnToHeading(267 , 900,{}, false);
     //pick up line of 3 rings
     drivePID(75, 1500, 30);
-    drivePID(-16,800);
+    drivePID(-19,800);
     chassis.turnToHeading(0, 900,{}, false);
     drivePID(25, 1000, 40);
     drivePID(-22,800);
@@ -524,7 +524,7 @@ void progSkills(int i)
    
     //endSection(1000);
     drivePID(25,1000);
-    chassis.turnToHeading(130, 900,{}, false);
+    chassis.turnToHeading(132, 900,{}, false);
     intake.move(40);
     //intake.move(127);
     //goal 3
@@ -538,7 +538,7 @@ void progSkills(int i)
     intake.move(127);
     //drive towards goal 3
     drivePID(-19,700);
-    drivePID(-15,700,35);
+    drivePID(-16.3 ,700,35);
     clamp.set_value(LOW);
     intake.brake();
     drivePID(3,500,160);
@@ -556,27 +556,28 @@ void progSkills(int i)
     //ring 1 for goal 3
     intake.move(127);
     chassis.turnToHeading(305, 900,{}, false);
-    drivePID(43,1000);
+    drivePID(38,1000);
     //ring 2 for goal 3
     chassis.turnToHeading(0, 900,{}, false);
-    drivePID(23,800);
+    drivePID(21,800);
     //ring 3 and 4
     chassis.turnToHeading(90, 900,{}, false);
-    drivePID(35,800);
+    drivePID(32,800);
     drivePID(-6,500,170);
     //ring 5
     chassis.turnToHeading(0, 900,{}, false);
-    drivePID(17,800);
+    drivePID(15,800);
     chassis.turnToHeading(255, 900,{}, false);
     //drop in corner
     drivePID(-29,800,25);
     intake.move(-90);
     delay(100);
     clamp.set_value(HIGH);
+    chassis.turnToHeading(255, 900,{}, false);
     //move out of corner
-    drivePID(40,900);
+    drivePID(35,900);
     intake.move(-127);
-    chassis.turnToHeading(142, 900,{}, false);
+    chassis.turnToHeading(152, 900,{}, false);
     //push goal 4 into corner
     drivePID(150,4000,170);
     drivePID(-20,800,170);
