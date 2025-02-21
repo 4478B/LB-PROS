@@ -48,7 +48,9 @@ bool waitUntilAnyIntake(int timeout);
 
 extern bool intakeStuck;
 extern bool intakeOverride;
-extern void intake_stuck_task(void* param);
+extern bool armStuck;
+extern bool armOverride;
+extern void stuck_task(void* param);
 
 
 #endif // COLOR_SORT_H

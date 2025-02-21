@@ -89,39 +89,58 @@ bool waitUntilAnyIntake(int timeout)
     return waitUntilRingDetected(timeout, -1);
 }
 
-// global intake stuck detector
+// global intake and arm stuck detectors
 bool intakeStuck = false;
-int stuckCount = 0;
+int intakeStuckCount = 0;
+bool armStuck = false;
+int armStuckCount = 0;
 
 // ONLY ENABLE DURING ROUTES WHEN WANTED
 bool intakeOverride = false;
+bool armOverride = false;
 
-void intake_stuck_task(void* param) {
+void stuck_task(void* param) {
     while (true) {
         // Check if the intake is stuck based on voltage and efficiency
         if (abs(intake.get_voltage()) > 4000 && intake.get_efficiency() < 5) {
-            stuckCount++;
+            intakeStuckCount++;
         } else {
-            stuckCount = 0;
+            intakeStuckCount = 0;
         }
 
         // Set the intakeStuck flag if the stuck count exceeds the threshold
-        if (stuckCount > 50) {
+        if (intakeStuckCount > 50) {
             intakeStuck = true;
-            if(intakeOverride){
-                int initvelo = intake.get_target_velocity();
+            if (intakeOverride) {
+                int initVelo = intake.get_target_velocity();
                 intake.move(-127);
                 pros::delay(400); // Stay stuck for 400ms
-                intake.move(initvelo);
-            }
-            else{
+                intake.move(initVelo);
+            } else {
                 pros::delay(400); // Stay stuck for 400ms
             }
-            
         } else {
             intakeStuck = false;
         }
 
+        // Check if the arm is stuck based on voltage and efficiency
+        if (abs(arm_motors.get_voltage()) > 4000 && arm_motors.get_efficiency() < 5) {
+            armStuckCount++;
+        } else {
+            armStuckCount = 0;
+        }
+
+        // Set the armStuck flag if the stuck count exceeds the threshold
+        if (armStuckCount > 50) {
+            armStuck = true;
+            if (armOverride) {
+                setArmMid();
+            } else {
+                pros::delay(400); // Stay stuck for 400ms
+            }
+        } else {
+            armStuck = false;
+        }
 
         pros::delay(20); // Use pros::delay for consistency with the rest of the code
     }
