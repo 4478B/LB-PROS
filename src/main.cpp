@@ -89,7 +89,7 @@ void arm_control_task(void *param)
             currentPos = armRot.get_angle() / 100.0;
 
             // normalize error to [-180,180]
-            currentPos = currentPos - 360 * (currentPos > 240) + 360 * (currentPos < -240);
+            currentPos = currentPos - 360 * (currentPos > 250) + 360 * (currentPos < -250);
 
             // calculate how far arm is from target
             error = targetPos - currentPos;
