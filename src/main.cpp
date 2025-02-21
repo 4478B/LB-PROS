@@ -202,7 +202,7 @@ void initialize()
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
     // create intake stuck task 
-    Task intake_task(intake_stuck_task, nullptr, "Intake Stuck Task");
+    Task motor_stuck_task(stuck_task, nullptr, "Stuck Task");
     // color sort task
     //Task csort_task(csort::color_sort_task, nullptr, "Color Sort Task");
     //Task intake_task(intake_control_task, nullptr, "Intake Control Task");
@@ -538,6 +538,7 @@ void opcontrol()
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
     intakeOverride = false;
+    armOverride = false;
 
     // loop forever
     while (true)
@@ -558,8 +559,11 @@ void opcontrol()
         handleRightDoinker();
         handleAllianceMacro();
         //handleHangMacro();
-        // print value of intakeStuck
-        pros::lcd::print(1, "Heading %f", imu.get_heading());
+
+        // print arm motor voltage and efficiency to brain
+        pros::lcd::print(1, "Arm Motor Voltage: %i", arm_motors.get_voltage());
+        pros::lcd::print(2, "Arm Motor Efficiency: %f", arm_motors.get_efficiency());
+
         // delay to save resources
         pros::delay(20);
     }
