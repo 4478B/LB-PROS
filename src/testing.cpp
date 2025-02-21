@@ -426,7 +426,7 @@ void testAuton(bool inputReq)
             testDriveTrain();
         }
         else{
-            progSkills(1);
+            newRingSideRight(1);
         }
         // ***********************************************
         // ***********************************************

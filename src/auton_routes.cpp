@@ -170,11 +170,12 @@ void soloPushRight(int i){
     clamp.set_value(HIGH);
     chassis.setPose(0,0,-212);
     setArmAlliance();
-    delay(500);
+    delay(475);
     drivePID(-6,600,120);
-    chassis.turnToHeading(-32,800,{}, false);
     setArmBottom();
-    intake.move(90);
+    chassis.turnToHeading(-32,800,{}, false);
+
+    intake.move(45);
     drivePID(24,700,120);
     waitUntilAnyIntake(700);
     intake.brake();
@@ -184,13 +185,12 @@ void soloPushRight(int i){
     chassis.turnToHeading(-2,600,{}, false);
     intake.move(127);
     drivePID(26,800,130);
-    chassis.turnToHeading(157,700,{}, false);
-    intake.move(127);
+    chassis.turnToHeading(154,700,{}, false);
     clamp.set_value(HIGH);
-    drivePID(62,1300,80);
+    drivePID(62,1300,60);
     intake.move(127);
     drivePID(26,800,120);
-    intake.move(80);
+    intake.move(40);
     waitUntilAnyIntake(500);
     intake.brake();
     drivePID(-24,800,120);
@@ -269,25 +269,25 @@ void ladyBrownRushRight(int i){
     intake.brake();
    drivePID(-16,800,30);
    left_doinker.set_value(LOW);
-   chassis.turnToHeading(273,400);
+   chassis.turnToHeading(273,400,{},false);
    drivePID(6,600);
    setArm(220);
  delay(350);
-   chassis.turnToHeading(10,650);
+   chassis.turnToHeading(10,650,{},false);
    setArm(80);
 drivePID(-22,1000);
 clamp.set_value(LOW);
-chassis.turnToHeading(50,700);
+chassis.turnToHeading(50,700,{},false);
 intake.move(127);
 left_doinker.set_value(HIGH);
 drivePID(20,700);
 intake.move(-40);
 drivePID(50,1300,50);
 drivePID(-10,600,50);
-chassis.turnToHeading(195,700);
+chassis.turnToHeading(195,700,{},false);
 intake.move(127);
 left_doinker.set_value(LOW);
-chassis.turnToHeading(180,250);
+chassis.turnToHeading(180,250,{},false);
 drivePID(20,1000);
 
 }
