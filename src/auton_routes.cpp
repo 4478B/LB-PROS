@@ -416,7 +416,7 @@ void progSkills(int i)
     delay(100);
     intake.brake();
     delay(400);
-    setArmBottom();
+    setArm(57);
     delay(300);
     setArm(150);
     delay(400);
@@ -424,7 +424,7 @@ void progSkills(int i)
 
     //back up to align with 3 rings
     drivePID(-16,800);
-    setArmBottom();
+    setArm(57);
     intakeOverride = true;
 
     // turn and go to 3 rings
@@ -457,8 +457,8 @@ void progSkills(int i)
     
     drivePID(14,800);
     intake.move(127);
-    chassis.turnToHeading(175, 900,{}, false);
-    chassis.turnToHeading(175, 900,{}, false);
+    chassis.turnToHeading(177, 900,{}, false);
+    chassis.turnToHeading(177, 900,{}, false);
     //chassis.moveToPose(-48,-36,180,7000,{.forwards=false, .maxSpeed = 50},false);
     drivePID(-78,2000,40);
     drivePID(2,400,160);
