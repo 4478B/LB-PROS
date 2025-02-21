@@ -563,6 +563,7 @@ void opcontrol()
         // print arm motor voltage and efficiency to brain
         pros::lcd::print(1, "Arm Motor Voltage: %i", arm_motors.get_voltage());
         pros::lcd::print(2, "Arm Motor Efficiency: %f", arm_motors.get_efficiency());
+        pros::lcd::print(3, "Arm Target Velocity %f", arm_motors.get_target_velocity());
 
         // delay to save resources
         pros::delay(20);
