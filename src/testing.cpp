@@ -427,6 +427,9 @@ void testAuton(bool inputReq)
         }
         else{
             progSkills(1);
+            //soloPushRight(1);
+            //ladyBrownRushRight(1);
+            //safe4RingRight(1);
         }
         // ***********************************************
         // ***********************************************

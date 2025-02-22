@@ -18,6 +18,7 @@ void redRingSide(int i);
 void WPIAWP(int i);
 void safeAWPLeft(int i);
 void safeAWPRight(int i);
+void safe4RingRight(int i);
 void danburyRedRS(int i);
 void danburyBlueRS(int i);
 void redRingRush(int i);
