@@ -2,6 +2,7 @@
 #include "extended_chassis.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "lemlib/pid.hpp"
+#include "liblvgl/core/lv_obj.h"
 #include "liblvgl/llemu.hpp"
 #include "pros/adi.h"
 #include "pros/misc.h"
@@ -16,8 +17,26 @@
 #include "old_systems.h"
 #include "color_sort.h"
 
-// Global variables needed for arm control
 
+LV_IMG_DECLARE(none_sort); //delcare image
+LV_IMG_DECLARE(red_sort); //delcare image
+LV_IMG_DECLARE(blue_sort); //delcare image
+lv_obj_t *screenNone ;  //declare your screen
+lv_obj_t *screenRed ;  //declare your screen
+lv_obj_t *screenBlue ;  //declare your screen
+
+screenNone= lv_obj_create(NULL); // Create a new screen
+screenRed= lv_obj_create(NULL); // Create a new screen
+screenBlue= lv_obj_create(NULL); // Create a new screen
+
+
+
+
+
+
+
+
+// Global variables needed for arm control
 namespace ArmPos{
 
     const double bottom = 3;
@@ -63,12 +82,6 @@ void intake_control_task(void* param){
         delay(100);
         
         //print all variables used
-        pros::lcd::print(0, "Intake Voltage: %d", intake.get_voltage());
-        pros::lcd::print(1, "Intake Torque: %f", intake.get_torque());
-        pros::lcd::print(2, "Stuck Count: %d", stuckCount);
-        pros::lcd::print(3, "Last Reset: %d", lastReset);
-        pros::lcd::print(4, "Current Time: %d", pros::millis());
-        pros::lcd::print(5, "Reset CD: %d", resetCD);
 
     }
 
@@ -139,11 +152,11 @@ void arm_control_task(void *param)
 
         // collect and print data involving pid on screen
         /*
-        pros::lcd::print(6, "Arm State: %s", armMoving ? "Moving" : "Idle");
-        pros::lcd::print(3, "Arm Current Pos: %f", currentPos);
-        pros::lcd::print(4, "Arm Target Pos: %f", targetPos);
-        pros::lcd::print(7, "error: %f", error);
-        pros::lcd::print(5, "Arm Next Movement: %f", nextMovement);
+        //pros::lcd::print(6, "Arm State: %s", armMoving ? "Moving" : "Idle");
+        //pros::lcd::print(3, "Arm Current Pos: %f", currentPos);
+        //pros::lcd::print(4, "Arm Target Pos: %f", targetPos);
+        //pros::lcd::print(7, "error: %f", error);
+        //pros::lcd::print(5, "Arm Next Movement: %f", nextMovement);
         */
         // Add a small delay to prevent the task from hogging CPU
         pros::delay(20);
@@ -186,7 +199,32 @@ void initialize()
 {
 
     // controller.clear(); // clear controller screen
-    lcd::initialize();   // initialize brain screen
+
+    
+    lv_obj_t * redS = lv_img_create(lv_scr_act());//
+    lv_img_set_src(redS, &red_sort);
+    lv_obj_align(redS, LV_ALIGN_CENTER, 0,0);
+
+    lv_obj_t * blueS = lv_img_create(lv_scr_act());//
+    lv_img_set_src(blueS, &none_sort);
+    lv_obj_align(blueS, LV_ALIGN_CENTER, 0,0);
+    
+    lv_obj_t * noneS = lv_img_create(lv_scr_act());//
+    lv_img_set_src(noneS, &none_sort);
+    lv_obj_align(noneS, LV_ALIGN_CENTER, 0,0);
+    
+
+    
+    
+    /*lv_init(); //initialize  lvgl
+    
+    lv_obj_t * red_sort = lv_img_create(screenRed);//parameter is screen 
+    lv_img_set_src(red_sort, &none_sort);
+    lv_obj_align(red_sort, LV_ALIGN_CENTER, 0, 0);
+    
+    lv_scr_load(screenRed);*/
+
+
     chassis.calibrate(); // calibrate sensors
 
     clamp.set_value(HIGH);
@@ -207,16 +245,15 @@ void initialize()
     //Task csort_task(csort::color_sort_task, nullptr, "Color Sort Task");
     //Task intake_task(intake_control_task, nullptr, "Intake Control Task");
 
-    pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
 
     // print odometry position to brain screen
     /*
     pros::Task screen_task([&]() {
         while (true) {
             // print robot location to the brain screen
-            pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-            pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-            pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+            //pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
+            //pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+            //pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
             // delay to save resources
 
             if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
@@ -270,9 +307,6 @@ void competition_initialize()
     on_left_button();
     on_right_button();
 
-    // assign buttons to actions in auton selector
-    lcd::register_btn0_cb(on_left_button);
-    lcd::register_btn2_cb(on_right_button);
 }
 
 const double SMOOTHING_DENOMINATOR = 100; // Used to normalize the exponential curve
@@ -359,10 +393,7 @@ namespace csort {
                 }
 
                 // Print debug information to the LCD
-                pros::lcd::print(4, "Time since last detection: %d", pros::millis() - lastRingDetectionTime);
-                pros::lcd::print(5, "Intake start position: %f", intakeStartPosition);
-                pros::lcd::print(6, "Detection timeout: %d", detectionTimeout);
-                pros::lcd::print(7, "Ring toss counter: %d", ringTossCounter);
+
             }
             // Outtake
             else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
@@ -386,7 +417,6 @@ namespace csort {
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
             targetHue = (targetHue.hue == BLUE_RING_HUE.hue) ? RED_RING_HUE : BLUE_RING_HUE;
             // print hue to the brain screen
-            lcd::print(2, "Sorting out: %s", targetHue.hue == BLUE_RING_HUE.hue ? "Blue" : "Red");
         }
         // Hold X to enable/disable sorting
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
@@ -402,7 +432,6 @@ namespace csort {
                     //ringSens.set_led_pwm(0);
                     //ringSens.set_integration_time(100);
                     // print sorting status to the brain screen
-                    lcd::print(2, "Sorting out: Disabled");
                 }
             }
         } else {
@@ -434,7 +463,7 @@ void handleLeftDoinker()
     // activates on pressing LEFT
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT))
     {
-
+        lv_scr_load_anim(screenBlue, LV_SCR_LOAD_ANIM_OVER_BOTTOM, 500, 0, false);
         left_doinker.set_value(left_doinker.get_value() == LOW ? HIGH : LOW);
     }
 }
@@ -445,7 +474,7 @@ void handleRightDoinker()
     // activates on pressing LEFT
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
     {
-
+        lv_scr_load_anim(screenRed, LV_SCR_LOAD_ANIM_OVER_BOTTOM, 500, 0, false);
         right_doinker.set_value(right_doinker.get_value() == LOW ? HIGH : LOW);
     }
 }
@@ -561,10 +590,7 @@ void opcontrol()
         //handleHangMacro();
 
         // print arm motor voltage and efficiency to brain
-        pros::lcd::print(1, "Arm Motor Voltage: %i", arm_motors.get_voltage());
-        pros::lcd::print(2, "Arm Motor Efficiency: %f", arm_motors.get_efficiency());
-        pros::lcd::print(3, "Arm Target Velocity %f", arm_motors.get_target_velocity());
-
+ 
         // delay to save resources
         pros::delay(20);
     }

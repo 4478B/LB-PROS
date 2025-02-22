@@ -51,9 +51,7 @@ void drivePIDOdom(double goalInches, bool clamping, double clampDistInches)
 
     // Step 6: Print debug information for testing pose calculations.
     // Output trimmed to 3 decimal places to fit the screen.
-    pros::lcd::print(3, "Pose Init: X: %.3f, Y: %.3f, Th: %.3f", poseInit.x, poseInit.y, poseInit.theta);
-    pros::lcd::print(4, "Pose Goal: X: %.3f, Y: %.3f, Th: %.3f", poseGoal.x, poseGoal.y, poseGoal.theta);
-    pros::lcd::print(5, "Unit Angle: %.3f", unitCircleAngle);
+    
 }
 
 void driveInchesClamp(double gDist, double cDist = .5)
@@ -113,9 +111,6 @@ bool endSection(int delay) {
         printTimes(autonSection, deltaTime, totalTime, poseInit);
 
         // Print timer positions on screen for temporary logging
-        pros::lcd::print(5, "Auton Section: %i", autonSection);
-        pros::lcd::print(6, "Section Time: %i", deltaTime);
-        pros::lcd::print(7, "Total Time: %i", totalTime);
 
         // While button hasn't been pressed and hasn't timed out
         while (pros::millis() - startTime < delay) {
@@ -130,9 +125,9 @@ bool endSection(int delay) {
             }
             // Heading override: Adjust heading if Y button is pressed
             else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-                pros::lcd::print(1, "Old Heading: %f", chassis.getPose().theta);
+                
                 while (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-                    pros::lcd::print(2, "New Heading: %f", chassis.getPose().theta);
+                    
                     pros::delay(20);
                 }
                 // Store corrected pose

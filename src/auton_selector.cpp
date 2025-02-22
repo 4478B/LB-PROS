@@ -17,8 +17,7 @@ AutonSelector::AutonSelector(const AutonRoutine* routinesArray, size_t routineCo
     // Add main routines
     for (size_t i = 0; i < routineCount; i++) {
         if (routinesArray[i].func == nullptr) {
-            pros::lcd::clear_line(3);
-            pros::lcd::print(3, "Routine %d has null function", i);
+
         }
         routines.push_back(routinesArray[i]);
     }
@@ -27,8 +26,7 @@ AutonSelector::AutonSelector(const AutonRoutine* routinesArray, size_t routineCo
     if (combineTesting && extraRoutinesArray != nullptr) {
         for (size_t i = 0; i < extraCount; i++) {
             if (extraRoutinesArray[i].func == nullptr) {
-                pros::lcd::clear_line(3);
-                pros::lcd::print(3, "Extra routine %d has null function", i);
+ 
             }
             routines.push_back(extraRoutinesArray[i]);
         }
@@ -39,12 +37,10 @@ AutonSelector::AutonSelector(const AutonRoutine* routinesArray, size_t routineCo
 // Method implementations
 void AutonSelector::displaySelectionBrain() {
     if (currentSelection < 1 || currentSelection > routines.size()) {
-        pros::lcd::clear_line(4);
-        pros::lcd::print(4, "Invalid selection: %i", currentSelection);
+
         return;
     }
-    pros::lcd::clear_line(2);
-    pros::lcd::print(2, "%s",routines[currentSelection - 1].displayName.c_str());
+    
 }
 
 void AutonSelector::prevSelection() {
@@ -57,8 +53,7 @@ void AutonSelector::nextSelection() {
 
 void AutonSelector::runSelection() {
     if (currentSelection < 1 || currentSelection > routines.size()) {
-        pros::lcd::clear_line(4);
-        pros::lcd::print(4, "Invalid selection: %d", currentSelection);
+
         return;
     }
 

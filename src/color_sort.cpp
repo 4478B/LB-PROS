@@ -53,9 +53,7 @@ bool waitUntilRingDetected(int msecTimeout, Hue targetHue)
             ringDetected = 0; // Reset the detection counter
         }
         // Print debug information
-        pros::lcd::print(2, "Sensor hue %f", ringSens.get_hue());
-        pros::lcd::print(3, "Sensor dist: %i", ringSens.get_proximity());
-        pros::lcd::print(4, "Detections: %i", ringDetected);
+
         pros::delay(10); // Wait briefly before the next sensor reading to prevent excessive polling
     }
     ringSens.set_led_pwm(100);

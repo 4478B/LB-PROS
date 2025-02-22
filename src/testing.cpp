@@ -100,30 +100,30 @@ void testRingSens(int i)
         /*
         // * TEST COLORS AND GENERAL FUNCTIONALITY
         intake.move(127);
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Waiting for any...");
+        //pros::lcd::clear_line(1);
+        //pros::lcd::print(1, "Waiting for any...");
         waitUntilAnyIntake(100000);
         intake.brake();
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Got any!");
+        //pros::lcd::clear_line(1);
+        //pros::lcd::print(1, "Got any!");
         endSection(1000000);
         
         intake.move(127);
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Waiting for red...");
+        //pros::lcd::clear_line(1);
+        //pros::lcd::print(1, "Waiting for red...");
         waitUntilRedIntake(100000);
         intake.brake();
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Got red!");
+        //pros::lcd::clear_line(1);
+        //pros::lcd::print(1, "Got red!");
         endSection(1000000);
 
         intake.move(127);
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Waiting for blue...");
+        //pros::lcd::clear_line(1);
+        //pros::lcd::print(1, "Waiting for blue...");
         waitUntilBlueIntake(100000);
         intake.brake();
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Got blue!");
+        //pros::lcd::clear_line(1);
+        //pros::lcd::print(1, "Got blue!");
         endSection(1000000);
         */
         
@@ -131,19 +131,19 @@ void testRingSens(int i)
         
 
         intake.move(70);
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Waiting for any... (jerk)");
+        ////pros::lcd::clear_line(1);
+        ////pros::lcd::print(1, "Waiting for any... (jerk)");
         for(int i = 0; i < 100; i++){
             ringSens.set_led_pwm(100);
             delay(10);
         }
         waitUntilAnyIntake(100000);
-        pros::lcd::print(1, "jerking");
+        ////pros::lcd::print(1, "jerking");
         intake.tare_position();
         if(dist == 0){
             while(!controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
                 intake.brake();
-                pros::lcd::print(5,"Dist: %f",intake.get_position());
+                ////pros::lcd::print(5,"Dist: %f",intake.get_position());
                 dist = intake.get_position();
                 pros::delay(50);
             }
@@ -151,28 +151,28 @@ void testRingSens(int i)
         else{
             while(intake.get_position() < dist){
                 delay(20);
-                pros::lcd::print(6,"Error: %f",dist - intake.get_position());
+                ////pros::lcd::print(6,"Error: %f",dist - intake.get_position());
             }
         }
         
         intake.brake();
         delay(500);
         intake.move(100);
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Got any! (jerked)");
+        //pros::lcd::clear_line(1);
+        //pros::lcd::print(1, "Got any! (jerked)");
         endSection( 1000);
         /*
         // * TEST INTAKE ARM HOLD
         intake.move(127);
         setArm(18);
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Waiting for blue... (arm-hold)");
+        //pros::lcd::clear_line(1);
+        //pros::lcd::print(1, "Waiting for blue... (arm-hold)");
         waitUntilBlueIntake(100000);
-        pros::lcd::print(1, "lowering");
+        //pros::lcd::print(1, "lowering");
         setArmBottom();
         intake.move(127);
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Got blue! (arm-hold)");
+        //pros::lcd::clear_line(1);
+        //pros::lcd::print(1, "Got blue! (arm-hold)");
         endSection(1000000);
 
         */
@@ -185,13 +185,13 @@ void testGoalSens(int i)
     while (true)
     {
 
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Waiting for goal...");
+        //pros::lcd::clear_line(1);
+        //pros::lcd::print(1, "Waiting for goal...");
         all_motors.move(40);
         waitUntilClamp(48000000, 1000000);
         all_motors.brake();
-        pros::lcd::clear_line(1);
-        pros::lcd::print(1, "Got goal!");
+        //pros::lcd::clear_line(1);
+        //pros::lcd::print(1, "Got goal!");
         endSection(1000000);
     }
 }
@@ -288,65 +288,65 @@ void testEndSection(){
     chassis.setPose(0,0,0);
     // Test 1: Timeout
     // -- Delay for 3000ms
-    pros::lcd::print(1,"Test 1: Timeout (None)");
+    //pros::lcd::print(1,"Test 1: Timeout (None)");
     delay(1000);
-    pros::lcd::print(2,"Test 1 START");
+    //pros::lcd::print(2,"Test 1 START");
     endSection(3000);
-    pros::lcd::print(2,"Test 1 END");
+    //pros::lcd::print(2,"Test 1 END");
     delay(1000);
 
     // Test 2: Default Override
     // -- press X, return def path
-    pros::lcd::print(1,"Test 2: Default Override (X)");
+    //pros::lcd::print(1,"Test 2: Default Override (X)");
     delay(1000);
-    pros::lcd::print(2,"Test 2 START");
+    //pros::lcd::print(2,"Test 2 START");
     bool path = endSection(100000000);
     if(path){
-        pros::lcd::print(2,"Alternate Path Taken");
+        //pros::lcd::print(2,"Alternate Path Taken");
     }
     else{
-        pros::lcd::print(2,"Default Path Taken");
+        //pros::lcd::print(2,"Default Path Taken");
     }
-    pros::lcd::print(2,"Test 2 END");
+    //pros::lcd::print(2,"Test 2 END");
     delay(1000);
 
     // Test 3: Alternate Override
     // -- press A, return alt path
-    pros::lcd::print(1,"Test 3: Alternate Override (A)");
+    //pros::lcd::print(1,"Test 3: Alternate Override (A)");
     delay(1000);
-    pros::lcd::print(2,"Test 3 START");
+    //pros::lcd::print(2,"Test 3 START");
     path = endSection(100000000);
     if(path){
-        pros::lcd::print(2,"Alternate Path Taken");
+        //pros::lcd::print(2,"Alternate Path Taken");
     }
     else{
-        pros::lcd::print(2,"Default Path Taken");
+        //pros::lcd::print(2,"Default Path Taken");
     }
-    pros::lcd::print(2,"Test 3 END");
+    //pros::lcd::print(2,"Test 3 END");
     delay(1000);
     
     // Test 4: Position Override
     // Press B, move robot, press B again, return to original heading
-    pros::lcd::print(1,"Test 4: Position Override (B)");
+    //pros::lcd::print(1,"Test 4: Position Override (B)");
     delay(1000);
-    pros::lcd::print(2,"Test 4 START");
-    pros::lcd::print(3,"Initial heading %f",chassis.getPose().theta);
+    //pros::lcd::print(2,"Test 4 START");
+    //pros::lcd::print(3,"Initial heading %f",chassis.getPose().theta);
     endSection(100000000);
     delay(400);
-    pros::lcd::print(3,"Final heading %f",chassis.getPose().theta);
-    pros::lcd::print(2,"Test 4 END");
+    //pros::lcd::print(3,"Final heading %f",chassis.getPose().theta);
+    //pros::lcd::print(2,"Test 4 END");
     delay(1000);
 
     // Test 5: Heading Override
     // Press Y, move joystick, press Y again, return to new heading
-    pros::lcd::print(1,"Test 5: Heading Override (Y)");
+    //pros::lcd::print(1,"Test 5: Heading Override (Y)");
     delay(1000);
-    pros::lcd::print(2,"Test 5 START");
-    pros::lcd::print(3,"Initial heading %f",chassis.getPose().theta);
+    //pros::lcd::print(2,"Test 5 START");
+    //pros::lcd::print(3,"Initial heading %f",chassis.getPose().theta);
     endSection(100000000);
     delay(400);
-    pros::lcd::print(3,"Final heading %f",chassis.getPose().theta);
-    pros::lcd::print(2,"Test 5 END");
+    //pros::lcd::print(3,"Final heading %f",chassis.getPose().theta);
+    //pros::lcd::print(2,"Test 5 END");
 
 }
 
@@ -354,17 +354,17 @@ void testDriveTrain(){
 
     while(true){
         double initHeading = imu.get_heading();
-        pros::lcd::print(1,"Initial Heading: %f",initHeading);
+        //pros::lcd::print(1,"Initial Heading: %f",initHeading);
         drivePID(80,5000);
-        pros::lcd::print(2,"Final Heading: %f",imu.get_heading());
-        pros::lcd::print(3,"Delta Heading: %f",imu.get_heading()-initHeading);
+        //pros::lcd::print(2,"Final Heading: %f",imu.get_heading());
+        //pros::lcd::print(3,"Delta Heading: %f",imu.get_heading()-initHeading);
         endSection(10000000);
         
         initHeading = imu.get_heading();
-        pros::lcd::print(1,"Initial Heading: %f",initHeading);
+        //pros::lcd::print(1,"Initial Heading: %f",initHeading);
         drivePID(-80,5000);
-        pros::lcd::print(2,"Final Heading: %f",imu.get_heading());
-        pros::lcd::print(3,"Delta Heading: %f",imu.get_heading()-initHeading);
+        //pros::lcd::print(2,"Final Heading: %f",imu.get_heading());
+        //pros::lcd::print(3,"Delta Heading: %f",imu.get_heading()-initHeading);
         endSection(10000000);
     }
 
