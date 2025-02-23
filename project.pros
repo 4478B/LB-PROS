@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "4478B-PROS",
+    "project_name": "4478B_CSortDemo",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -298,8 +298,8 @@
       }
     },
     "upload_options": {
-      "icon": "power",
-      "description": "50 point auton!!!!!",
+      "icon": "pros",
+      "description": "sigma rizz",
       "slot": 3
     },
     "use_early_access": false

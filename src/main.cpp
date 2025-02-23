@@ -4,6 +4,8 @@
 #include "lemlib/pid.hpp"
 #include "liblvgl/core/lv_obj.h"
 #include "liblvgl/llemu.hpp"
+#include "liblvgl/lv_conf_internal.h"
+#include "liblvgl/widgets/lv_label.h"
 #include "pros/adi.h"
 #include "pros/misc.h"
 #include "pros/motors.h"
@@ -18,33 +20,18 @@
 #include "color_sort.h"
 
 
-LV_IMG_DECLARE(none_sort); //delcare image
-LV_IMG_DECLARE(red_sort); //delcare image
-LV_IMG_DECLARE(blue_sort); //delcare image
-lv_obj_t *screenNone ;  //declare your screen
-lv_obj_t *screenRed ;  //declare your screen
-lv_obj_t *screenBlue ;  //declare your screen
-
-screenNone= lv_obj_create(NULL); // Create a new screen
-screenRed= lv_obj_create(NULL); // Create a new screen
-screenBlue= lv_obj_create(NULL); // Create a new screen
-
-
-
-
-
 
 
 
 // Global variables needed for arm control
 namespace ArmPos{
 
-    const double bottom = 3;
-    const double mid = 21;
-    const double top = 150;
-    const double mid_high = 57;
-    const double push_top = 152;
-    const double alliance = 205;
+    const double bottom = 3;// how laggy is it
+    const double mid = 21; //not that much suprisngly LIke it is less than a second of lag
+    const double top = 150; // not bad
+    const double mid_high = 57; // you could use github and code on your own and then just sync here if u want
+    const double push_top = 152; //wdym sync like commit on your home pc, push to github, pull on school pc lol copilot came in clutch omg the windwos key hhits my  LMFAO ok go buckwild ill brb
+    const double alliance = 205; //ah i see also when i move my curson tdoes that also move it for you ah that makes sense wait move it yeah it does Idm tho NOOO dont delete system 32ol i fifnyt 
 
 }
 static double targetPos = 0;
@@ -173,7 +160,7 @@ namespace csort {
                 if(isRingDetected(targetHue)){
                     lastRingDetectionTime = pros::millis();
                 }
-                delay(10);
+                pros::delay(10);
             } else {
                 delay(100);
             }
@@ -194,25 +181,87 @@ void setArmMid() { setArm(ArmPos::mid); }
 void setArmTop() { setArm(ArmPos::top); }
 void setArmAlliance() { setArm(ArmPos::alliance); }
 
+LV_IMG_DECLARE(none_sort); //delcare image
+LV_IMG_DECLARE(red_sort); //delcare image
+LV_IMG_DECLARE(blue_sort); //delcare image
+lv_obj_t *screen1; //declare screen
+lv_obj_t *autonLabel; //declare label
+lv_obj_t *img_obj; //declare image object
+
+void btn_event_cb(lv_event_t * e) {
+    lv_obj_t * btn = lv_event_get_target(e);
+    lv_obj_t * label = lv_obj_get_child(btn, 0);
+    int val = atoi(lv_label_get_text(label));
+    val++;
+    lv_label_set_text_fmt(label, "%d", val);
+}
+
 // initialize function. Runs on program startup
 void initialize()
 {
+    img_obj = lv_img_create(lv_scr_act()); // Create a single image object
+    lv_obj_align(img_obj, LV_ALIGN_CENTER, 0, 0); // Align the image to the center
+    lv_img_set_src(img_obj, &none_sort); // Set the image source to none_sort
 
     // controller.clear(); // clear controller screen
 
+    lv_init(); //initialize  lvgl
     
-    lv_obj_t * redS = lv_img_create(lv_scr_act());//
-    lv_img_set_src(redS, &red_sort);
-    lv_obj_align(redS, LV_ALIGN_CENTER, 0,0);
+    std::string lastHue = "null";
+    while(true){
+        intake.move_velocity(70);
+        if(isRingDetected(RED_RING_HUE)){
+            if(lastHue != "Red"){
+                lv_img_set_src(img_obj, &red_sort); // Set the image source to red_sort
+                intake.brake();
+                delay(1000);
+                intake.move_velocity(70);
 
-    lv_obj_t * blueS = lv_img_create(lv_scr_act());//
-    lv_img_set_src(blueS, &none_sort);
-    lv_obj_align(blueS, LV_ALIGN_CENTER, 0,0);
-    
-    lv_obj_t * noneS = lv_img_create(lv_scr_act());//
-    lv_img_set_src(noneS, &none_sort);
-    lv_obj_align(noneS, LV_ALIGN_CENTER, 0,0);
-    
+            }
+            lastHue = "Red";
+            
+        }
+        else if(isRingDetected(BLUE_RING_HUE)){
+            
+            if(lastHue != "Blue"){
+                lv_img_set_src(img_obj, &blue_sort); // Set the image source to blue_sort
+                intake.brake();
+                delay(1000);
+                intake.move_velocity(70);
+            }
+            lastHue = "Blue";
+        }
+        else{
+            if(lastHue != "None"){
+                lv_img_set_src(img_obj, &none_sort); // Set the image source to none_sort
+            }
+            lastHue = "None";
+        }
+        pros::delay(50);
+    }
+
+    /*// create a button on the screen
+    lv_obj_t * btn = lv_btn_create(lv_scr_act());
+    lv_obj_set_size(btn, 200, 100); // Set the size of the button
+    lv_obj_align(btn, LV_ALIGN_CENTER, 0, 0); // Align the button to the center
+
+    // create a label on the button
+    lv_obj_t * autonLabel = lv_label_create(btn); // Attach the label to the button
+    lv_label_set_text(autonLabel, "0");
+    lv_obj_center(autonLabel); // Center the label on the button
+
+    // create an event handler for the button
+
+    lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_CLICKED, NULL);*/
+
+    //while (true) {
+        //lv_img_set_src(img_obj, &red_sort); // Set the image source to red_sort
+        //pros::delay(1000); // Wait for 1 second
+        //lv_img_set_src(img_obj, &none_sort); // Set the image source to none_sort
+        //pros::delay(1000); // Wait for 1 second
+        //lv_img_set_src(img_obj, &blue_sort); // Set the image source to blue_sort
+    //}
+        
 
     
     
@@ -224,6 +273,10 @@ void initialize()
     
     lv_scr_load(screenRed);*/
 
+    /*screenNone= lv_obj_create(NULL); // Create a new screen
+    screenRed= lv_obj_create(NULL); // Create a new screen
+    screenBlue= lv_obj_create(NULL); // Create a new screen
+*/
 
     chassis.calibrate(); // calibrate sensors
 
@@ -237,12 +290,15 @@ void initialize()
     ringSens.set_integration_time(10);
 
 
+
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
     // create intake stuck task 
     Task motor_stuck_task(stuck_task, nullptr, "Stuck Task");
     // color sort task
     //Task csort_task(csort::color_sort_task, nullptr, "Color Sort Task");
+    // color sort brain task
+    //Task csort_brain_task(csort::color_sort_brain_task, nullptr, "Color Sort Brain Task");
     //Task intake_task(intake_control_task, nullptr, "Intake Control Task");
 
 
@@ -438,6 +494,36 @@ namespace csort {
             sortHoldDuration = 0;
         }
     }
+
+    std::string lastHue = "Null";
+    void color_sort_brain_task(void* param) {        
+
+        while(true){
+            if(isRingDetected(RED_RING_HUE)){
+                if(lastHue != "Red"){
+                    lv_img_set_src(img_obj, &red_sort); // Set the image source to red_sort
+                }
+                lastHue = "Red";
+                
+            }
+            else if(isRingDetected(BLUE_RING_HUE)){
+                
+                if(lastHue != "Blue"){
+                    lv_img_set_src(img_obj, &blue_sort); // Set the image source to blue_sort
+                }
+                lastHue = "Blue";
+            }
+            else{
+                if(lastHue != "None"){
+                    lv_img_set_src(img_obj, &none_sort); // Set the image source to none_sort
+                }
+                lastHue = "None";
+            }
+            pros::delay(300);
+            //lv_label_set_text(autonLabel, lastHue.c_str());
+        }
+
+    }
 }
 
 
@@ -463,7 +549,6 @@ void handleLeftDoinker()
     // activates on pressing LEFT
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT))
     {
-        lv_scr_load_anim(screenBlue, LV_SCR_LOAD_ANIM_OVER_BOTTOM, 500, 0, false);
         left_doinker.set_value(left_doinker.get_value() == LOW ? HIGH : LOW);
     }
 }
@@ -474,7 +559,6 @@ void handleRightDoinker()
     // activates on pressing LEFT
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
     {
-        lv_scr_load_anim(screenRed, LV_SCR_LOAD_ANIM_OVER_BOTTOM, 500, 0, false);
         right_doinker.set_value(right_doinker.get_value() == LOW ? HIGH : LOW);
     }
 }
