@@ -455,9 +455,9 @@ void progSkills(int i)
     drivePID(-19,800);
     // turn & go to last ring
     chassis.turnToHeading(180, 550,{}, false);
-    drivePID(25, 1000, 40);
+    drivePID(25, 750, 40);
     // back up to align with corner
-    drivePID(-22,800);
+    drivePID(-22,750);
 
     // turn and go to corner
     chassis.turnToHeading(45, 900,{}, false);
@@ -479,13 +479,13 @@ void progSkills(int i)
     //chassis.moveToPose(-48,-36,180,7000,{.forwards=false, .maxSpeed = 50},false);
     drivePID(-78,2000,40);
     drivePID(2,400,160);
-    drivePID(-10,500,30);
+    drivePID(-7,500,30);
     //clamp goal 2
     clamp.set_value(LOW);
 
     delay(100);
     //endSection(50000);
-    drivePID(7, 500);
+    drivePID(5, 500);
     //endSection(500);
     chassis.turnToHeading(84, 600,{}, false);
     intake.move(127);
@@ -514,7 +514,7 @@ void progSkills(int i)
     delay(200);
 
     //endSection(500);
-    drivePID(-21,800);
+    drivePID(-20,800);
     setArm(70);
     intakeOverride = true;
     intake.move(127);
@@ -523,9 +523,9 @@ void progSkills(int i)
     drivePID(84, 1500, 30);
     drivePID(-20,800);
     chassis.turnToHeading(0, 550,{}, false);
-    drivePID(25, 1000, 40);
+    drivePID(25, 750, 40);
     drivePID(-22,800);
-    chassis.turnToHeading(135, 800,{}, false);
+    chassis.turnToHeading(135, 700,{}, false);
     
     // TEMP POSE
     /*chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
@@ -541,31 +541,29 @@ void progSkills(int i)
 
     //endSection(1000);
     setArmBottom();
-    drivePID(25,1000);
+    drivePID(25,800);
     chassis.turnToHeading(130, 500,{}, false);
-    intake.move(40);
+    intake.move(33);
     //intake.move(127);
     //goal 3
     drivePID(92,2000,130);
-    intake.move(-127);
-    delay(100);
-    intake.move(127);
-    intakeOverride = false;
     setArmMid();
+    intakeOverride = false;
     chassis.turnToHeading(222, 700,{}, false);
+    intake.move(127);
     //drive towards goal 3
     drivePID(-22,700);
     drivePID(-19 ,900,35);
     clamp.set_value(LOW);
     drivePID(3,500,160);
-    intake.move(127);
-    chassis.turnToHeading(90, 700,{}, false);
+    intake.brake();
+    chassis.turnToHeading(90, 800,{}, false);
     //alliance stake 2
     drivePID(26,700,40);
     delay(200);
-    intake.brake();
     intake.move(-20);
     drivePID(-8.5,500,170);
+    intake.brake();
     setArmAlliance();
     delay(600);
     drivePID(-15,500,130);
@@ -587,24 +585,26 @@ void progSkills(int i)
     //ring 5
     chassis.turnToHeading(0, 550,{}, false);
     drivePID(15,800);
-    chassis.turnToHeading(255, 650,{}, false);
+    chassis.turnToHeading(225, 650,{}, false);
     //drop in corner
     drivePID(-33,1000,25);
-    intake.move(-90);
+    intake.move(-30);
     delay(100);
     clamp.set_value(HIGH);
     chassis.turnToHeading(255, 400,{}, false);
     //move out of corner
     drivePID(35,900);
     intake.move(-127);
-    chassis.turnToHeading(152, 800,{}, false);
+    chassis.turnToHeading(149, 800,{}, false);
     //push goal 4 into corner
-    drivePID(150,3000,170);
-    chassis.turnToHeading(120, 700,{}, false);
-    setArm(80);
-    drivePID(-85,700,170);
-
-    
+    drivePID(150,2000,170);
+    chassis.turnToHeading(128, 700,{}, false);
+    setArmAlliance();
+    intake.brake();
+    all_motors.set_brake_mode(E_MOTOR_BRAKE_COAST);
+    drivePID(-100,1050,35);
+    delay(800);
+    drivePID(4,500);
     
 
     

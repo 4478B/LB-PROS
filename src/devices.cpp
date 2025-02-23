@@ -22,7 +22,7 @@ adi::Port left_doinker('D', pros::E_ADI_DIGITAL_OUT);
 adi::Port right_doinker('C', pros::E_ADI_DIGITAL_OUT);
 
 
-PID armPID(2.9, 0, 2.5); // old 2.9 2.5
+PID armPID(2.9, 0, 5); // old 2.9 2.5
 PID lateralPID(.11, 0, 0.15);
 PID angularPID(0.499, 0, 0.002);
 
