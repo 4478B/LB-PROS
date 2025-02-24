@@ -78,16 +78,14 @@ const AutonRoutine COMPETITION_ROUTINES[] = {
     {"Prog Skills", progSkills},                          
     {"Safe AWP Left", safeAWPLeft},   
     {"Safe AWP Right", safeAWPRight}, 
-    {"FULL AWP RIGHT", soloPushRight,1},   
+    {"FULL AWP RIGHT", soloPushRight,1},    
     {"FULL AWP LEFT", soloPushLeft,1}, 
     {"Red Goal Side SUGARRUSH", redGoalSideSugarRush},        
-    {"Blue Goal Side SUGARRUSH", blueGoalSideSugarRush},        
-    {"Blue Goal Side", blueGoalSide},                     
-    {"Red Goal Side", redGoalSide},                       
-    {"Blue Ring Side", blueRingSide},                     
-    {"Red Ring Side", redRingSide},
-    {"Red Ring Rush", redRingRush},
-    {"Blue Ring Rush", redRingRush, -1}
+    {"Blue Goal Side SUGARRUSH", blueGoalSideSugarRush},                          
+    {"Right Safe Ring Side", safe4RingRight},                     
+    {"Left Safe Ring Side", safe4RingLeft},
+    {"Right Ring Rush", newRingSideRight},
+    {"Left Ring Rush", newRingSideLeft}
 
 };
 

@@ -426,7 +426,7 @@ void testAuton(bool inputReq)
             testDriveTrain();
         }
         else{
-            progSkills(1);
+            safe4RingRight(1);
             //soloPushRight(1);
             //ladyBrownRushRight(1);
             //safe4RingRight(1);
