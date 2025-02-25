@@ -107,7 +107,7 @@ void testRingSens(int i)
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got any!");
         endSection(1000000);
-        
+
         intake.move(127);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for red...");
@@ -126,41 +126,45 @@ void testRingSens(int i)
         pros::lcd::print(1, "Got blue!");
         endSection(1000000);
         */
-        
+
         // * TEST INTAKE JERKING
-        
 
         intake.move(70);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Waiting for any... (jerk)");
-        for(int i = 0; i < 100; i++){
+        for (int i = 0; i < 100; i++)
+        {
             ringSens.set_led_pwm(100);
             delay(10);
         }
         waitUntilAnyIntake(100000);
         pros::lcd::print(1, "jerking");
         intake.tare_position();
-        if(dist == 0){
-            while(!controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
+        if (dist == 0)
+        {
+            while (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_X))
+            {
                 intake.brake();
-                pros::lcd::print(5,"Dist: %f",intake.get_position());
+                pros::lcd::print(5, "Dist: %f", intake.get_position());
                 dist = intake.get_position();
                 pros::delay(50);
             }
         }
-        else{
-            while(intake.get_position() < dist){
+        else
+        {
+            while (intake.get_position() < dist)
+            {
                 delay(20);
-                pros::lcd::print(6,"Error: %f",dist - intake.get_position());
+                pros::lcd::print(6, "Error: %f", dist - intake.get_position());
             }
         }
-        
+
         intake.brake();
         delay(500);
         intake.move(100);
         pros::lcd::clear_line(1);
         pros::lcd::print(1, "Got any! (jerked)");
-        endSection( 1000);
+        endSection(1000);
         /*
         // * TEST INTAKE ARM HOLD
         intake.move(127);
@@ -177,7 +181,6 @@ void testRingSens(int i)
 
         */
     }
-
 }
 
 void testGoalSens(int i)
@@ -202,9 +205,9 @@ void testOdometryStraight(int i)
     chassis.setPose(0, 0, 0);
     while (true)
     {
-        drivePID(10,9000);
+        drivePID(10, 9000);
         endSection(1000000);
-        drivePID(-10,9000);
+        drivePID(-10, 9000);
         endSection(1000000);
     }
 }
@@ -218,12 +221,12 @@ void testOdometryTurn(int i)
     while (true)
     {
         endSection(1000000);
-        chassis.turnToHeading(180, 4000,{.direction=lemlib::AngularDirection::CW_CLOCKWISE},false);
+        chassis.turnToHeading(180, 4000, {.direction = lemlib::AngularDirection::CW_CLOCKWISE}, false);
         endSection(1000000);
-        chassis.turnToHeading(270, 4000,{},false);
+        chassis.turnToHeading(270, 4000, {}, false);
         endSection(1000000);
-        chassis.turnToHeading(0, 4000,{},false);
-        
+        chassis.turnToHeading(0, 4000, {}, false);
+
         endSection(500000);
         chassis.turnToHeading(180, 50000, {.direction = AngularDirection::CW_CLOCKWISE});
         endSection(500000);
@@ -251,7 +254,8 @@ void testOdometryBoth(int i)
     }
 }
 
-void testIntakeReadings(){
+void testIntakeReadings()
+{
     // set up permanent console logging for intake readings
     std::cout << std::fixed << std::setprecision(2);
     std::cout << std::setw(10) << "time" << " | "
@@ -262,19 +266,25 @@ void testIntakeReadings(){
               << std::endl;
     std::cout << std::string(11 * 5 + 4, '-')
               << std::endl;
-    while(true){
+    while (true)
+    {
         std::cout << std::setw(10) << pros::millis() << " | "
                   << std::setw(10) << intake.get_voltage() << " | "
                   << std::setw(10) << intake.get_torque() << " | "
                   << std::setw(10) << intake.get_position() << " | "
                   << std::setw(10) << intake.get_efficiency() << " | "
                   << std::endl;
-        // handle regular intake function if r2 pressed forward 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+        // handle regular intake function if r2 pressed forward
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+        {
             intake.move(127);
-        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+        }
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+        {
             intake.move(-127);
-        } else {
+        }
+        else
+        {
             intake.brake();
         }
 
@@ -282,94 +292,152 @@ void testIntakeReadings(){
     }
 }
 
-void testEndSection(){
+void testEndSection()
+{
 
-
-    chassis.setPose(0,0,0);
+    chassis.setPose(0, 0, 0);
     // Test 1: Timeout
     // -- Delay for 3000ms
-    pros::lcd::print(1,"Test 1: Timeout (None)");
+    pros::lcd::print(1, "Test 1: Timeout (None)");
     delay(1000);
-    pros::lcd::print(2,"Test 1 START");
+    pros::lcd::print(2, "Test 1 START");
     endSection(3000);
-    pros::lcd::print(2,"Test 1 END");
+    pros::lcd::print(2, "Test 1 END");
     delay(1000);
 
     // Test 2: Default Override
     // -- press X, return def path
-    pros::lcd::print(1,"Test 2: Default Override (X)");
+    pros::lcd::print(1, "Test 2: Default Override (X)");
     delay(1000);
-    pros::lcd::print(2,"Test 2 START");
+    pros::lcd::print(2, "Test 2 START");
     bool path = endSection(100000000);
-    if(path){
-        pros::lcd::print(2,"Alternate Path Taken");
+    if (path)
+    {
+        pros::lcd::print(2, "Alternate Path Taken");
     }
-    else{
-        pros::lcd::print(2,"Default Path Taken");
+    else
+    {
+        pros::lcd::print(2, "Default Path Taken");
     }
-    pros::lcd::print(2,"Test 2 END");
+    pros::lcd::print(2, "Test 2 END");
     delay(1000);
 
     // Test 3: Alternate Override
     // -- press A, return alt path
-    pros::lcd::print(1,"Test 3: Alternate Override (A)");
+    pros::lcd::print(1, "Test 3: Alternate Override (A)");
     delay(1000);
-    pros::lcd::print(2,"Test 3 START");
+    pros::lcd::print(2, "Test 3 START");
     path = endSection(100000000);
-    if(path){
-        pros::lcd::print(2,"Alternate Path Taken");
+    if (path)
+    {
+        pros::lcd::print(2, "Alternate Path Taken");
     }
-    else{
-        pros::lcd::print(2,"Default Path Taken");
+    else
+    {
+        pros::lcd::print(2, "Default Path Taken");
     }
-    pros::lcd::print(2,"Test 3 END");
+    pros::lcd::print(2, "Test 3 END");
     delay(1000);
-    
+
     // Test 4: Position Override
     // Press B, move robot, press B again, return to original heading
-    pros::lcd::print(1,"Test 4: Position Override (B)");
+    pros::lcd::print(1, "Test 4: Position Override (B)");
     delay(1000);
-    pros::lcd::print(2,"Test 4 START");
-    pros::lcd::print(3,"Initial heading %f",chassis.getPose().theta);
+    pros::lcd::print(2, "Test 4 START");
+    pros::lcd::print(3, "Initial heading %f", chassis.getPose().theta);
     endSection(100000000);
     delay(400);
-    pros::lcd::print(3,"Final heading %f",chassis.getPose().theta);
-    pros::lcd::print(2,"Test 4 END");
+    pros::lcd::print(3, "Final heading %f", chassis.getPose().theta);
+    pros::lcd::print(2, "Test 4 END");
     delay(1000);
 
     // Test 5: Heading Override
     // Press Y, move joystick, press Y again, return to new heading
-    pros::lcd::print(1,"Test 5: Heading Override (Y)");
+    pros::lcd::print(1, "Test 5: Heading Override (Y)");
     delay(1000);
-    pros::lcd::print(2,"Test 5 START");
-    pros::lcd::print(3,"Initial heading %f",chassis.getPose().theta);
+    pros::lcd::print(2, "Test 5 START");
+    pros::lcd::print(3, "Initial heading %f", chassis.getPose().theta);
     endSection(100000000);
     delay(400);
-    pros::lcd::print(3,"Final heading %f",chassis.getPose().theta);
-    pros::lcd::print(2,"Test 5 END");
-
+    pros::lcd::print(3, "Final heading %f", chassis.getPose().theta);
+    pros::lcd::print(2, "Test 5 END");
 }
 
-void testDriveTrain(){
+void testDriveTrain()
+{
 
-    while(true){
+    while (true)
+    {
         double initHeading = imu.get_heading();
-        pros::lcd::print(1,"Initial Heading: %f",initHeading);
-        drivePID(80,5000);
-        pros::lcd::print(2,"Final Heading: %f",imu.get_heading());
-        pros::lcd::print(3,"Delta Heading: %f",imu.get_heading()-initHeading);
+        pros::lcd::print(1, "Initial Heading: %f", initHeading);
+        drivePID(80, 5000);
+        pros::lcd::print(2, "Final Heading: %f", imu.get_heading());
+        pros::lcd::print(3, "Delta Heading: %f", imu.get_heading() - initHeading);
         endSection(10000000);
-        
+
         initHeading = imu.get_heading();
-        pros::lcd::print(1,"Initial Heading: %f",initHeading);
-        drivePID(-80,5000);
-        pros::lcd::print(2,"Final Heading: %f",imu.get_heading());
-        pros::lcd::print(3,"Delta Heading: %f",imu.get_heading()-initHeading);
+        pros::lcd::print(1, "Initial Heading: %f", initHeading);
+        drivePID(-80, 5000);
+        pros::lcd::print(2, "Final Heading: %f", imu.get_heading());
+        pros::lcd::print(3, "Delta Heading: %f", imu.get_heading() - initHeading);
         endSection(10000000);
     }
-
 }
 
+void testGyro()
+{
+    // set up permanent console logging for gyro readings
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << std::setw(10) << "time" << " | "
+              << std::setw(10) << "pitch" << " | "
+              << std::setw(10) << "roll" << " | "
+              << std::setw(10) << "yaw" << " | "
+              << std::endl;
+    std::cout << std::string(11 * 3 + 4, '-')
+              << std::endl;
+    while (true)
+    {
+        std::cout << std::setw(10) << pros::millis() << " | "
+                  << std::setw(10) << imu.get_pitch() << " | "
+                  << std::setw(10) << imu.get_roll() << " | "
+                  << std::setw(10) << imu.get_yaw() << " | "
+                  << std::endl;
+
+        // handle regular gyro function if r2 pressed forward
+        handleArm();
+        handleDriveTrain();
+
+        pros::delay(100);
+    }
+}
+
+const double hangReq = 2;
+void testHang()
+{
+    all_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
+    bool hung = false;
+    double initPitch = imu.get_roll();
+
+    while (true)
+    {
+        handleDriveTrain();
+        handleArm();
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
+        {
+            hung = false;
+            initPitch = imu.get_roll();
+        }
+        if (fabs(imu.get_roll() - initPitch) > hangReq)
+        {
+            hung = true;
+        }
+        std::cout << std::setw(10) << pros::millis() << " | "
+                  << std::setw(10) << imu.get_roll() << " | "
+                  << std::setw(10) << hung << " | "
+                  << std::endl;
+        delay(20);
+    }
+}
 
 /*
 
@@ -422,19 +490,26 @@ void testAuton(bool inputReq)
         // ***********************************************
         // ************ CHANGE ROUTE HERE ***************
         // ***********************************************
-        if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-            testDriveTrain();
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
+        {
+            testHang();
         }
-        else{
-            //safe4RingRight(1);
-            //soloPushRight(1);
-            //ladyBrownRushRight(1);
-            //safe4RingRight(1);
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
+        {
+            testGyro();
+        }
+        else
+        {
+            // safeAWPRight(1);
+            // safe4RingRight(1);
+            // soloPushRight(1);
+            // ladyBrownRushRight(1);
+            // safe4RingRight(1);
             progSkills(1);
         }
         // ***********************************************
         // ***********************************************
-        
+
         //  stops motors to prevent rogue movements after autonl
         left_motors.brake();
         right_motors.brake();

@@ -18,7 +18,8 @@
 
 // Global variables needed for arm control
 
-namespace ArmPos{
+namespace ArmPos
+{
 
     const double bottom = 3;
     const double mid = 21;
@@ -33,26 +34,32 @@ static double lastPos = 0;
 static bool armMoving = false;
 static const double armThreshold = 0.25; // Adjust as needed
 
-void intake_control_task(void* param){
-    
+void intake_control_task(void *param)
+{
+
     int stuckCount = 0;
     int requiredStuck = 10;
     int lastReset = pros::millis();
     int resetCD = 5000;
-    while(true){
+    while (true)
+    {
 
-        if(abs(intake.get_voltage()) > 0 && intake.get_torque() > 1 && lastReset + resetCD < pros::millis()){
+        if (abs(intake.get_voltage()) > 0 && intake.get_torque() > 1 && lastReset + resetCD < pros::millis())
+        {
             stuckCount++;
         }
-        else{
+        else
+        {
             stuckCount = 0;
         }
 
-        if(stuckCount > requiredStuck){
+        if (stuckCount > requiredStuck)
+        {
             int initVoltage = intake.get_voltage();
             intake.move(-127);
             delay(200);
-            if(intake.get_voltage() == -127){
+            if (intake.get_voltage() == -127)
+            {
                 intake.move(initVoltage);
             }
             intake.move(0);
@@ -61,17 +68,15 @@ void intake_control_task(void* param){
         }
 
         delay(100);
-        
-        //print all variables used
+
+        // print all variables used
         pros::lcd::print(0, "Intake Voltage: %d", intake.get_voltage());
         pros::lcd::print(1, "Intake Torque: %f", intake.get_torque());
         pros::lcd::print(2, "Stuck Count: %d", stuckCount);
         pros::lcd::print(3, "Last Reset: %d", lastReset);
         pros::lcd::print(4, "Current Time: %d", pros::millis());
         pros::lcd::print(5, "Reset CD: %d", resetCD);
-
     }
-
 }
 // Task function for arm control
 void arm_control_task(void *param)
@@ -93,12 +98,13 @@ void arm_control_task(void *param)
 
             // calculate how far arm is from target
             error = targetPos - currentPos;
-            if(targetPos == ArmPos::push_top && error >5){
+            if (targetPos == ArmPos::push_top && error > 5)
+            {
                 arm_motors.move(127);
                 delay(20);
                 continue;
             }
-    
+
             if (fabs(error) < armThreshold)
             { // goal has been met
 
@@ -125,10 +131,8 @@ void arm_control_task(void *param)
 
                 // clamps movements to [-600,600]
                 nextMovement = std::clamp(nextMovement, -600.0, 600.0);
-                
             }
 
-            
             // move arm motors based on PID
             arm_motors.move_velocity(nextMovement);
         }
@@ -149,19 +153,26 @@ void arm_control_task(void *param)
         pros::delay(20);
     }
 }
-namespace csort {
+namespace csort
+{
     bool sortingEnabled = false;
     Hue targetHue = BLUE_RING_HUE;
     int lastRingDetectionTime = 0;
 
-    void color_sort_task(void* param) {
-        while (true) {
-            if (sortingEnabled) {
-                if(isRingDetected(targetHue)){
+    void color_sort_task(void *param)
+    {
+        while (true)
+        {
+            if (sortingEnabled)
+            {
+                if (isRingDetected(targetHue))
+                {
                     lastRingDetectionTime = pros::millis();
                 }
                 delay(10);
-            } else {
+            }
+            else
+            {
                 delay(100);
             }
         }
@@ -198,14 +209,13 @@ void initialize()
     ringSens.set_led_pwm(100); // Set the LED brightness to maximum for better detection
     ringSens.set_integration_time(10);
 
-
     // create arm control task
     Task arm_task(arm_control_task, nullptr, "Arm Control Task");
-    // create intake stuck task 
+    // create intake stuck task
     Task motor_stuck_task(stuck_task, nullptr, "Stuck Task");
     // color sort task
-    //Task csort_task(csort::color_sort_task, nullptr, "Color Sort Task");
-    //Task intake_task(intake_control_task, nullptr, "Intake Control Task");
+    // Task csort_task(csort::color_sort_task, nullptr, "Color Sort Task");
+    // Task intake_task(intake_control_task, nullptr, "Intake Control Task");
 
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
 
@@ -224,7 +234,7 @@ void initialize()
             }
             pros::delay(20);
 
-            
+
         }
     });
     */
@@ -309,50 +319,68 @@ void handleDriveTrain()
     leftY *= 6;
     rightY *= 6;
 
-    //skills change
+    // skills change
 
     left_motors.move_velocity(leftY);
     right_motors.move_velocity(rightY);
 }
-namespace csort {
+namespace csort
+{
 
     int ringTossCounter = 0;
     int detectionTimeout = 0;
     const int sortingDistance = 290;
     double intakeStartPosition;
-    
-    void handleIntake() {
-        if (!sortingEnabled) {
+
+    void handleIntake()
+    {
+        if (!sortingEnabled)
+        {
             // Simple intake control without sorting
-            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2) || intakeStuck) {
+            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2) || intakeStuck)
+            {
                 intake.move(-127);
-            } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+            }
+            else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+            {
                 intake.move(127);
-            } else {
+            }
+            else
+            {
                 intake.brake();
             }
-        } else {
+        }
+        else
+        {
             // Manual controls are overridden if color sort mechanism is active
             // Intake
-            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+            {
 
                 // If a ring is detected within the sorting distance, continue intake
-                if (detectionTimeout > 0 && sortingDistance + intakeStartPosition > intake.get_position()) {
+                if (detectionTimeout > 0 && sortingDistance + intakeStartPosition > intake.get_position())
+                {
                     intake.move(127);
                     detectionTimeout--;
                     ringTossCounter = 20;
                 }
                 // If a ring is detected, start the intake and set the start position
-                else if (lastRingDetectionTime + 50 > pros::millis()) {
+                else if (lastRingDetectionTime + 50 > pros::millis())
+                {
                     intake.move(127);
                     intakeStartPosition = intake.get_position();
                     detectionTimeout = 30;
-                } else {
+                }
+                else
+                {
                     // If toss counter is active, brake the intake
-                    if (ringTossCounter > 0) {
+                    if (ringTossCounter > 0)
+                    {
                         intake.brake();
                         ringTossCounter--;
-                    } else {
+                    }
+                    else
+                    {
                         // Continue intake if no ring is detected
                         intake.move(127);
                     }
@@ -365,11 +393,13 @@ namespace csort {
                 pros::lcd::print(7, "Ring toss counter: %d", ringTossCounter);
             }
             // Outtake
-            else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+            {
                 intake.move(-127);
             }
             // No movement without button pressed
-            else {
+            else
+            {
                 intake.brake();
             }
         }
@@ -377,40 +407,48 @@ namespace csort {
 
     int sortHoldDuration = 0;
 
-    void handleColorSort() {
+    void handleColorSort()
+    {
         // Set the LED brightness to maximum for better detection
         ringSens.set_led_pwm(100);
         ringSens.set_integration_time(10);
 
         // Toggle the hue to be tossed when X is pressed
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X))
+        {
             targetHue = (targetHue.hue == BLUE_RING_HUE.hue) ? RED_RING_HUE : BLUE_RING_HUE;
             // print hue to the brain screen
             lcd::print(2, "Sorting out: %s", targetHue.hue == BLUE_RING_HUE.hue ? "Blue" : "Red");
         }
         // Hold X to enable/disable sorting
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X))
+        {
             sortHoldDuration++;
-            if (sortHoldDuration > 30) {
+            if (sortHoldDuration > 30)
+            {
                 sortingEnabled = !sortingEnabled;
-                if (sortingEnabled) {
+                if (sortingEnabled)
+                {
                     // Enable LED for better detection
                     ringSens.set_led_pwm(100);
                     ringSens.set_integration_time(10);
-                } else {
+                }
+                else
+                {
                     // Disable LED to save power
-                    //ringSens.set_led_pwm(0);
-                    //ringSens.set_integration_time(100);
+                    // ringSens.set_led_pwm(0);
+                    // ringSens.set_integration_time(100);
                     // print sorting status to the brain screen
                     lcd::print(2, "Sorting out: Disabled");
                 }
             }
-        } else {
+        }
+        else
+        {
             sortHoldDuration = 0;
         }
     }
 }
-
 
 void handleClamp()
 {
@@ -453,28 +491,32 @@ void handleArm()
 {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
     {
-        
+
         setArmBottom();
     }
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
     {
-        if(targetPos == ArmPos::mid){
+        if (targetPos == ArmPos::mid)
+        {
             int initVoltage = intake.get_voltage();
             intake.move(-127);
             delay(30);
             intake.move(initVoltage);
             setArm(ArmPos::mid_high);
         }
-        else{
-        setArmMid();
+        else
+        {
+            setArmMid();
         }
     }
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
     {
-        if(targetPos == ArmPos::top){
+        if (targetPos == ArmPos::top)
+        {
             setArm(ArmPos::push_top);
         }
-        else{
+        else
+        {
             int initVoltage = intake.get_voltage();
             intake.move(-127);
             delay(30);
@@ -488,32 +530,51 @@ void handleArm()
     }
 }
 static bool macroAlliance = false;
-void handleAllianceMacro(){
-    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)&&!controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)&&!controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)&&!controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)&&macroAlliance==false){
-        macroAlliance=true;
+void handleAllianceMacro()
+{
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y) && !controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && !controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && !controller.get_digital(pros::E_CONTROLLER_DIGITAL_B) && macroAlliance == false)
+    {
+        macroAlliance = true;
     }
-    if(macroAlliance==true){
-        intake.move(-20);
-        drivePID(-6,400,180);
+    if (macroAlliance == true)
+    {
+        intake.move(-10);
+        drivePID(-9.5, 400, 180);
         intake.brake();
         setArmAlliance();
-        macroAlliance=false;
+        macroAlliance = false;
     }
 }
+
+double getNearestHeading(double initHeading)
+{
+    std::vector<double> headings = {45, 135, 225, 315};
+    auto it = std::min_element(headings.begin(), headings.end(),
+                               [initHeading](double a, double b)
+                               {
+                                   return std::abs(a - initHeading) < std::abs(b - initHeading);
+                               });
+    return *it;
+}
+
 static bool macroHang = false;
-void handleHangMacro(){
-    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)&&macroHang==false){
-        macroHang=true;
+void handleHangMacro()
+{
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A) && macroHang == false)
+    {
+        macroHang = true;
     }
-    if(macroHang==true){
+    if (macroHang == true)
+    {
         double initHeading = imu.get_heading();
         // put targetHeading to nearest of the following values 45, 135, 225, or 315
-        double targetHeading = round(initHeading/90)*90+45;
+        double targetHeading = getNearestHeading(initHeading);
         // turn to target heading
         chassis.turnToHeading(targetHeading, 800);
-        all_motors.move_velocity(-400);
+        all_motors.move_velocity(-500);
         delay(1000);
-        macroHang=false;
+        all_motors.brake();
+        macroHang = false;
     }
 }
 
@@ -549,10 +610,10 @@ void opcontrol()
         {
             testAuton();
         }
-        
+
         handleDriveTrain();
         csort::handleIntake();
-        //csort::handleColorSort();
+        // csort::handleColorSort();
         handleClamp();
         handleArm();
         handleLeftDoinker();
