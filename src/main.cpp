@@ -539,9 +539,9 @@ void handleAllianceMacro()
     if (macroAlliance == true)
     {
         intake.move(-10);
-        drivePID(-9.5, 400, 180);
-        intake.brake();
         setArmAlliance();
+        drivePID(-7, 400, 180);
+        intake.brake();
         macroAlliance = false;
     }
 }

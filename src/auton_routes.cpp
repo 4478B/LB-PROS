@@ -201,61 +201,49 @@ void soloPushRight(int i){
     intake.move(127);
     chassis.turnToHeading(160,700,{}, false);
     drivePID(26,800,130);
-    drivePID(-55,800,120);
+    all_motors.set_brake_mode(E_MOTOR_BRAKE_COAST);
+    drivePID(-60,800,120);
     intake.brake();
 }
 
 void soloPushLeft(int i){
-    //set the pose at the beginnng
     ringSens.set_led_pwm(100);
     clamp.set_value(HIGH);
     chassis.setPose(0,0,212);
-    //alliance stake
     setArmAlliance();
     delay(500);
     drivePID(-6,600,120);
-    //align with alliance's preload
-    chassis.turnToHeading(32,800,{}, false);
     setArmBottom();
-    intake.move(90);
+    chassis.turnToHeading(32,800,{}, false);
+
+    intake.move(60);
     drivePID(24,700,120);
-    //sensor to stop at top
     waitUntilAnyIntake(700);
     intake.brake();
-    //align with goal
-    chassis.turnToHeading(-63,600,{}, false);
-    drivePID(-26,800,35);
-    //clamp goal
+    chassis.turnToHeading(-60,600,{}, false);
+    drivePID(-27,800,35);
     clamp.set_value(LOW);
     chassis.turnToHeading(2,600,{}, false);
     intake.move(127);
-    //grab bottom ring from stack
     drivePID(26,800,130);
-    //align with ring stack, drive through it 
-    chassis.turnToHeading(-157,700,{}, false);
-    intake.move(127);
+    chassis.turnToHeading(-151,700,{}, false);
     clamp.set_value(HIGH);
-    //drive past the stack, spit out bottom ring
-    drivePID(62,1300,80);
-    intake.move(127);
+    drivePID(59,1500,60);
     setArm(70);
-    drivePID(26,800,120);
-    //hold top ring of stack in intake
     intake.move(80);
+    drivePID(29,800,120);
+    intake.move(40);
     waitUntilAnyIntake(500);
     intake.brake();
     drivePID(-24,800,120);
-    //align with goal
     chassis.turnToHeading(-60,700,{}, false);
-    //clamp goal
-    drivePID(-38,1000,35);
+    drivePID(-42,1000,35);
     clamp.set_value(LOW);
     intake.move(127);
-    //grab ring stack
-    chassis.turnToHeading(-165,700,{}, false);
+    chassis.turnToHeading(-160,700,{}, false);
     drivePID(26,800,130);
-    //touch mid
     drivePID(-55,800,120);
+    intake.brake();
 }
 void ladyBrownRushRight(int i){
     /*
@@ -322,41 +310,46 @@ void newRingSideRight(int i){
    // turn to face mogo and grab it
    chassis.turnToHeading(47,600,{}, false);
 
-   drivePID(-20,900,40);
+   drivePID(-25,900,40);
    clamp.set_value(LOW);
-   delay(300);
+   delay(100);
 
   
    // intake ring in intake on goal
-   intake.move(127);
 
    //face line of rings
-   chassis.turnToHeading(357,650,{}, false);
+   chassis.turnToHeading(16,650,{}, false);
 
    // score line of rings
+   intake.move(127);
    drivePID(38,900,35);
-   chassis.turnToHeading(150,650,{}, false);
-   drivePID(60,1300,60);
+   chassis.turnToHeading(159,800,{}, false);
+   drivePID(60,1300,25);
    clamp.set_value(HIGH);
-   intake.move(45);
-   drivePID(42,800);
+   delay(500);
+   intake.move(70);
+   drivePID(35,800,40);
     waitUntilBlueIntake(500);
     intake.brake();
     setArmMid();
-    drivePID(-43,800,120);
+    drivePID(-48,800,40);
     clamp.set_value(LOW);
-    drivePID(20,700);
+    drivePID(21,700);
     delay(100);
+    intake.move(127);
     left_doinker.set_value(HIGH);
     chassis.turnToHeading(90,900,{}, false);
-    intake.move(127);
+    intake.brake();
+    intake.move(-10);
     left_doinker.set_value(LOW);
-    drivePID(5,700);
+    drivePID(26,800,40);
+    delay(200);
+    drivePID(-9.5,600,160);
     setArmAlliance();
     delay(600);
     drivePID(-10,600);
     setArmBottom();
-    chassis.turnToHeading(270,700,{}, false);
+    chassis.turnToHeading(270,800,{}, false);
     drivePID(22,1000,30);
    /*
    // face corner
@@ -545,9 +538,9 @@ void progSkills(int i)
  
     // move forward to align with goal 2
     
-    drivePID(14.6,800);
+    drivePID(14.8,800);
     intake.move(127);
-    chassis.turnToHeading(179, 900,{}, false);
+    chassis.turnToHeading(181, 900,{}, false);
     //chassis.moveToPose(-48,-36,180,7000,{.forwards=false, .maxSpeed = 50},false);
     drivePID(-78,2000,40);
     drivePID(2,400,160);
