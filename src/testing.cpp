@@ -505,8 +505,8 @@ void testAuton(bool inputReq)
             // soloPushRight(1);
             // ladyBrownRushRight(1);
             // safe4RingRight(1);
-            //progSkills(1);
-            newRingSideRight(1);
+            // progSkills(1);
+            progSkills(1);
         }
         // ***********************************************
         // ***********************************************
