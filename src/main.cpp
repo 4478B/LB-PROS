@@ -32,7 +32,7 @@ namespace ArmPos
 static double targetPos = 0;
 static double lastPos = 0;
 static bool armMoving = false;
-static const double armThreshold = 0.25; // Adjust as needed
+static const double armThreshold = 1; // Adjust as needed
 
 void intake_control_task(void *param)
 {
