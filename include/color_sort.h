@@ -5,10 +5,10 @@
 
 // one sided hue range that is considered close enough
 #include <type_traits>
-const int HUE_RANGE = 10;
+const int HUE_RANGE = 20;
 
-const int MIN_RING_DETECTION = 1; // Amount of detections needed to quit loop
-const int MAX_RING_DISTANCE = 10; // maximum distance ring is on intake from optical sensor
+const int MIN_RING_DETECTION = 0; // Amount of detections needed to quit loop
+const int MAX_RING_DISTANCE = 20; // maximum distance ring is on intake from optical sensor
 class Hue{
     public:
     int hue;

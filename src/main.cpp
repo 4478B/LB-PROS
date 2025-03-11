@@ -577,6 +577,48 @@ void handleHangMacro()
         macroHang = false;
     }
 }
+bool sorting = false;
+void handleColorSortTwo(int color)
+{ // 0 is blue 1 is red
+
+    int startTime = pros::millis();
+    // ringSens.set_led_pwm(100);
+
+    while (1)
+    {
+        // intake.move(127);
+        if (10 < ringSens.get_hue() < 15 && ringSens.get_proximity() > 235 && color == 1)
+        {
+            intake.set_zero_position(0);
+            while (intake.get_position() < 405)
+            {
+                intake.move(80);
+            }
+            intake.brake();
+            delay(100);
+        }
+        else if (210 < ringSens.get_hue() < 215 && ringSens.get_proximity() > 235 && color == 0)
+        {
+            intake.set_zero_position(0);
+            while (intake.get_position() < 405)
+            {
+                intake.move(80);
+            }
+            intake.brake();
+            delay(100);
+        }
+        static bool printFlag = false;
+        if (printFlag)
+        {
+            // print proximity, hue, and time to terminal with setw
+            std::cout << std::setw(10) << ringSens.get_proximity() << " | "
+                  << std::setw(10) << ringSens.get_hue() << " | "
+                  << std::setw(10) << pros::millis() - startTime << " | "
+                  << std::endl;
+        }
+        printFlag = !printFlag;
+    }
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -600,6 +642,9 @@ void opcontrol()
     arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
     intakeOverride = false;
     armOverride = false;
+    ringSens.set_led_pwm(100);
+    pros::Task ColorSortTask([]
+                             { handleColorSortTwo(0); });
 
     // loop forever
     while (true)
@@ -610,16 +655,18 @@ void opcontrol()
         {
             testAuton();
         }
-
+        ringSens.set_led_pwm(100);
+        ringSens.set_integration_time(10);
         handleDriveTrain();
         csort::handleIntake();
+        // handleColorSortTwo(0);
         // csort::handleColorSort();
         handleClamp();
         handleArm();
         handleLeftDoinker();
         handleRightDoinker();
         handleAllianceMacro();
-        //handleHangMacro();
+        // handleHangMacro();
 
         // print arm motor voltage and efficiency to brain
         pros::lcd::print(1, "Arm Motor Voltage: %i", arm_motors.get_voltage());

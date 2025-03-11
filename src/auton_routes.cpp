@@ -430,7 +430,7 @@ void newRingSideLeft(int i)
     drivePID(45, 1100);
 
     // slow intake and grab ring, back up with rings
-    intake.move(40);
+    intake.move(28);
     drivePID(-27, 950, 66);
     intake.brake();
     left_doinker.set_value(LOW);
@@ -466,7 +466,7 @@ void newRingSideLeft(int i)
     clamp.set_value(HIGH);
     intake.move(70);
     drivePID(35, 800, 40);
-    waitUntilRedIntake(500);
+    waitUntilBlueIntake(500);
     intake.brake();
     //setArmMid();
     drivePID(-48, 800, 40);
