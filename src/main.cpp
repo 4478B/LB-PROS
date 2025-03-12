@@ -9,6 +9,7 @@
 #include "pros/rotation.hpp"
 #include <algorithm>
 #include <cstdlib>
+#include <iostream>
 #include "devices.h"
 #include "auton_selector.h"
 #include "auton_routes.h"
@@ -165,9 +166,16 @@ namespace csort
         {
             if (sortingEnabled)
             {
+                ringSens.set_led_pwm(100);
+                //print hue with H:, proximity with P:, and last detection time with D:, and time with T: to terminal with setw
+                std::cout << std::setw(10) << "H:" << std::fixed << std::setprecision(4) << ringSens.get_hue() 
+                          << std::setw(10) << "P:" << std::fixed << std::setprecision(0) << ringSens.get_proximity() 
+                          << std::setw(10) << "D:" << std::fixed << std::setprecision(0) << lastRingDetectionTime 
+                          << std::setw(10) << "T:" << std::fixed << std::setprecision(0) << pros::millis() << std::endl;
                 if (isRingDetected(targetHue))
                 {
                     lastRingDetectionTime = pros::millis();
+                    
                 }
                 delay(10);
             }
@@ -214,7 +222,8 @@ void initialize()
     // create intake stuck task
     Task motor_stuck_task(stuck_task, nullptr, "Stuck Task");
     // color sort task
-    // Task csort_task(csort::color_sort_task, nullptr, "Color Sort Task");
+    //Task csort_task(csort::color_sort_task, nullptr, "Color Sort Task");
+    
     // Task intake_task(intake_control_task, nullptr, "Intake Control Task");
 
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
@@ -331,6 +340,7 @@ namespace csort
     int detectionTimeout = 0;
     const int sortingDistance = 290;
     double intakeStartPosition;
+    int sortCount = 0;
 
     void handleIntake()
     {
@@ -360,6 +370,7 @@ namespace csort
                 // If a ring is detected within the sorting distance, continue intake
                 if (detectionTimeout > 0 && sortingDistance + intakeStartPosition > intake.get_position())
                 {
+                    //std::cout << "Continuing intake: detectionTimeout=" << detectionTimeout << ", sortingDistance=" << sortingDistance << ", intakeStartPosition=" << intakeStartPosition << ", intakePosition=" << intake.get_position() << std::endl;
                     intake.move(127);
                     detectionTimeout--;
                     ringTossCounter = 20;
@@ -367,6 +378,8 @@ namespace csort
                 // If a ring is detected, start the intake and set the start position
                 else if (lastRingDetectionTime + 50 > pros::millis())
                 {
+                    sortCount++;
+                    //std::cout << "Ring detected: sortCount=" << sortCount << ", lastRingDetectionTime=" << lastRingDetectionTime << ", currentMillis=" << pros::millis() << std::endl;
                     intake.move(127);
                     intakeStartPosition = intake.get_position();
                     detectionTimeout = 30;
@@ -376,21 +389,23 @@ namespace csort
                     // If toss counter is active, brake the intake
                     if (ringTossCounter > 0)
                     {
+                        //std::cout << "Braking intake: ringTossCounter=" << ringTossCounter << std::endl;
                         intake.brake();
                         ringTossCounter--;
                     }
                     else
                     {
                         // Continue intake if no ring is detected
+                        //std::cout << "Continuing intake: no ring detected, time = " << pros::millis() << std::endl;
                         intake.move(127);
                     }
                 }
 
                 // Print debug information to the LCD
-                pros::lcd::print(4, "Time since last detection: %d", pros::millis() - lastRingDetectionTime);
-                pros::lcd::print(5, "Intake start position: %f", intakeStartPosition);
-                pros::lcd::print(6, "Detection timeout: %d", detectionTimeout);
-                pros::lcd::print(7, "Ring toss counter: %d", ringTossCounter);
+                //pros::lcd::print(4, "Time since last detection: %d", pros::millis() - lastRingDetectionTime);
+                //pros::lcd::print(5, "Intake start position: %f", intakeStartPosition);
+                //pros::lcd::print(6, "Detection timeout: %d", detectionTimeout);
+                //pros::lcd::print(7, "Ring toss counter: %d", ringTossCounter);
             }
             // Outtake
             else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
@@ -577,6 +592,19 @@ void handleHangMacro()
         macroHang = false;
     }
 }
+
+ void handleCornerMacro(){
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
+    {
+        intake.brake();
+        drivePID(25,1200,60);
+        intake.move(127);
+        delay(300);
+        drivePID(-20,1200,60);
+        intake.brake();
+    }
+}
+
 bool sorting = false;
 void handleColorSortTwo(int color)
 { // 0 is blue 1 is red
@@ -635,7 +663,6 @@ void handleColorSortTwo(int color)
  */
 void opcontrol()
 {
-
     // left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     // right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
@@ -643,9 +670,11 @@ void opcontrol()
     intakeOverride = false;
     armOverride = false;
     ringSens.set_led_pwm(100);
-    pros::Task ColorSortTask([]
-                             { handleColorSortTwo(0); });
-
+    intake.move(127);
+    //pros::Task ColorSortTask([]
+    //                         { handleColorSortTwo(0); });
+    //csort::color_sort_task(nullptr);
+    
     // loop forever
     while (true)
     {
@@ -655,25 +684,27 @@ void opcontrol()
         {
             testAuton();
         }
-        ringSens.set_led_pwm(100);
-        ringSens.set_integration_time(10);
+        //ringSens.set_led_pwm(100);
+        //ringSens.set_integration_time(10);
         handleDriveTrain();
         csort::handleIntake();
-        // handleColorSortTwo(0);
-        // csort::handleColorSort();
+        //handleColorSortTwo(0);
+        //csort::handleColorSort();
         handleClamp();
         handleArm();
         handleLeftDoinker();
         handleRightDoinker();
         handleAllianceMacro();
+        //handleCornerMacro();
         // handleHangMacro();
 
         // print arm motor voltage and efficiency to brain
-        pros::lcd::print(1, "Arm Motor Voltage: %i", arm_motors.get_voltage());
-        pros::lcd::print(2, "Arm Motor Efficiency: %f", arm_motors.get_efficiency());
-        pros::lcd::print(3, "Arm Target Velocity %f", arm_motors.get_target_velocity());
+        //pros::lcd::print(1, "Arm Motor Voltage: %i", arm_motors.get_voltage());
+        //pros::lcd::print(2, "Arm Motor Efficiency: %f", arm_motors.get_efficiency());
+        //pros::lcd::print(3, "Arm Target Velocity %f", arm_motors.get_target_velocity());
 
         // delay to save resources
         pros::delay(20);
     }
+    
 }

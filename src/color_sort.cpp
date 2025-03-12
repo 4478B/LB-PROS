@@ -30,7 +30,10 @@ bool isRingDetected(Hue targetHue){
         // Determine if the current hue falls within the valid range, considering wrapping around 360 degrees
 
         bool inDist = currentDist > 255 - MAX_RING_DISTANCE;
-        if ((targetHue.inHueRange(currentHue)) && inDist) {
+        bool inHueRange = targetHue.inHueRange(currentHue);
+        // print status of inDist and inHueRange with Time
+        //std::cout << std::setw(10) << "D:" << inDist << std::setw(10) << "H:" << inHueRange << std::setw(10) << "T:" << pros::millis() << std::endl;
+        if (inHueRange && inDist) {
             return true;
         }
         else {
