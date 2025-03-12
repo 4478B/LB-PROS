@@ -319,7 +319,6 @@ void newRingSideRight(int i)
     // slow intake and grab ring, back up with rings
     intake.move(40);
     drivePID(-27, 950, 66);
-    intake.brake();
     right_doinker.set_value(LOW);
 
     // turn to face mogo and grab it
@@ -342,15 +341,47 @@ void newRingSideRight(int i)
         intake.move(127); });
 
     drivePID(38, 900, 35);
-    chassis.turnToHeading(60, 800, {}, false);
-    drivePID(10, 600);
-    delay(150);
-    drivePID(-10, 600);
-    chassis.turnToHeading(160, 800, {}, false);
+    chassis.turnToHeading(65, 800, {}, false);
+    // go to corner
+    drivePID(50, 1200,100);
+    delay(300);
+                            
+
+    // back up from corner
+    chassis.turnToHeading(45, 800, {}, false);
+    drivePID(-6.8912369, 400);
+
+    //back up to score alliance stack
+    chassis.turnToHeading(190, 800, {}, false);
     delay(200);
     drivePID(60, 1300, 25);
     delay(300);
-    clamp.set_value(HIGH);
+
+
+    all_motors.move_velocity(50);
+    waitUntilAnyIntake(700);
+    int sortingDistance = 290;
+    double intakeStartPosition = intake.get_position();
+    while(intake.get_position() < intakeStartPosition + sortingDistance){
+        intake.move(70);
+        delay(20);
+    }
+    intake.brake();
+    delay(300);
+    intake.move(127);
+    delay(400);
+    drivePID(-4, 800);
+    intake.brake();
+    chassis.turnToHeading(90, 1000);
+    drivePID(15, 800);
+    drivePID(-10,800);
+    setArmAlliance();
+    delay(600);
+    drivePID(-10);
+
+
+
+    /*clamp.set_value(HIGH);
     intake.move(70);
     drivePID(35, 800, 40);
     waitUntilBlueIntake(500);
@@ -371,7 +402,8 @@ void newRingSideRight(int i)
     intake.brake();
     setArmAlliance();
     delay(600);
-    drivePID(-10, 600);
+    drivePID(-10, 600);*/
+
     /*
     setArmBottom();
     chassis.turnToHeading(270, 800, {}, false);

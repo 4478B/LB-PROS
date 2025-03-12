@@ -508,11 +508,7 @@ void testAuton(bool inputReq)
             // progSkills(1);
             //progSkills(1);
             //newRingSideLeft(1);
-            ringSens.set_led_pwm(100);
-            ringSens.set_led_pwm(100);
-            intake.move(50);
-            waitUntilBlueIntake(50000);
-            intake.brake();
+            newRingSideRight(1);
         }
         // ***********************************************
         // ***********************************************
