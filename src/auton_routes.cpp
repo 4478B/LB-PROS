@@ -340,24 +340,30 @@ void newRingSideRight(int i)
         pros::delay(300);
         intake.move(127); });
 
-    drivePID(38, 900, 35);
+    drivePID(44, 900, 35);
+    drivePID(-5, 900, 35);
     chassis.turnToHeading(65, 800, {}, false);
     // go to corner
-    drivePID(50, 1200,100);
-    delay(300);
+    drivePID(52, 1200,100);
+    delay(400);
                             
 
     // back up from corner
-    chassis.turnToHeading(45, 800, {}, false);
+    chassis.turnToHeading(46, 800, {}, false);
     drivePID(-6.8912369, 400);
 
     //back up to score alliance stack
     chassis.turnToHeading(190, 800, {}, false);
     delay(200);
-    drivePID(60, 1300, 25);
-    delay(300);
+    drivePID(45, 1300, 25);
+    intake_lift.set_value(HIGH);
+    drivePID(20, 1300, 25);
+    intake_lift.set_value(LOW);
+    delay(700);
+    drivePID(-12, 1300, 25);
+    
 
-
+/*
     all_motors.move_velocity(50);
     waitUntilAnyIntake(700);
     int sortingDistance = 290;
@@ -379,7 +385,7 @@ void newRingSideRight(int i)
     delay(600);
     drivePID(-10);
 
-
+*/
 
     /*clamp.set_value(HIGH);
     intake.move(70);
