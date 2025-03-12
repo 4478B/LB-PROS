@@ -24,6 +24,7 @@ extern pros::Optical ringSens;
 extern pros::Distance goalSens;
 extern adi::Port left_doinker;
 extern adi::Port right_doinker;
+extern adi::Port intake_lift;
 
 extern PID armPID;
 extern PID lateralPID;

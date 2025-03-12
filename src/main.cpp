@@ -492,6 +492,15 @@ void handleLeftDoinker()
     }
 }
 
+void handleIntakeLift(){
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
+    {
+        intake.move(127);
+        delay(300);
+        intake.brake();
+    }
+}
+
 void handleRightDoinker()
 {
 
@@ -695,6 +704,7 @@ void opcontrol()
         handleLeftDoinker();
         handleRightDoinker();
         handleAllianceMacro();
+        handleIntakeLift();
         //handleCornerMacro();
         // handleHangMacro();
 
