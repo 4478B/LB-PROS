@@ -341,7 +341,7 @@ void newRingSideRight(int i)
         intake.move(127); });
 
     drivePID(44, 900, 35);
-    drivePID(-5, 900, 35);
+    drivePID(-6, 900, 35);
     chassis.turnToHeading(65, 800, {}, false);
     // go to corner
     drivePID(52, 1200,100);
@@ -353,7 +353,7 @@ void newRingSideRight(int i)
     drivePID(-6.8912369, 400);
 
     //back up to score alliance stack
-    chassis.turnToHeading(190, 800, {}, false);
+    chassis.turnToHeading(192, 800, {}, false);
     delay(200);
     drivePID(45, 1300, 25);
     intake_lift.set_value(HIGH);
@@ -361,6 +361,17 @@ void newRingSideRight(int i)
     intake_lift.set_value(LOW);
     delay(700);
     drivePID(-12, 1300, 25);
+    /*
+    poop butt booty cheeks
+    tyler is a poop
+    lol
+    Fuck all these hoes
+    fuck you
+    fuck the judges
+    fuck everything
+    FUCK DALLAS
+    -Grace
+    */
     
 
 /*
