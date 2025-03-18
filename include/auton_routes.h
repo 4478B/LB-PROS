@@ -27,5 +27,7 @@ void redRingRush(int i);
 void oldRedRingSide(int i);
 void redGoalSideSugarRush(int i);
 void blueGoalSideSugarRush(int i);
+void redGoalSideSugarRush2(int i);
+void worldsGoalSide(int i);
 
 #endif // AUTON_ROUTES_H

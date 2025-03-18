@@ -1954,3 +1954,91 @@ void blueGoalSideSugarRush(int i)
 
     drivePID(-24, 1000, 80);
 }
+
+void redGoalSideSugarRush2(int i)
+{
+    // objective: score 2 rings on goal side, then 2 rings on midline
+    // for setup: put the robot in the corner of the field, facing the goal side
+    clamp.set_value(HIGH);
+    right_doinker.set_value(HIGH);
+    chassis.setPose(0, 0, 90);
+    drivePID(40, 1000, 70);
+    endSection();
+
+    chassis.turnToHeading(275, 1000, {}, false);
+    right_doinker.set_value(LOW);
+    endSection();
+
+    chassis.turnToHeading(320, 1000);
+    intake.move(127);
+    drivePID(15);
+    delay(270);
+    intake.brake();
+    // drivePID(8);
+    endSection(100);
+
+    chassis.turnToHeading(180, 1000, {}, false);
+    drivePID(-27);
+    clamp.set_value(LOW);
+    endSection(500);
+
+    chassis.turnToHeading(270, 1000, {}, false);
+    intake.move(127);
+    drivePID(35, 1000);
+    endSection();
+
+    chassis.turnToHeading(190, 1000, {}, false);
+    right_doinker.set_value(HIGH);
+    drivePID(37, 1000);
+    endSection();
+
+    chassis.turnToHeading(90, 1000, {}, false);
+    endSection();
+
+    intake.brake();
+    drivePID(20, 1000);
+    clamp.set_value(HIGH);
+    endSection();
+
+    right_doinker.set_value(LOW);
+    chassis.turnToHeading(225, 1000, {}, false);
+    endSection();
+
+    drivePID(-24, 1000, 80);
+}
+
+
+void worldsGoalSide(int i){
+
+    // initial states
+    chassis.setPose(0, 0, 212);
+
+    // arm functions
+    setArmAlliance();
+    delay(600);
+
+    // odom to goal and clamp
+    chassis.moveToPoint(12, -5, 1000, {.forwards=false,.minSpeed=30}, false);
+    delay(1000);
+    clamp.set_value(LOW);
+
+    // turn to ladder
+    chassis.turnToHeading(30, 1000);
+    delay(1000);
+
+    // rush mid rings
+
+    drivePID(20, 1000);
+    left_doinker.set_value(LOW);
+    delay(1000);
+    chassis.turnToHeading(40, 400);
+    drivePID(-20, 1000);
+
+    // turn to first ring and lift doinker, leaving a line of 3 rings
+    chassis.turnToHeading(180, 1000);
+    left_doinker.set_value(HIGH);
+    delay(300);
+    intake.move(127);
+    drivePID(25, 1000);
+
+}
