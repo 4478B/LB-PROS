@@ -2016,29 +2016,35 @@ void worldsGoalSide(int i){
     // arm functions
     setArmAlliance();
     delay(600);
+    endSection(10000);
 
     // odom to goal and clamp
     chassis.moveToPoint(12, -5, 1000, {.forwards=false,.minSpeed=30}, false);
     delay(1000);
     clamp.set_value(LOW);
+    endSection(10000);
 
     // turn to ladder
     chassis.turnToHeading(30, 1000);
     delay(1000);
+    endSection(10000);
 
     // rush mid rings
-
     drivePID(20, 1000);
     left_doinker.set_value(LOW);
     delay(1000);
+    endSection(10000);
+
     chassis.turnToHeading(40, 400);
     drivePID(-20, 1000);
+    endSection(10000);
 
     // turn to first ring and lift doinker, leaving a line of 3 rings
     chassis.turnToHeading(180, 1000);
     left_doinker.set_value(HIGH);
     delay(300);
-    intake.move(127);
+    //intake.move(127);
     drivePID(25, 1000);
+    endSection(10000);
 
 }
