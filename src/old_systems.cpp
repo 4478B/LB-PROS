@@ -145,117 +145,102 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
   all_motors.brake();
 }
 
-// alias for clamping
-void drivePIDClamp(double inches, int timeout, double kP, double kI, double kD, double goalThreshold){
-  drivePID(inches, timeout, kP, kI, kD, goalThreshold, true);
-}
+void drivePIDCurve(double inches, int timeout, double kP, double leftPowerPCT, double rightPowerPCT) {
+  double kI = 0.0;
+  double kD = 0.0;
+  // Function to control robot movement using PID with different power for left and right motors
+  all_motors.set_encoder_units_all(E_MOTOR_ENCODER_ROTATIONS);
+  double currentDeltaLeft, currentDeltaRight;   // Errors for left and right motors
+  double P = 0, I = 0, D = 0, totalPID;        // PID terms
+  double pollingRate = 20;                     // Polling rate in ms
+  // Convert inches into encoder rotations
 
-/*void inert(double target, double kP, double kI, double kD)
-{
-  bool isComplete = false;
-  double startTime = pros::millis(), prevTime = startTime, deltaTime, currentTime;
-  double integral = 0, error = 0, derivative = 0, prevError = 0;
-  double currentDeg = imu.get_heading();
-  double output;
-  int oscillation = 0;
-  while (!isComplete)
-  {
-    //////////////////setting values
-    currentTime = pros::millis();
-    deltaTime = currentTime - prevTime;
-    prevTime = currentTime;
-    currentDeg = imu.get_heading();
+  double targetLeft = (inches * GEAR_RATIO / WHEEL_CIRCUMFERENCE) * (leftPowerPCT / 100.0);  // Adjust target for left motor based on power percentage
+  double targetRight = (inches * GEAR_RATIO / WHEEL_CIRCUMFERENCE) * (rightPowerPCT / 100.0); // Adjust target for right motor based on power percentage
 
-    // calculations
+  double previousDeltaLeft = targetLeft;  // Initialize previous error for left motor
+  double previousDeltaRight = targetRight; // Initialize previous error for right motor
+  double integralSumLeft = 0;         // Cumulative error for left motor
+  double integralSumRight = 0;        // Cumulative error for right motor
 
-    error = target - currentDeg;
+  // Reset motor encoder value to 0
+  all_motors.tare_position_all();
 
-    if (error > 180)
-    {
-      error = error - 360;
+  double startTime = pros::millis(); // Start time for timeout
+  double goalsNeededLeft = (fabs(inches) / 5) * pollingRate * (leftPowerPCT / 100.0);  // Goals proportional to left motor power
+  double goalsNeededRight = (fabs(inches) / 5) * pollingRate * (rightPowerPCT / 100.0); // Goals proportional to right motor power
+
+  goalsNeededLeft = std::clamp(goalsNeededLeft, 1.0, 5.0);   // Clamp goals for left motor
+  goalsNeededRight = std::clamp(goalsNeededRight, 1.0, 5.0); // Clamp goals for right motor
+
+  int inGoalLeft = 0;  // Tracks time spent in goal threshold for left motor
+  int inGoalRight = 0; // Tracks time spent in goal threshold for right motor
+
+  while (inGoalLeft < goalsNeededLeft || inGoalRight < goalsNeededRight) {
+    // Main PID loop; runs until target is reached for both motors
+    double currentPositionLeft = (all_motors.get_position(0) + all_motors.get_position(1) + all_motors.get_position(2)) / 3.0;
+    double currentPositionRight = (all_motors.get_position(3) + all_motors.get_position(4) + all_motors.get_position(5)) / 3.0;
+
+    // Calculate the current errors
+    currentDeltaLeft = targetLeft - currentPositionLeft;
+    currentDeltaRight = targetRight - currentPositionRight;
+
+    // Proportional: Larger error results in larger response
+    double PLeft = kP * currentDeltaLeft;
+    double PRight = kP * currentDeltaRight;
+
+    // Integral: Sum of all errors helps correct for small errors over time
+    integralSumLeft += currentDeltaLeft;
+    integralSumRight += currentDeltaRight;
+    double ILeft = kI * integralSumLeft;
+    double IRight = kI * integralSumRight;
+    ILeft = std::clamp(ILeft, -50.0, 50.0);
+    IRight = std::clamp(IRight, -50.0, 50.0);
+
+    // Derivative: React to the rate of error change
+    double DLeft = kD * (currentDeltaLeft - previousDeltaLeft) / pollingRate;
+    double DRight = kD * (currentDeltaRight - previousDeltaRight) / pollingRate;
+
+    // Calculate total PID response
+    double totalPIDLeft = PLeft + ILeft + DLeft;
+    double totalPIDRight = PRight + IRight + DRight;
+    totalPIDLeft = std::clamp(totalPIDLeft, -127.0, 127.0);
+    totalPIDRight = std::clamp(totalPIDRight, -127.0, 127.0);
+
+    // Apply power proportionally to left and right motors
+    double leftPower = totalPIDLeft * (leftPowerPCT / 100.0);
+    double rightPower = totalPIDRight * (rightPowerPCT / 100.0);
+
+    left_motors.move(leftPower);
+    right_motors.move(rightPower);
+
+    // Check if the error is small enough to stop for left motor
+    if (fabs(currentDeltaLeft) < (targetLeft)) {
+      inGoalLeft++;
+    } else {
+      inGoalLeft = 0;
     }
-    else if (error < -180)
-    {
-      error = 360 + error;
+
+    // Check if the error is small enough to stop for right motor
+    if (fabs(currentDeltaRight) < (targetRight)) {
+      inGoalRight++;
+    } else {
+      inGoalRight = 0;
     }
 
-    derivative = (error - prevError) / deltaTime;
-
-    prevError = error;
-
-    integral = +error * deltaTime;
-
-    output = kP * error + kI * integral + kD * derivative;
-
-    //  output = turnSlew(output);
-
-    //////////////////////// motor output
-
-    left_motors.move_velocity(output * 6);
-    right_motors.move_velocity(-output * 6);
-
-    //      Printing values
-
-    //      Exiting loop
-    if (((fabs(prevError) < 1.5)))
-    {
-      oscillation++;
-      if (oscillation > 1)
-      {
-        isComplete = true;
-        left_motors.brake();
-        right_motors.brake();
-        break;
-      }
+    // Check if timeout is reached
+    if ((pros::millis() - startTime) >= timeout) {
+      break;
     }
-    delay(20);
+
+    // Update the previous errors for the next loop
+    previousDeltaLeft = currentDeltaLeft;
+    previousDeltaRight = currentDeltaRight;
+
+    // Wait for the polling rate before next iteration
+    delay(pollingRate);
   }
+
+  // Stop the motors once goal is met
+  all_motors.brake();
 }
-
-void driveInches(double inches, int veloc, bool clamping)
-{
-
-  // adjusted inches based on gear ratios
-  double adjustedInches = inches * (48 / 36);
-
-  // conversion from inches to degrees
-  double degrs = (adjustedInches * 180) / (1.375 * M_PI);
-
-  double average = 0;
-  left_motors.tare_position_all();
-
-  // Determine direction of movement
-  int dirType = (degrs >= 0) ? 1 : -1;
-  // Use absolute value for comparisons
-  double targetDegrees = fabs(degrs);
-  double slowdownThreshold = (degrs >= 0) ? 250 : 150;
-
-  while ((dirType == 1 && average < degrs) ||
-         (dirType == -1 && average > degrs))
-  {
-    // Calculate average position
-    average = (left_motors.get_position(0));
-
-    // Spin motors in appropriate direction
-    left_motors.move_velocity(veloc * dirType * 6);
-    right_motors.move_velocity(veloc * dirType * 6);
-
-    // Handle slowdown and clamp
-    double distanceRemaining = fabs(degrs - average);
-    if (veloc > 15 && distanceRemaining < slowdownThreshold)
-    {
-      veloc = veloc * (distanceRemaining / targetDegrees);
-      // Set clamp opposite to current value
-      if (clamping)
-      {
-        clamp.set_value(clamp.get_value() == LOW ? HIGH : LOW);
-      }
-    }
-
-    delay(10);
-  }
-}
-
-// alias for clamping mode
-void driveInchesClamp(double inches, int veloc) { driveInches(inches, veloc, true); }
-*/
