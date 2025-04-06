@@ -177,6 +177,57 @@ bool endSection(int delay)
 
 // This file includes all of the routes coded in PROS for our robot
 // The routes should have linked path.jerryio files for reference
+void newGoalSideWorldsRight(int i){
+    intake.set_brake_mode(E_MOTOR_BRAKE_COAST);
+    clamp.set_value(HIGH);
+    chassis.setPose(0, 0, -212);
+    ringSens.set_led_pwm(100);
+
+    // arm functions
+    setArmAlliance();
+    delay(600);
+    drivePID(-10, 800);
+
+    setArmBottom();
+    chassis.turnToHeading(-270, 700, {}, false);
+    drivePID(-20, 800, 40);
+    drivePID(-18, 800, 35);
+    clamp.set_value(LOW);
+    intake.move(127);
+    delay(100);
+    chassis.turnToHeading(0, 800, {}, false);
+    intake.move(127);
+
+    // score ring 2
+    drivePID(29, 800, 45);
+    delay(300);
+
+    drivePID(-21,800);
+    chassis.turnToHeading(-141, 800, {}, false);
+    intake.brake();
+    drivePID(20,800);
+    right_doinker.set_value(HIGH);
+    delay(300);
+    drivePID(-40,1100);
+    /*
+    chassis.turnToHeading(-155, 800, {}, false);
+    right_doinker.set_value(LOW);
+    intake.move(127);
+    chassis.turnToHeading(-140, 800, {}, false);
+    drivePID(15,800);
+    drivePID(-20,800);*/
+    intake.move(127);
+    chassis.turnToHeading(16, 800, {}, false);
+    right_doinker.set_value(LOW);
+    delay(500);
+    chassis.turnToHeading(43, 800, {}, false);
+    drivePID(40,800);
+    delay(1000);
+    drivePID(-10,600);
+    //drivePID(15,700);
+    //drivePID(-20,800);
+
+}
 void soloPushRight(int i)
 {
     ringSens.set_led_pwm(100);

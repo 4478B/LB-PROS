@@ -510,7 +510,7 @@ void testAuton(bool inputReq)
             //newRingSideLeft(1);
             //newRingSideRight(1);
             //redGoalSideSugarRush2(1);
-            worldsGoalSide(1);
+            newGoalSideWorldsRight(1);
         }
         // ***********************************************
         // ***********************************************
