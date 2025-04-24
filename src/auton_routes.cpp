@@ -2099,3 +2099,45 @@ void worldsGoalSide(int i){
     endSection(10000);
 
 }
+
+mikeyStopMakingMeMakeRoutesRoute(int i){
+    // initial states
+    chassis.setPose(0,0,212);
+
+    // robot is touching wall, align it by making lb score on alliance, not touching mid rings
+    setArmAlliance();
+    delay(600);
+    endSection(10000);
+    drivePID(-6, 1000);
+    setArmBottom();
+    
+    // turn and back up and clamp goal
+
+    chassis.turnToHeading(-70, 1000);
+    drivePID(-40,1000);
+    clamp.set_value(LOW);
+
+    // turn to mid, set doinker and rush and retrieve under-ladder ring
+    chassis.turnToHeading(45, 1000);
+    right_doinker.set_value(LOW);
+    drivePID(20);
+    drivePID(-20);
+
+    // turn with ring attached, deattach and score 2 rings
+    chassis.turnToHeading(170,1000);
+    right_doinker.set_value(HIGH);
+    intake.move(127);
+    chassis.turnToHeading(180,1000);
+    drivePID(20);
+    // turn to corner and ram twice to score two rings
+    chassis.turnToHeading(240, 1000);
+    drivePID(20);
+    drivePID(-5);
+    drivePID(7);
+    drivePID(-15);
+    clamp.set_value(HIGH);
+    
+
+
+
+}
