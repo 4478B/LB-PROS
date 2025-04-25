@@ -30,5 +30,6 @@ void redGoalSideSugarRush(int i);
 void blueGoalSideSugarRush(int i);
 void redGoalSideSugarRush2(int i);
 void worldsGoalSide(int i);
+void mikeyStopMakingMeMakeRoutesRoute(int i);
 
 #endif // AUTON_ROUTES_H

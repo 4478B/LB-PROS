@@ -85,7 +85,7 @@ const AutonRoutine COMPETITION_ROUTINES[] = {
     {"Right Safe Ring Side", safe4RingRight},                     
     {"Left Safe Ring Side", safe4RingLeft},
     {"Right Ring Rush", newRingSideRight},
-    {"Left Ring Rush", newRingSideLeft}
+    {"Left Ring Rush", newRingSideLeft}    
 
 };
 
