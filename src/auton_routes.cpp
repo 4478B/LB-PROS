@@ -2157,7 +2157,7 @@ drivePID(20,600);
 
 
 }
-/*
+
 void mikeyStopMakingMeMakeRoutesRoute(int i){
     // initial states
     chassis.setPose(0,0,148);
@@ -2218,4 +2218,36 @@ void mikeyStopMakingMeMakeRoutesRoute(int i){
     chassis.turnToHeading(90,1000,{.maxSpeed=80});
     drivePID(-20);
 
+    
 }
+
+void codersDoYourJobs(int i){
+//GOALRUSH FULL GOAL
+chassis.setPose(0,0,292);
+clamp.set_value(HIGH);
+//touching ring, line up corner purple screw with middle of tile and c channel crossbar with 2 sides of tile
+
+
+//go forward, grab ring, doinker goal back
+waitUntilAnyIntake(500);
+intake.move(55);
+left_doinker.set_value(HIGH);
+drivePID(33,1200);
+intake.brake();
+drivePID(-25,800,50);left_doinker.set_value(LOW);
+
+//turn, grab goal and put 1 on
+chassis.turnToHeading(45,600,{},false);
+drivePID(-11,700,50);
+clamp.set_value(LOW);
+intake.move(127);
+delay(100);
+chassis.turnToHeading(-125,800,{},false);
+intake.brake();
+
+//go to mid rings
+drivePID(26,700);
+right_doinker.set_value(HIGH);
+
+}
+

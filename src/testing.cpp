@@ -518,7 +518,7 @@ void testAuton(bool inputReq)
             //newRingSideRight(1);
             //redGoalSideSugarRush2(1);
             //evanAryanRahulDoYourJobs(1);
-            worldsGoalSide(1);
+            codersDoYourJobs(1);
         }
         // ***********************************************
         // ***********************************************
