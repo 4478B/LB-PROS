@@ -458,7 +458,7 @@ void testAuton(bool inputReq)
 
     // if the parameter inputReq is set to true (default), these buttons
     // will start the route when all pressed
-    bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_B) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
+    bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
 
     // it runs once automatically with inputReq, otherwise manually
     if ((!inputReq && autonSection == 0) || buttonsPressed)
@@ -500,6 +500,13 @@ void testAuton(bool inputReq)
         }
         else
         {
+
+
+
+
+//////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
+
+
             // safeAWPRight(1);
             // safe4RingRight(1);
             // soloPushRight(1);
@@ -510,7 +517,8 @@ void testAuton(bool inputReq)
             //newRingSideLeft(1);
             //newRingSideRight(1);
             //redGoalSideSugarRush2(1);
-            newGoalSideWorldsRight(1);
+            //evanAryanRahulDoYourJobs(1);
+            worldsGoalSide(1);
         }
         // ***********************************************
         // ***********************************************

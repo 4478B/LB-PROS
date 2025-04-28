@@ -2060,7 +2060,7 @@ void redGoalSideSugarRush2(int i)
 
 
 void worldsGoalSide(int i){
-
+/*
     // initial states
     chassis.setPose(0, 0, 212);
 
@@ -2098,9 +2098,67 @@ void worldsGoalSide(int i){
     drivePID(25, 1000);
     endSection(10000);
 
-}
+*/
 
-mikeyStopMakingMeMakeRoutesRoute(int i){
+ // initial states
+ chassis.setPose(0,0,147);
+
+ // robot is barely off wall, align it by making lb score on alliance, not touching mid rings
+ setArmAlliance();
+ delay(600);
+
+ drivePID(-6, 1000);
+ setArmBottom();
+ 
+ // turn and get 2 stack ring
+
+ chassis.turnToHeading(-135, 1000, {}, false);
+ intake_lift.set_value(HIGH);
+ intake.move(127);
+ drivePID(15,1000);
+ intake_lift.set_value(LOW);
+drivePID(10,500);
+ waitUntilAnyIntake(1500);
+ intake.move(50);
+ drivePID(-12,1000);
+ intake.brake();
+
+//turn and clamp goal
+
+chassis.turnToHeading(120,1000, {}, false);
+drivePID(-31,1100,35);
+clamp.set_value(LOW);
+
+
+//get mid rings
+
+intake.move(127);
+chassis.turnToHeading(-125,1000,{},false);
+intake.brake();
+drivePID(20,1000);
+right_doinker.set_value(HIGH);
+delay(100);
+chassis.turnToHeading(-107,700,{},false);
+left_doinker.set_value(HIGH);
+delay(100);
+
+//drive back score mid rings + bottom of 2 stack
+
+chassis.turnToHeading(-135,500,{},false);
+drivePID(-20,500);
+left_doinker.set_value(LOW);
+chassis.turnToHeading(-150,500,{},false);
+drivePID(11);
+chassis.turnToHeading(-10,600,{},false);
+right_doinker.set_value(LOW);
+chassis.turnToHeading(0,250,{},false);
+drivePID(20,600);
+
+
+
+}
+/*
+void mikeyStopMakingMeMakeRoutesRoute(int i){
     // initial states
     chassis.setPose(0,0,212);
 
@@ -2138,6 +2196,4 @@ mikeyStopMakingMeMakeRoutesRoute(int i){
     clamp.set_value(HIGH);
     
 
-
-
-}
+}*/
