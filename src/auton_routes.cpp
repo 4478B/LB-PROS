@@ -2160,40 +2160,62 @@ drivePID(20,600);
 /*
 void mikeyStopMakingMeMakeRoutesRoute(int i){
     // initial states
-    chassis.setPose(0,0,212);
+    chassis.setPose(0,0,148);
+    clamp.set_value(HIGH);
 
     // robot is touching wall, align it by making lb score on alliance, not touching mid rings
     setArmAlliance();
     delay(600);
-    endSection(10000);
-    drivePID(-6, 1000);
+    drivePID(-3, 1000);
     setArmBottom();
+    delay(300);
     
     // turn and back up and clamp goal
 
-    chassis.turnToHeading(-70, 1000);
-    drivePID(-40,1000);
+    chassis.turnToHeading(95, 1000);
+    delay(1000);
+    drivePID(-42,1500,30);
+    delay(100);
     clamp.set_value(LOW);
 
     // turn to mid, set doinker and rush and retrieve under-ladder ring
-    chassis.turnToHeading(45, 1000);
-    right_doinker.set_value(LOW);
-    drivePID(20);
-    drivePID(-20);
+    chassis.turnToHeading(223, 1000);
+    delay(100);
+    drivePID(20,2000,60);
+    right_doinker.set_value(HIGH);
+    delay(500);
+    drivePID(-22,1000,50);
 
     // turn with ring attached, deattach and score 2 rings
-    chassis.turnToHeading(170,1000);
-    right_doinker.set_value(HIGH);
-    intake.move(127);
-    chassis.turnToHeading(180,1000);
-    drivePID(20);
-    // turn to corner and ram twice to score two rings
-    chassis.turnToHeading(240, 1000);
-    drivePID(20);
-    drivePID(-5);
-    drivePID(7);
-    drivePID(-15);
-    clamp.set_value(HIGH);
     
+    chassis.turnToHeading(330,1000,{.maxSpeed=80});
+    delay(500);
+    right_doinker.set_value(LOW);
+  
+    intake.move(127);
+    chassis.turnToHeading(350,1000);
+    drivePID(30);
+    // turn to corner and ram twice to score two rings
+    chassis.turnToHeading(68, 1000);
+    drivePID(40);
+    delay(200);
+    drivePID(-10);
+    delay(200);
+    drivePID(12);
+    delay(200);
+    drivePID(-10);
+    delay(200);
+    drivePID(12);
+    delay(200);
+    drivePID(-15);
+    delay(100);
+    
+    // Drop goal next to corner
+    chassis.turnToHeading(180,1000,{.maxSpeed=80});
+    drivePID(-5);
+    clamp.set_value(HIGH);
+    drivePID(10);
+    chassis.turnToHeading(90,1000,{.maxSpeed=80});
+    drivePID(-20);
 
-}*/
+}

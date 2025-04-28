@@ -703,8 +703,8 @@ void opcontrol()
         handleArm();
         handleLeftDoinker();
         handleRightDoinker();
-        handleAllianceMacro();
-        handleIntakeLift();
+        //handleAllianceMacro();
+        //handleIntakeLift();
         //handleCornerMacro();
         // handleHangMacro();
 
