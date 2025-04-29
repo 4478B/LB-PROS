@@ -490,16 +490,6 @@ void testAuton(bool inputReq)
         // ***********************************************
         // ************ CHANGE ROUTE HERE ***************
         // ***********************************************
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
-        {
-            testHang();
-        }
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
-        {
-            testGyro();
-        }
-        else
-        {
 
 
 
@@ -517,9 +507,8 @@ void testAuton(bool inputReq)
             //newRingSideLeft(1);
             //newRingSideRight(1);
             //redGoalSideSugarRush2(1);
-            //evanAryanRahulDoYourJobs(1);
             codersDoYourJobs(1);
-        }
+          //mikeyStopMakingMeMakeRoutesRoute(1);
         // ***********************************************
         // ***********************************************
 
