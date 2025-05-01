@@ -404,15 +404,17 @@ void newRingSideRight(int i)
     // back up from corner
     chassis.turnToHeading(46, 800, {}, false);
     drivePID(-10.8912369, 400);
-    drivePID(14.8912369, 400);
+    drivePID(9.8912369, 600);
     drivePID(-6.8912369, 400);
     // back up to score alliance stack
     chassis.turnToHeading(187, 800, {}, false);
     delay(200);
     intake.move(127);
-    drivePID(42, 1300, 40);
-    intake_lift.set_value(HIGH);
-    drivePID(23, 1300, 25);
+    pros::Task delayIntakeLiftTask([]
+        {
+        pros::delay(500);
+        intake_lift.set_value(HIGH); });   
+    drivePID(65, 1300, 40);
     intake_lift.set_value(LOW);
     delay(700);
     drivePID(-12, 1300, 25);
