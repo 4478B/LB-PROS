@@ -507,18 +507,7 @@ void testAuton(bool inputReq)
 //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
 
 
-            // safeAWPRight(1);
-            // safe4RingRight(1);
-            // soloPushRight(1);
-            // ladyBrownRushRight(1);
-            // safe4RingRight(1);
-            // progSkills(1);
-            //progSkills(1);
-            //newRingSideLeft(1);
-            //newRingSideRight(1);
-            //redGoalSideSugarRush2(1);
-            //evanAryanRahulDoYourJobs(1);
-            codersDoYourJobs(1);
+            soloPushRight(1);
         }
         // ***********************************************
         // ***********************************************
