@@ -523,7 +523,7 @@ void handleArm()
         if (targetPos == ArmPos::mid)
         {
             int initVoltage = intake.get_voltage();
-            intake.move(-127);
+            intake.move(-100);
             delay(30);
             intake.move(initVoltage);
             setArm(ArmPos::mid_high);
@@ -542,7 +542,7 @@ void handleArm()
         else
         {
             int initVoltage = intake.get_voltage();
-            intake.move(-127);
+            intake.move(-100);
             delay(30);
             intake.move(initVoltage);
             setArmTop();
