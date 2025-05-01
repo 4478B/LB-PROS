@@ -24,7 +24,7 @@ adi::Port right_doinker('C', pros::E_ADI_DIGITAL_OUT);
 adi::Port intake_lift('E', pros::E_ADI_DIGITAL_OUT);
 
 
-PID armPID(1.8, 0, 4.8); // old 2.9 2.5
+PID armPID(1.8, 0, 2); // old 2.9 2.5
 PID lateralPID(.11, 0, 0.15);
 PID angularPID(0.499, 0, 0.002);
 
