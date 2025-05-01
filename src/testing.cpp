@@ -453,8 +453,7 @@ int prevTime;
 // This function runs in driver control WITHOUT COMM SWITCH, it is a better way of testing the
 // autons since you can take inputs from the controller and test multiple times.
 // NOTE: The arm is on a different task, so don't hit those buttons during auton
-void testAuton(bool inputReq)
-{
+void testAuton(bool inputReq){
 
     // if the parameter inputReq is set to true (default), these buttons
     // will start the route when all pressed
@@ -491,7 +490,16 @@ void testAuton(bool inputReq)
         // ************ CHANGE ROUTE HERE ***************
         // ***********************************************
 
-
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
+        {
+            testHang();
+        }
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
+        {
+            testGyro();
+        }
+        else
+        {
 
 
 //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
@@ -505,11 +513,11 @@ void testAuton(bool inputReq)
             // progSkills(1);
             //progSkills(1);
             //newRingSideLeft(1);
-            newRingSideRight(1);
+            //newRingSideRight(1);
             //redGoalSideSugarRush2(1);
-            //codersDoYourJobs(1);         
+            codersDoYourJobs(1);         
             //mikeyStopMakingMeMakeRoutesRoute(1);
-            soloPushRight(1);
+            //soloPushRight(1);
         }
         // ***********************************************
         // ***********************************************

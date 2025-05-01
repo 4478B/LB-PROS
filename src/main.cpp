@@ -133,7 +133,6 @@ void arm_control_task(void *param)
                 // clamps movements to [-600,600]
                 nextMovement = std::clamp(nextMovement, -600.0, 600.0);
             }
-
             // move arm motors based on PID
             arm_motors.move_velocity(nextMovement);
         }
