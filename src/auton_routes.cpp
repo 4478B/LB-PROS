@@ -190,7 +190,7 @@ void newGoalSideWorldsRight(int i)
     drivePID(-10, 800);
 
     setArmBottom();
-    chassis.turnToHeading(-270, 700, {}, false);
+    chassis.turnToHeading(-265, 700, {}, false);
     drivePID(-20, 800, 40);
     drivePID(-18, 800, 35);
     clamp.set_value(LOW);
@@ -206,7 +206,7 @@ void newGoalSideWorldsRight(int i)
     drivePID(-21, 800);
     chassis.turnToHeading(-141, 800, {}, false);
     intake.brake();
-    drivePID(20, 800);
+    drivePID(17, 800);
     right_doinker.set_value(HIGH);
     delay(300);
     drivePID(-40, 1100);
@@ -2122,43 +2122,52 @@ void worldsGoalSide(int i)
     chassis.turnToHeading(-135, 1000, {}, false);
     intake_lift.set_value(HIGH);
     intake.move(127);
-    drivePID(15, 1000);
-    intake_lift.set_value(LOW);
-    drivePID(10, 500);
+    pros::Task delayIntakeLiftTask([]
+        {
+        pros::delay(150);
+        intake_lift.set_value(LOW); });  
+    drivePID(25, 1000,40);
     waitUntilAnyIntake(1500);
-    intake.move(50);
+    intake.move(30);
     drivePID(-12, 1000);
-    intake.brake();
+    intake.move(20);
 
     // turn and clamp goal
 
     chassis.turnToHeading(120, 1000, {}, false);
-    drivePID(-31, 1100, 35);
+    drivePID(-31, 900, 40);
+    intake.brake();
     clamp.set_value(LOW);
 
     // get mid rings
 
     intake.move(127);
-    chassis.turnToHeading(-125, 1000, {}, false);
+    chassis.turnToHeading(-127, 1000, {}, false);
     intake.brake();
-    drivePID(20, 1000);
+    drivePID(19, 1000,70);
     right_doinker.set_value(HIGH);
-    delay(100);
+    delay(300);
     chassis.turnToHeading(-107, 700, {}, false);
+    drivePID(3, 200);
     left_doinker.set_value(HIGH);
     delay(100);
-
     // drive back score mid rings + bottom of 2 stack
 
-    chassis.turnToHeading(-135, 500, {}, false);
-    drivePID(-20, 500);
-    left_doinker.set_value(LOW);
-    chassis.turnToHeading(-150, 500, {}, false);
-    drivePID(11);
-    chassis.turnToHeading(-10, 600, {}, false);
+    chassis.turnToHeading(-120, 300, {}, false);
+    drivePID(-20, 800,40);
+    chassis.turnToHeading(-6, 800, {.maxSpeed=60}, false);
     right_doinker.set_value(LOW);
-    chassis.turnToHeading(0, 250, {}, false);
-    drivePID(20, 600);
+    chassis.turnToHeading(7, 800, {.maxSpeed=60}, false);
+    left_doinker.set_value(LOW);
+  /*pros::Task delayDoinkerTask([]
+        {
+        pros::delay(350);
+        left_doinker.set_value(LOW); }); */
+
+    chassis.turnToHeading(-3, 800, {.maxSpeed=60}, false);
+    intake.move(127);
+    drivePID(30, 600);
+    chassis.turnToHeading(68, 800, {.maxSpeed=60}, false);
 }
 
 void mikeyStopMakingMeMakeRoutesRoute(int i)
