@@ -513,12 +513,12 @@ void testAuton(bool inputReq){
             // progSkills(1);
             //progSkills(1);
             //newRingSideLeft(1);
-            //newRingSideRight(1);
+            newRingSideRight(1);//******
             //redGoalSideSugarRush2(1);
             //codersDoYourJobs(1);         
             //mikeyStopMakingMeMakeRoutesRoute(1);
             //soloPushRight(1);
-            worldsGoalSide(1); 
+            //worldsGoalSide(1); *****
             //newGoalSideWorldsRight(1);
         }
         // ***********************************************
