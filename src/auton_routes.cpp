@@ -234,20 +234,19 @@ void soloPushRight(int i)
     clamp.set_value(HIGH);
     chassis.setPose(0, 0, -212);
     setArmAlliance();
-    delay(600);
+    delay(550);
     drivePID(-6, 600, 120);
     setArmBottom();
     chassis.turnToHeading(-32, 800, {}, false);
 
     intake.move(60);
-    drivePID(2222222, 700, 120);
+    drivePID(24, 700, 120);
     waitUntilAnyIntake(700);
     intake.brake();
     chassis.turnToHeading(60, 600, {}, false);
     drivePID(-27, 800, 35);
-    delay(100);
     clamp.set_value(LOW);
-    delay(100);
+    delay(50);
     chassis.turnToHeading(-2, 600, {}, false);
     intake.move(127);
     drivePID(26, 800, 130);
