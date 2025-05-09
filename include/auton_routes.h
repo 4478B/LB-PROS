@@ -30,6 +30,7 @@ void redGoalSideSugarRush(int i);
 void blueGoalSideSugarRush(int i);
 void redGoalSideSugarRush2(int i);
 void worldsGoalSide(int i);
+void worldsGoalSideLeft(int i);
 void mikeyStopMakingMeMakeRoutesRoute(int i);
 void codersDoYourJobs(int i);
 

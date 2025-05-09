@@ -366,12 +366,13 @@ void newRingSideRight(int i)
     ringSens.set_led_pwm(100);
 
     // get to ring stack mid
+    setArm(60);
     drivePID(45, 1100);
     chassis.turnToHeading(293, 200, {}, false);
 
     // slow intake and grab ring, back up with rings
     intake.move(10);
-    drivePID(-31, 950, 66);
+    drivePID(-28, 950, 66);
     right_doinker.set_value(LOW);
 
     // turn to face mogo and grab it
@@ -393,23 +394,31 @@ void newRingSideRight(int i)
         pros::delay(100);
         intake.move(127); });
 
-    drivePID(47, 900, 35);
+    drivePID(52, 900, 35);
     delay(100);
-    drivePID(-13, 900, 35);
-    chassis.turnToHeading(67, 800, {}, false);
+    drivePID(-18, 900, 35);
+    chassis.turnToHeading(65, 600, {}, false);
     // go to corner
-    drivePID(56, 1200);
+    drivePID(65, 1200);
     delay(400);
-
+    setArmTop();
     // back up from corner
-    chassis.turnToHeading(46, 800, {}, false);
-    drivePID(-10.8912369, 500);
-    drivePID(9.8912369, 500);
+    chassis.turnToHeading(46, 600, {}, false);
+    drivePID(-17.8912369, 500);
+    drivePID(16.8912369, 500);
     drivePID(-6.8912369, 500);
     // back up to score alliance stack
     chassis.turnToHeading(187, 800, {}, false);
     delay(200);
     intake.move(127);
+
+    drivePID(30,800);
+    delay(600);
+    chassis.turnToHeading(338, 700, {}, false);
+    
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    drivePID(-80,800,170);
+    /*
     pros::Task delayIntakeLiftTask([]
         {
         pros::delay(500);
@@ -418,9 +427,61 @@ void newRingSideRight(int i)
     intake_lift.set_value(LOW);
     delay(400);
     drivePID(-12, 800);
-    chassis.turnToHeading(287, 800, {}, false);
-    drivePID(20,500);
+    chassis.turnToHeading(-287, 700, {}, false);
+    drivePID(20,500);*/
 
+
+
+    /*
+    left_doinker.set_value(HIGH);
+    chassis.turnToHeading(-90, 900, {}, false);
+    left_doinker.set_value(LOW);
+    drivePID(26, 800, 40);
+    delay(200);
+    intake.move(-7);
+    drivePID(-10, 800, 160);
+    intake.brake();
+    setArmAlliance();
+    delay(600);
+    drivePID(-10, 600);*/
+    /*
+    setArmBottom();
+    chassis.turnToHeading(270, 800, {}, false);
+    drivePID(22, 1000, 30);*/
+    /*
+    // face corner
+    chassis.turnToHeading(125,600,{}, false);
+
+    // go to corner
+    drivePID(36,1300);
+
+
+    // doink corner
+    chassis.turnToHeading(18,650,{}, false);
+    right_doinker.set_value(HIGH);
+    drivePID(28,1550);
+    drivePID(-1.5,500,160);
+
+    // face
+    chassis.turnToHeading(-10,800,{}, false);
+
+
+
+    drivePID(-20,1000);
+    chassis.turnToHeading(-175,1000,{}, false);
+    chassis.turnToHeading(-160,400,{}, false);
+    right_doinker.set_value(LOW);
+
+    drivePID(32,1500,120);
+    intake.move(80);
+    drivePID(25,1000,40);
+    waitUntilAnyIntake(700);
+    intake.brake();
+    drivePID(-25,600);
+    setArmMid();
+    intake.move(127);
+    chassis.turnToHeading(90,1000,{}, false);
+    setArmAlliance();*/
     /*
     poop butt booty cheeks
     tyler is a poop
@@ -458,7 +519,7 @@ void newRingSideRight(int i)
     */
 
     /*clamp.set_value(HIGH);
-    intake.move(70);
+    intake.move(70);9
     drivePID(35, 800, 40);
     waitUntilBlueIntake(500);
     intake.brake();
@@ -523,6 +584,7 @@ void newRingSideLeft(int i)
 {
 
     // setup
+    setArmBottom();
     ringSens.set_led_pwm(100);
     clamp.set_value(HIGH);
     ringSens.set_led_pwm(100);
@@ -535,20 +597,19 @@ void newRingSideLeft(int i)
     ringSens.set_led_pwm(100);
 
     // get to ring stack mid
-
+    setArm(60);
     drivePID(45, 1100);
-    chassis.turnToHeading(0, 800, {}, false);
+    chassis.turnToHeading(-293, 200, {}, false);
 
     // slow intake and grab ring, back up with rings
-    intake.move(28);
-    drivePID(-27, 950, 66);
-    intake.brake();
+    intake.move(10);
+    drivePID(-28, 950, 66);
     left_doinker.set_value(LOW);
 
     // turn to face mogo and grab it
-    chassis.turnToHeading(-47, 600, {}, false);
+    chassis.turnToHeading(-49, 600, {}, false);
 
-    drivePID(-25, 900, 40);
+    drivePID(-29, 900, 30);
     clamp.set_value(LOW);
     delay(100);
 
@@ -561,29 +622,47 @@ void newRingSideLeft(int i)
 
     pros::Task delayIntakeTask([]
                                {
-        pros::delay(300);
+        pros::delay(100);
         intake.move(127); });
 
-    drivePID(38, 900, 35);
-    chassis.turnToHeading(-60, 800, {}, false);
-    drivePID(10, 600);
-    delay(150);
-    drivePID(-10, 600);
-    chassis.turnToHeading(-160, 800, {}, false);
-    delay(200);
-    drivePID(60, 1300, 25);
-    delay(300);
-    clamp.set_value(HIGH);
-    intake.move(70);
-    drivePID(35, 800, 40);
-    waitUntilBlueIntake(500);
-    intake.brake();
-    // setArmMid();
-    drivePID(-48, 800, 40);
-    clamp.set_value(LOW);
-    drivePID(20, 700);
+    drivePID(52, 900, 35);
     delay(100);
+    drivePID(-18, 900, 35);
+    chassis.turnToHeading(-67, 600, {}, false);
+    // go to corner
+    drivePID(65, 1200);
+    delay(400);
+    setArmTop();
+    // back up from corner
+    chassis.turnToHeading(-46, 600, {}, false);
+    drivePID(-17.8912369, 500);
+    drivePID(16.8912369, 500);
+    drivePID(-6.8912369, 500);
+    // back up to score alliance stack
+    chassis.turnToHeading(-187, 800, {}, false);
+    delay(200);
     intake.move(127);
+
+    drivePID(40,800);
+    chassis.turnToHeading(-350, 700, {}, false);
+    
+
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    drivePID(-70,800);
+    /*
+    pros::Task delayIntakeLiftTask([]
+        {
+        pros::delay(500);
+        intake_lift.set_value(HIGH); });   
+    drivePID(65, 1300, 40);
+    intake_lift.set_value(LOW);
+    delay(400);
+    drivePID(-12, 800);
+    chassis.turnToHeading(-287, 700, {}, false);
+    drivePID(20,500);*/
+
+
+
     /*
     left_doinker.set_value(HIGH);
     chassis.turnToHeading(-90, 900, {}, false);
@@ -2070,46 +2149,7 @@ void redGoalSideSugarRush2(int i)
 
 void worldsGoalSide(int i)
 {
-    /*
-        // initial states
-        chassis.setPose(0, 0, 212);
-
-        // arm functions
-        setArmAlliance();
-        delay(600);
-        endSection(10000);
-
-        // odom to goal and clamp
-        chassis.moveToPoint(12, -5, 1000, {.forwards=false,.minSpeed=30}, false);
-        delay(1000);
-        clamp.set_value(LOW);
-        endSection(10000);
-
-        // turn to ladder
-        chassis.turnToHeading(30, 1000);
-        delay(1000);
-        endSection(10000);
-
-        // rush mid rings
-        drivePID(20, 1000);
-        left_doinker.set_value(LOW);
-        delay(1000);
-        endSection(10000);
-
-        chassis.turnToHeading(40, 400);
-        drivePID(-20, 1000);
-        endSection(10000);
-
-        // turn to first ring and lift doinker, leaving a line of 3 rings
-        chassis.turnToHeading(180, 1000);
-        left_doinker.set_value(HIGH);
-        delay(300);
-        //intake.move(127);
-        drivePID(25, 1000);
-        endSection(10000);
-
-    */
-
+    //delay(1500);
     // initial states
     chassis.setPose(0, 0, 147);
     clamp.set_value(HIGH);
@@ -2123,7 +2163,7 @@ void worldsGoalSide(int i)
 
     // turn and get 2 stack ring
 
-    chassis.turnToHeading(-137, 1000, {}, false);
+    chassis.turnToHeading(-139, 500, {}, false);
     intake_lift.set_value(HIGH);
     intake.move(127);
     pros::Task delayIntakeLiftTask([]
@@ -2138,10 +2178,10 @@ void worldsGoalSide(int i)
 
     // turn and clamp goal
 
-    chassis.turnToHeading(118, 1000, {}, false);
+    chassis.turnToHeading(118, 500, {}, false);//previously 118
     intake.brake();
-    drivePID(-20, 700);
-    drivePID(-12, 950, 25);
+    drivePID(-20, 700); //previously 20
+    drivePID(-12, 750, 25);
 
     clamp.set_value(LOW);
 
@@ -2149,10 +2189,10 @@ void worldsGoalSide(int i)
     delay(75);
     intake.move(127);
     delay(100);
-    chassis.turnToHeading(-133, 1000, {}, false);
+    chassis.turnToHeading(-134, 600, {}, false);
     intake.brake();
     intake.move(10);
-    drivePID(18.5, 1000,70);
+    drivePID(17.3, 1000,70);
     right_doinker.set_value(HIGH);
     delay(200);
     //left_doinker.set_value(HIGH);
@@ -2162,28 +2202,115 @@ void worldsGoalSide(int i)
     chassis.turnToHeading(-120, 300, {}, false);
     intake.move(-10);
     drivePID(-19, 800,40);
-    chassis.turnToHeading(-29  , 800,{}, false);
+    chassis.turnToHeading(-29  , 600,{}, false);
     right_doinker.set_value(LOW);
     setArmBottom();
-    chassis.turnToHeading(-6, 800,{},false);
+    chassis.turnToHeading(-6, 300,{},false);
   /*pros::Task delayDoinkerTask([]
         {
         pros::delay(350);
         left_doinker.set_value(LOW); }); */
 
-    chassis.turnToHeading(-3, 800, {.maxSpeed=60}, false);
+    chassis.turnToHeading(-3, 300, {.maxSpeed=60}, false);
     intake.move(127);
     drivePID(33, 600);
     delay(100);
-    drivePID(-5,800);
-    chassis.turnToHeading(66, 800, {.maxSpeed=60}, false);
-    drivePID(56,1200);    
-    delay(300);
+    chassis.turnToHeading(66, 600, {.maxSpeed=60}, false);
+    drivePID(60,1200);    
+    chassis.turnToHeading(45, 400, {}, false);
     drivePID(-15,600);
     delay(300);
+
     drivePID(15,600);
+    chassis.turnToHeading(30, 100, {}, false);
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    //setArm(30);
+    drivePID(-80,1000);
+    intake.brake();
+
+}
+void worldsGoalSideLeft(int i)
+{
+    //delay(1500);
+    // initial states
+    chassis.setPose(0, 0, -147);
+    clamp.set_value(HIGH);
+    ringSens.set_led_pwm(100);
+    // robot is barely off wall, align it by making lb score on alliance, not touching mid rings
+    setArmAlliance();
+    delay(600);
+
+    drivePID(-6, 1000);
+    setArmBottom();
+
+    // turn and get 2 stack ring
+
+    chassis.turnToHeading(139, 500, {}, false);
+    intake_lift.set_value(HIGH);
+    intake.move(127);
+    pros::Task delayIntakeLiftTask([]
+        {
+        pros::delay(150);
+        intake_lift.set_value(LOW); });  
+    drivePID(25, 1000,40);
+    waitUntilAnyIntake(1500);
+    intake.move(30);
+    drivePID(-12, 1000);
+    intake.move(10);
+
+    // turn and clamp goal
+
+    chassis.turnToHeading(-118, 500, {}, false);
+    intake.brake();
+    drivePID(-20, 700);
+    drivePID(-12, 750, 25);
+
+    clamp.set_value(LOW);
+
+    // get mid rings
+    delay(75);
+    intake.move(127);
+    delay(100);
+    chassis.turnToHeading(134, 600, {}, false);
+    intake.brake();
+    intake.move(10);
+    drivePID(17.3, 1000,70);
+    left_doinker.set_value(HIGH);
+    delay(200);
+    //left_doinker.set_value(HIGH);
+    //delay(100);
+    // drive back score mid rings + bottom of 2 stack
+
+    chassis.turnToHeading(120, 300, {}, false);
+    intake.move(-10);
+    drivePID(-19, 800,40);
+    chassis.turnToHeading(29  , 600,{}, false);
+    left_doinker.set_value(LOW);
+    setArmBottom();
+    chassis.turnToHeading(6, 300,{},false);
+  /*pros::Task delayDoinkerTask([]
+        {
+        pros::delay(350);
+        left_doinker.set_value(LOW); }); */
+
+    chassis.turnToHeading(3, 300, {.maxSpeed=60}, false);
+    intake.move(127);
+    drivePID(33, 600);
+    delay(100);
+    chassis.turnToHeading(-66, 600, {.maxSpeed=60}, false);
+    drivePID(60,1200);    
+    chassis.turnToHeading(-45, 400, {}, false);
+    drivePID(-15,600);
     delay(300);
-    drivePID(-10,500);
+
+    drivePID(15,600);
+    chassis.turnToHeading(-30, 100, {}, false);
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    //setArm(30);
+    drivePID(-80,1000);
+    intake.brake();
+
+
 }
 
 void mikeyStopMakingMeMakeRoutesRoute(int i)
