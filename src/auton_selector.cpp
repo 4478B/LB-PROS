@@ -10,6 +10,7 @@ struct AutonRoutine {
     std::function<void(int)> func;
     int parameter = 0;
 };
+void testRingSens(int i);
 
 // Constructor
 AutonSelector::AutonSelector(const AutonRoutine* routinesArray, size_t routineCount, bool combineTesting, const AutonRoutine* extraRoutinesArray, size_t extraCount) {
