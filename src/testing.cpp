@@ -15,7 +15,6 @@
 #include "old_systems.h"
 #include "misc.h"
 #include <iomanip>
-#include "color_sort.h"
 
 int totalTime;
 int prevTime;
@@ -72,23 +71,6 @@ void testAuton(bool inputReq){
 
 
 //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
-
-
-            // safeAWPRight(1);
-            // safe4RingRight(1);
-            // soloPushRight(1);
-            // ladyBrownRushRight(1);
-            // safe4RingRight(1);
-            // progSkills(1);
-            //progSkills(1);
-            //newRingSideLeft(1);
-            newRingSideRight(1);//******
-            //redGoalSideSugarRush(1);
-            //codersDoYourJobs(1);         
-            //mikeyStopMakingMeMakeRoutesRoute(1);
-            //soloPushRight(1);
-            //worldsGoalSide(1); //*****
-            //newGoalSideWorldsRight(1);
         }
         // ***********************************************
         // ***********************************************

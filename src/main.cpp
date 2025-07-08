@@ -15,52 +15,6 @@
 #include "auton_routes.h"
 #include "testing.h"
 #include "old_systems.h"
-
-
-void intake_control_task(void *param)
-{
-
-    int stuckCount = 0;
-    int requiredStuck = 10;
-    int lastReset = pros::millis();
-    int resetCD = 5000;
-    while (true)
-    {
-
-        if (abs(intake.get_voltage()) > 0 && intake.get_torque() > 1 && lastReset + resetCD < pros::millis())
-        {
-            stuckCount++;
-        }
-        else
-        {
-            stuckCount = 0;
-        }
-
-        if (stuckCount > requiredStuck)
-        {
-            int initVoltage = intake.get_voltage();
-            intake.move(-127);
-            delay(200);
-            if (intake.get_voltage() == -127)
-            {
-                intake.move(initVoltage);
-            }
-            intake.move(0);
-            lastReset = pros::millis();
-            stuckCount = 0;
-        }
-
-        delay(100);
-
-        // print all variables used
-        pros::lcd::print(0, "Intake Voltage: %d", intake.get_voltage());
-        pros::lcd::print(1, "Intake Torque: %f", intake.get_torque());
-        pros::lcd::print(2, "Stuck Count: %d", stuckCount);
-        pros::lcd::print(3, "Last Reset: %d", lastReset);
-        pros::lcd::print(4, "Current Time: %d", pros::millis());
-        pros::lcd::print(5, "Reset CD: %d", resetCD);
-    }
-}
 // Task function for arm control
 
 
@@ -165,13 +119,26 @@ void handleClamp()
     // activates on pressing B
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
     {
-
         // clamp or unclamp based on toggled variable
 
         clamp.set_value(clamp.get_value() == LOW ? HIGH : LOW);
-
         // print the state of the clamp on the controller screen
          }
+}
+void handleIntake(){
+    // activates on pressing R1
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+    {
+        intake.move(127);
+    }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+    {
+        intake.move(-127);
+    }
+    else
+    {
+        intake.brake();
+    }
 }
 
 
@@ -194,11 +161,6 @@ void opcontrol()
     // left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     // right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-    arm_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
-    intakeOverride = false;
-    armOverride = false;
-    ringSens.set_led_pwm(100);
-    intake.move(127);
     //pros::Task ColorSortTask([]
     //                         { handleColorSortTwo(0); });
     //csort::color_sort_task(nullptr);
@@ -212,25 +174,9 @@ void opcontrol()
         {
             testAuton();
         }
-        //ringSens.set_led_pwm(100);
-        //ringSens.set_integration_time(10);
         handleDriveTrain();
-        csort::handleIntake();
-        //handleColorSortTwo(0);
-        //csort::handleColorSort();
         handleClamp();
-        handleArm();
-        handleLeftDoinker();
-        handleRightDoinker();
-        //handleAllianceMacro();
-        //handleIntakeLift();
-        //handleCornerMacro();
-        // handleHangMacro();
-
-        // print arm motor voltage and efficiency to brain
-        //pros::lcd::print(1, "Arm Motor Voltage: %i", arm_motors.get_voltage());
-        //pros::lcd::print(2, "Arm Motor Efficiency: %f", arm_motors.get_efficiency());
-        //pros::lcd::print(3, "Arm Target Velocity %f", arm_motors.get_target_velocity());
+        handleIntake();
 
         // delay to save resources
         pros::delay(20);

@@ -62,19 +62,12 @@
 extern "C"
 {
 #endif
-
-  void setArm(int position);
-  void setArmBottom();
-  void setArmMid();
-  void setArmTop();
-  void setArmAlliance();
   void autonomous(void);
   void initialize(void);
   void disabled(void);
   extern bool inCompetition;
   void competition_initialize(void);
   void opcontrol(void);
-  void handleArm();
   void handleDriveTrain();
 #ifdef __cplusplus
 }
