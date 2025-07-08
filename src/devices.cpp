@@ -18,21 +18,15 @@ MotorGroup intake({-11,-5}, pros::MotorGearset::blue);
 
 adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
 
-adi::Port left_doinker('D', pros::E_ADI_DIGITAL_OUT);
-adi::Port right_doinker('C', pros::E_ADI_DIGITAL_OUT);
 
 adi::Port intake_lift('E', pros::E_ADI_DIGITAL_OUT);
 
 
-PID armPID(1.8, 0, 2); // old 2.9 2.5
 PID lateralPID(.11, 0, 0.15);
 PID angularPID(0.499, 0, 0.002);
 
-Rotation armRot(10);
+Rotation autoRot(10);
 
-Optical ringSens(1);
-
-Distance goalSens(0);
 
 // drivetrain settings
 Drivetrain drivetrain(&left_motors,               // left motor group

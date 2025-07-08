@@ -20,17 +20,12 @@ extern Controller controller;
 extern MotorGroup intake;
 
 extern adi::Port clamp;
-extern pros::Optical ringSens;
-extern pros::Distance goalSens;
-extern adi::Port left_doinker;
-extern adi::Port right_doinker;
 extern adi::Port intake_lift;
 
-extern PID armPID;
 extern PID lateralPID;
 extern PID angularPID;
 
-extern Rotation armRot;
+extern Rotation autoRot;
 extern Drivetrain drivetrain;
 
 extern pros::Rotation vertical_encoder;
