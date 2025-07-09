@@ -14,13 +14,11 @@ MotorGroup arm_motors({12, -13}, pros::MotorGearset::blue);
 // controller definition
 Controller controller(pros::E_CONTROLLER_MASTER);
 
-MotorGroup intake({-11,-5}, pros::MotorGearset::blue);
+MotorGroup intake({-2, -5}, pros::MotorGearset::blue);
 
 adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
 
-
 adi::Port intake_lift('E', pros::E_ADI_DIGITAL_OUT);
-
 
 PID lateralPID(.11, 0, 0.15);
 PID angularPID(0.499, 0, 0.002);
@@ -30,28 +28,27 @@ Rotation autoRot(10);
 Optical ballSensor(1); // Optical sensor on port 1
 
 // drivetrain settings
-Drivetrain drivetrain(&left_motors,               // left motor group
-                      &right_motors,              // right motor group
-                      11,                         // 11 inch track width
-                      2.75, // using new 2.75" omnis
-                      450,                        // drivetrain rpm is 450
-                      8                           // horizontal drift is 8 (center traction wheel drivebase)
+Drivetrain drivetrain(&left_motors,  // left motor group
+                      &right_motors, // right motor group
+                      11,            // 11 inch track width
+                      2.75,          // using new 2.75" omnis
+                      450,           // drivetrain rpm is 450
+                      8              // horizontal drift is 8 (center traction wheel drivebase)
 );
 
 Imu imu(4);
 
-
 pros::Rotation vertical_encoder(-9);
 pros::Rotation horizontal_encoder(-7);
 
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, 2,  -2.44);
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, 2, -2.44);
 lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, 2, .375);
 
-OdomSensors sensors(&vertical_tracking_wheel, // vertical tracking wheel 1
-                    nullptr, // vertical tracking wheel 2
+OdomSensors sensors(&vertical_tracking_wheel,   // vertical tracking wheel 1
+                    nullptr,                    // vertical tracking wheel 2
                     &horizontal_tracking_wheel, // horizontal tracking wheel 1
-                    nullptr, // horizontal tracking wheel 2
-                    &imu     // inertial sensor
+                    nullptr,                    // horizontal tracking wheel 2
+                    &imu                        // inertial sensor
 );
 
 // lateral PID controller
@@ -68,12 +65,12 @@ ControllerSettings lateral_controller(10,  // proportional gain (kP)
 
 // angular PID controller
 ControllerSettings angular_controller(2.7, // proportional gain (kP)
-                                      0.2,   // integral gain (kI)
+                                      0.2, // integral gain (kI)
                                       20,  // derivative gain (kD)
                                       5,   // anti windup
                                       0.2, // small error range, in inches
                                       250, // small error range timeout, in milliseconds
-                                      0.4,   // large error range, in inches
+                                      0.4, // large error range, in inches
                                       250, // large error range timeout, in milliseconds
                                       0    // maximum acceleration (slew)
 );
