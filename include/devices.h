@@ -21,6 +21,7 @@ extern MotorGroup intake;
 
 extern adi::Port clamp;
 extern adi::Port intake_lift;
+extern adi::Port backGate;
 
 extern PID lateralPID;
 extern PID angularPID;

@@ -130,14 +130,24 @@ void handleIntake(){
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
     {
         intake.move(127);
+        if(0<ballSensor.get_hue()<20){
+            backGate.set_value(HIGH);
+            delay(1000);
+        }
+        else{
+            backGate.set_value(LOW);
+        }
+        
     }
     else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         intake.move(-127);
+        backGate.set_value(LOW);
     }
     else
     {
         intake.brake();
+        backGate.set_value(LOW);
     }
 }
 
@@ -161,6 +171,8 @@ void opcontrol()
     // left_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     // right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+    ballSensor.set_led_pwm(100);
+    backGate.set_value(LOW);
     //pros::Task ColorSortTask([]
     //                         { handleColorSortTwo(0); });
     //csort::color_sort_task(nullptr);
@@ -178,6 +190,10 @@ void opcontrol()
         handleClamp();
         handleIntake();
 
+        std::cout << ballSensor.get_hue() << std::endl;
+        std::cout<<"   "<< std::endl;
+        delay(10000);
+        
         // delay to save resources
         pros::delay(20);
     }
