@@ -175,3 +175,38 @@ bool endSection(int delay)
     }
 }
 
+void fullAWPLeft(int i)
+{
+    int sectime = 100; //set to 500000 for a full section time
+    chassis.setPose(0,0,326);
+    intake.move(127);
+    drivePID(52);
+    endSection(sectime);
+    drivePID(-30);
+    chassis.turnToHeading(205,600);
+    drivePID(40);
+    chassis.turnToHeading(180,600);
+    endSection(sectime);
+    drivePID(-50,1000);
+    drivePID(16);
+    chassis.turnToHeading(55,600);
+    drivePID(48);
+    endSection(sectime);
+    drivePID(-20);
+    chassis.turnToHeading(90,600);
+    drivePID(60);
+    chassis.turnToHeading(60,600);
+    intake.move(127); //change so it is only bottom stage
+    drivePID(24);
+    endSection(sectime);
+    drivePID(-26);
+    chassis.turnToHeading(310,600);
+    intake.move(-127);//change so it is only bottom stage
+    drivePID(20);
+    endSection(sectime);
+    drivePID(-48);
+    chassis.turnToHeading(180,600);
+    drivePID(-30);
+
+}
+

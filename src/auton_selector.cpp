@@ -10,7 +10,6 @@ struct AutonRoutine {
     std::function<void(int)> func;
     int parameter = 0;
 };
-void testRingSens(int i);
 
 // Constructor
 AutonSelector::AutonSelector(const AutonRoutine* routinesArray, size_t routineCount, bool combineTesting, const AutonRoutine* extraRoutinesArray, size_t extraCount) {
@@ -79,14 +78,10 @@ const AutonRoutine COMPETITION_ROUTINES[] = {
 
 };
 
-const AutonRoutine TESTING_ROUTINES[] = {
-    {"Test Ring Sensor", testRingSens}
-};
 
 const bool isTestingCombined = false;
 
 AutonSelector competitionSelector(COMPETITION_ROUTINES, sizeof(COMPETITION_ROUTINES) / sizeof(COMPETITION_ROUTINES[0]));
-AutonSelector testingSelector(TESTING_ROUTINES, sizeof(TESTING_ROUTINES) / sizeof(TESTING_ROUTINES[0]), isTestingCombined, COMPETITION_ROUTINES, sizeof(COMPETITION_ROUTINES) / sizeof(COMPETITION_ROUTINES[0]));
 
 void on_left_button() {
     competitionSelector.prevSelection();

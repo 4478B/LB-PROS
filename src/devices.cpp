@@ -27,6 +27,7 @@ PID angularPID(0.499, 0, 0.002);
 
 Rotation autoRot(10);
 
+Optical ballSensor(1); // Optical sensor on port 1
 
 // drivetrain settings
 Drivetrain drivetrain(&left_motors,               // left motor group

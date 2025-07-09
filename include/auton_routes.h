@@ -6,5 +6,7 @@ extern int autonSection;
 void drivePIDOdom(double goalInches, bool clamping = false, double clampDistInches = 2);
 bool endSection(int delay = 0);
 
+void fullAWPLeft(int i);
+
 
 #endif // AUTON_ROUTES_H
