@@ -3,24 +3,26 @@
 #include "pros/distance.hpp"
 
 // left motor group
-MotorGroup left_motors({-16, -15, -14}, pros::MotorGearset::blue);
+MotorGroup left_motors({-11,-12}, pros::MotorGearset::blue);
 // right motor group
-MotorGroup right_motors({18, 19, 20}, pros::MotorGearset::blue);
+MotorGroup right_motors({20,19}, pros::MotorGearset::blue);
 
-MotorGroup all_motors({-16, -15, -14, 18, 19, 20}, pros::MotorGearset::blue);
+MotorGroup all_motors({-11,-12, 20, 19}, pros::MotorGearset::blue);
 
 MotorGroup arm_motors({12, -13}, pros::MotorGearset::blue);
 
 // controller definition
 Controller controller(pros::E_CONTROLLER_MASTER);
 
-MotorGroup intake({-2, -5}, pros::MotorGearset::blue);
+MotorGroup intake({-17, -2}, pros::MotorGearset::blue);
+Motor smallIntake(-2,pros::MotorGearset::blue);
 
 adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
 
 adi::Port intake_lift('E', pros::E_ADI_DIGITAL_OUT);
 
 adi::Port backGate('A', pros::E_ADI_DIGITAL_OUT);
+adi::Port frontGate('B', pros::E_ADI_DIGITAL_OUT);
 
 
 PID lateralPID(.11, 0, 0.15);

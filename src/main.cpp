@@ -113,41 +113,83 @@ void handleDriveTrain()
     right_motors.move_velocity(rightY);
 }
 
-void handleClamp()
+void handleGate()
 {
 
     // activates on pressing B
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B))
     {
         // clamp or unclamp based on toggled variable
-
-        clamp.set_value(clamp.get_value() == LOW ? HIGH : LOW);
+        backGate.set_value(HIGH);
         // print the state of the clamp on the controller screen
-         }
+    }
+    else if(!(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))){
+        backGate.set_value(LOW);
+    }
 }
 void handleIntake(){
+    ballSensor.set_led_pwm(100);
+
+    //bool justSaw=false;
     // activates on pressing R1
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+
+
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && ballSensor.get_hue()<20)
     {
         intake.move(127);
-        if(0<ballSensor.get_hue()<20){
-            backGate.set_value(HIGH);
-            delay(1000);
-        }
-        else{
-            backGate.set_value(LOW);
-        }
-        
+        delay(75);
+        backGate.set_value(HIGH);
+        delay(260);
+    }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)&& (195<ballSensor.get_hue()<220)&&!(controller.get_digital(pros::E_CONTROLLER_DIGITAL_B))){
+        backGate.set_value(LOW);
+        intake.move(127);
+    }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+        intake.move(127);
     }
     else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         intake.move(-127);
         backGate.set_value(LOW);
+
     }
-    else
+    else if(!(controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)))
     {
-        intake.brake();
         backGate.set_value(LOW);
+        intake.brake();
+
+    }
+}
+void handleSmallIntake(){
+    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+        smallIntake.move(127);
+    }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+        smallIntake.move(-127);
+    }
+    else{
+        smallIntake.brake();
+    }
+}
+void handleGateFront()
+{
+
+    // activates on pressing B
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN))
+    {
+        // clamp or unclamp based on toggled variable
+        frontGate.set_value(HIGH);
+        // print the state of the clamp on the controller screen
+    }
+    else{
+        frontGate.set_value(LOW);
+    }
+}
+
+void multiTake(){
+    while(true){
+        handleIntake();
     }
 }
 
@@ -172,9 +214,9 @@ void opcontrol()
     // right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     ballSensor.set_led_pwm(100);
-    backGate.set_value(LOW);
-    //pros::Task ColorSortTask([]
-    //                         { handleColorSortTwo(0); });
+    //backGate.set_value(LOW);
+    pros::Task IntakeTask([]
+                        { multiTake(); });
     //csort::color_sort_task(nullptr);
     
     // loop forever
@@ -187,12 +229,16 @@ void opcontrol()
             testAuton();
         }
         handleDriveTrain();
-        handleClamp();
-        handleIntake();
+        handleGate();
+        handleGateFront();
+        //handleIntake();
 
-        std::cout << ballSensor.get_hue() << std::endl;
-        std::cout<<"   "<< std::endl;
-        delay(10000);
+        pros::lcd::print(3,"hue: %f",ballSensor.get_hue());
+        pros::lcd::print(4,"prox: %f",ballSensor.get_proximity());
+        pros::lcd::print(5,"bright: %f",ballSensor.get_brightness());
+        pros::lcd::print(6,"raw: %f",ballSensor.get_raw());
+        pros::lcd::print(7,"saturation: %f",ballSensor.get_saturation());
+
         
         // delay to save resources
         pros::delay(20);
