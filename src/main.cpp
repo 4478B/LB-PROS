@@ -231,6 +231,7 @@ void opcontrol()
         handleDriveTrain();
         handleGate();
         handleGateFront();
+        handleSmallIntake();
         //handleIntake();
 
         pros::lcd::print(3,"hue: %f",ballSensor.get_hue());
