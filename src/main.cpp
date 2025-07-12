@@ -154,7 +154,7 @@ void handleIntake(){
         backGate.set_value(LOW);
 
     }
-    else if(!(controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)))
+    else if(!(controller.get_digital(pros::E_CONTROLLER_DIGITAL_B))&&!(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) || controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)))
     {
         backGate.set_value(LOW);
         intake.brake();
