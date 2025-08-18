@@ -128,6 +128,7 @@ void handleGate()
     }
 }
 void handleIntake(){
+    /*
     ballSensor.set_led_pwm(100);
 
     //bool justSaw=false;
@@ -159,6 +160,15 @@ void handleIntake(){
         backGate.set_value(LOW);
         intake.brake();
 
+    }*/
+    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+        intake.move(127);
+    }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+        intake.move(-127);
+    }
+    else{
+        intake.brake();
     }
 }
 void handleSmallIntake(){
