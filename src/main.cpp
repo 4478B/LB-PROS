@@ -113,20 +113,6 @@ void handleDriveTrain()
     right_motors.move_velocity(rightY);
 }
 
-void handleGate()
-{
-
-    // activates on pressing B
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B))
-    {
-        // clamp or unclamp based on toggled variable
-        backGate.set_value(HIGH);
-        // print the state of the clamp on the controller screen
-    }
-    else if(!(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))){
-        backGate.set_value(LOW);
-    }
-}
 void handleIntake(){
     /*
     ballSensor.set_led_pwm(100);
@@ -161,41 +147,48 @@ void handleIntake(){
         intake.brake();
 
     }*/
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+        intakeTop.move(-127);
         intake.move(127);
+    }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+        intake.move(127);
+        intakeTop.move(127);
+        backGate.set_value(HIGH);
+    }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)&& !(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))){
+        if(ballSensor.get_hue()<20){
+            intake.move(127);
+            intakeTop.move(-127);
+            delay(200);
+        }
+        else{
+            intake.move(127);
+            intakeTop.move(127);
+        }
     }
     else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
         intake.move(-127);
+        intakeTop.move(-127);
     }
     else{
         intake.brake();
+        intakeTop.brake();
+        backGate.set_value(LOW);
     }
 }
 void handleSmallIntake(){
     if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-        smallIntake.move(127);
+        smallIntake.move(-127);
     }
     else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-        smallIntake.move(-127);
+        smallIntake.move(127);
     }
     else{
         smallIntake.brake();
     }
 }
-void handleGateFront()
-{
 
-    // activates on pressing B
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN))
-    {
-        // clamp or unclamp based on toggled variable
-        frontGate.set_value(HIGH);
-        // print the state of the clamp on the controller screen
-    }
-    else{
-        frontGate.set_value(LOW);
-    }
-}
 
 void multiTake(){
     while(true){
@@ -239,8 +232,6 @@ void opcontrol()
             testAuton();
         }
         handleDriveTrain();
-        handleGate();
-        handleGateFront();
         handleSmallIntake();
         //handleIntake();
 

@@ -14,15 +14,17 @@ MotorGroup arm_motors({12, -13}, pros::MotorGearset::blue);
 // controller definition
 Controller controller(pros::E_CONTROLLER_MASTER);
 
-MotorGroup intake({-20,-12},pros::MotorGearset::blue); //big motor
-Motor smallIntake( 13, pros::MotorGearset::blue); //2 half m,otors
+Motor intake(-20,pros::MotorGearset::blue); 
+Motor intakeTop(-12,pros::MotorGearset::blue);
+
+Motor smallIntake( 13, pros::MotorGearset::blue); 
 
 
 adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
 
 adi::Port intake_lift('E', pros::E_ADI_DIGITAL_OUT);
 
-adi::Port backGate('A', pros::E_ADI_DIGITAL_OUT);
+adi::Port backGate('H', pros::E_ADI_DIGITAL_OUT);
 adi::Port frontGate('B', pros::E_ADI_DIGITAL_OUT);
 
 
@@ -31,7 +33,7 @@ PID angularPID(0.499, 0, 0.002);
 
 Rotation autoRot(10);
 
-Optical ballSensor(1); // Optical sensor on port 1
+Optical ballSensor(19); // Optical sensor on port 1
 
 // drivetrain settings
 Drivetrain drivetrain(&left_motors,  // left motor group
