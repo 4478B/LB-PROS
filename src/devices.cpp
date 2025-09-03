@@ -3,9 +3,9 @@
 #include "pros/distance.hpp"
 
 // left motor group
-MotorGroup left_motors({-11,-17}, pros::MotorGearset::blue);
+MotorGroup left_motors({-9,-10}, pros::MotorGearset::blue);
 // right motor group
-MotorGroup right_motors({1,19}, pros::MotorGearset::blue);
+MotorGroup right_motors({2,1}, pros::MotorGearset::blue);
 
 MotorGroup all_motors({-11,-17, 1, 19}, pros::MotorGearset::blue);
 
@@ -15,7 +15,7 @@ MotorGroup arm_motors({12, -13}, pros::MotorGearset::blue);
 Controller controller(pros::E_CONTROLLER_MASTER);
 
 Motor intake(-20,pros::MotorGearset::blue); 
-Motor intakeTop(-12,pros::MotorGearset::blue);
+Motor intakeTop(-14,pros::MotorGearset::blue);
 
 Motor smallIntake( 13, pros::MotorGearset::blue); 
 
