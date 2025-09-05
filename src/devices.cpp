@@ -5,7 +5,7 @@
 // left motor group
 MotorGroup left_motors({-10, -9, -8}, pros::MotorGearset::blue);
 // right motor group
-MotorGroup right_motors({3, 2, 1}, pros::MotorGearset::blue);
+MotorGroup right_motors({5, 2, 1}, pros::MotorGearset::blue);
 
 MotorGroup all_motors({-10, -9, -8, 3, 2, 1}, pros::MotorGearset::blue);
 
