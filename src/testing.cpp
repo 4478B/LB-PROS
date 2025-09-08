@@ -64,14 +64,12 @@ void testAuton(bool inputReq){
         }
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
         {
-                       drivePID(-48, 2500, 80, 0, 5, 0.5, false);
-
         }
         else
         {
 
            // aggressive P only trial
-           drivePIDTest(100,100,1000);
+           drivePID(100,10000);
 //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
         }
         

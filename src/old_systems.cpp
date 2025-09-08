@@ -20,7 +20,7 @@ const double WHEEL_RADIUS = 1.375;               // Inches
 const double WHEEL_CIRCUMFERENCE = 2 * M_PI * WHEEL_RADIUS; // Circumference in inches
 const double GEAR_RATIO = 48.0 / 36;            // Ratio for gear adjustment
 const double CLAMP_DISTANCE = 1;
-
+/*
 double slewStep = 2;
 
 double slew(double val, double fwdVal){
@@ -176,7 +176,7 @@ left_motors.move(output); // Left motors move in forward direction
         pros::delay(20); // Wait for a short duration before next iteration
     }
 
-}
+}*/
 
 void drivePID(double inches, int timeout, double kP, double kI, double kD, double goalThreshold, bool clamping)
 {
