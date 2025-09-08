@@ -89,7 +89,7 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
 
     // Derivative: React to the rate of error change
     // use seconds for derivative timebase
-    D = kD * (currentDelta - previousDelta) / (pollingRate / 1000.0);
+    D = kD * (currentDelta - previousDelta) / pollingRate;
 
     // Calculate total PID response
     totalPID = P + I + D;
