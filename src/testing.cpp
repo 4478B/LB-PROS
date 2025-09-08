@@ -56,12 +56,10 @@ void testAuton(bool inputReq){
         // ***********************************************
         // ************ CHANGE ROUTE HERE ***************
         // ***********************************************
-                   drivePID(100, 4000, 80, 0, 5, 0.5, false);
 
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
         {
-                      drivePID(48, 2500, 80, 0, 5, 0.5, false);
 
         }
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
@@ -73,14 +71,12 @@ void testAuton(bool inputReq){
         {
 
            // aggressive P only trial
-           drivePID(36, 2000, 100, 0, 0, 0.5, false);
-
+           drivePIDTest(100,100,1000);
 //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
         }
         
         // ***********************************************
 
-        drivePID(12, 1500, 80, 0, 5, 0.5, false);
 
         // ***********************************************
 
