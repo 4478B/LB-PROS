@@ -1,6 +1,8 @@
 #include "testing.h"
 #include "lemlib/chassis/chassis.hpp"
 #include "main.h"
+#include <algorithm>
+#include <cmath>
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "lemlib/pid.hpp"
 #include "liblvgl/llemu.hpp"
@@ -86,7 +88,8 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     I = std::clamp(I,-50.0,50.0);
 
     // Derivative: React to the rate of error change
-    D = kD * (currentDelta - previousDelta) / pollingRate;
+    // use seconds for derivative timebase
+    D = kD * (currentDelta - previousDelta) / (pollingRate / 1000.0);
 
     // Calculate total PID response
     totalPID = P + I + D;
