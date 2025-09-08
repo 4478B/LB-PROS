@@ -21,6 +21,27 @@ const double WHEEL_CIRCUMFERENCE = 2 * M_PI * WHEEL_RADIUS; // Circumference in 
 const double GEAR_RATIO = 48.0 / 36;            // Ratio for gear adjustment
 const double CLAMP_DISTANCE = 1;
 
+double slewStep = 2;
+
+double slew(double val, double fwdVal){
+  static double prevVal = 0;
+  if (fwdVal >= 0){  
+    if (prevVal + slewStep < val){
+    prevVal = prevVal + slewStep;
+    return prevVal;
+  }
+  prevVal = val;
+  return val;
+  }else
+  {
+     if (prevVal - slewStep > val){
+    prevVal = prevVal - slewStep;
+    return prevVal;
+  }
+  prevVal = val;
+  return val;
+  }
+}
 
 void drivePIDTest(double fwdVal, double limit, double timeout) {
     // PID constants
