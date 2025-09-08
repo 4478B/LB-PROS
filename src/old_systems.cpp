@@ -18,7 +18,7 @@
 // Define constants for conversions
 const double WHEEL_RADIUS = 1.375;               // Inches
 const double WHEEL_CIRCUMFERENCE = 2 * M_PI * WHEEL_RADIUS; // Circumference in inches
-const double GEAR_RATIO = 48.0 / 36;            // Ratio for gear adjustment
+const double GEAR_RATIO = 48.0 / 36.0;            // Ratio for gear adjustment
 const double CLAMP_DISTANCE = 1;
 /*
 double slewStep = 2;
@@ -221,7 +221,7 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     // Read motor position (you can average left and right motor values for straight driving)
     
     // finds average motor position
-    double currentPosition = (all_motors.get_position(0) + all_motors.get_position(1) + all_motors.get_position(2) + all_motors.get_position(3) + all_motors.get_position(4) + all_motors.get_position(5)) / 6.0;
+    double currentPosition = (all_motors.get_position(0) + all_motors.get_position(1) + all_motors.get_position(2) + all_motors.get_position(3)+all_motors.get_position(5)) / 5.0;
     pros::lcd::print(0, "LM1 Pos: %f", all_motors.get_position(0));
     pros::lcd::print(1, "LM2 Pos: %f", all_motors.get_position(1));
     pros::lcd::print(2, "LM3 Pos: %f", all_motors.get_position(2));
@@ -254,10 +254,10 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
 
     // POTENTIAL FIX BELOW
     //totalPID *= 600/127.0;
-    //all_motors.move_velocity(totalPID);
+    all_motors.move(totalPID);
     
-    left_motors.move(totalPID);
-    right_motors.move(totalPID);
+    //left_motors.move_velocity(totalPID);
+    //right_motors.move_velocity(totalPID);
     // Check if the error is small enough to stop
     if (fabs(currentDelta) < goalThreshold)
     {
