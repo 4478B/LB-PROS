@@ -7,9 +7,9 @@ MotorGroup left_motors({-10, -9, -8}, pros::MotorGearset::blue);
 // right motor group
 MotorGroup right_motors({5, 2, 1}, pros::MotorGearset::blue);
 
-MotorGroup all_motors({-10, -9, -8, 3, 2, 1}, pros::MotorGearset::blue);
+MotorGroup all_motors({-10, -9, -8, 5, 2, 1}, pros::MotorGearset::blue);
 
-MotorGroup arm_motors({12, -13}, pros::MotorGearset::blue);
+MotorGroup arm_motors({12, -12}, pros::MotorGearset::blue);
 
 // controller definition
 Controller controller(pros::E_CONTROLLER_MASTER);
@@ -42,7 +42,7 @@ Drivetrain drivetrain(&left_motors,  // left motor group
                       8              // horizontal drift is 8 (center traction wheel drivebase)
 );
 
-Imu imu(4);
+Imu imu(7);
 
 pros::Rotation vertical_encoder(-9);
 pros::Rotation horizontal_encoder(-7);

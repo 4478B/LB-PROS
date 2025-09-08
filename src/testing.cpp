@@ -56,22 +56,31 @@ void testAuton(bool inputReq){
         // ***********************************************
         // ************ CHANGE ROUTE HERE ***************
         // ***********************************************
+                   drivePID(100,1000);
+
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
         {
-           //
+                      drivePID(100,1000);
+
         }
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
         {
-            //
+                       drivePID(100,1000);
+
         }
         else
         {
 
+           drivePID(100,1000,190);
 
 //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
         }
+        
         // ***********************************************
+
+        drivePID(100,1000);
+
         // ***********************************************
 
         //  stops motors to prevent rogue movements after autonl

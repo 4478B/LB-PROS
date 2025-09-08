@@ -225,7 +225,7 @@ void opcontrol()
     // loop forever
     while (true)
     {
-
+        
         // THIS WHOLE IF STATEMENT SHOULD BE COMMENTED OUT IN COMPS
         if (!inCompetition)
         {
@@ -240,8 +240,7 @@ void opcontrol()
         pros::lcd::print(5,"bright: %f",ballSensor.get_brightness());
         pros::lcd::print(6,"raw: %f",ballSensor.get_raw());
         pros::lcd::print(7,"saturation: %f",ballSensor.get_saturation());
-
-        
+                
         // delay to save resources
         pros::delay(20);
     }
