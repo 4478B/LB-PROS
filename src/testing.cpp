@@ -53,6 +53,7 @@ void testAuton(bool inputReq){
         std::cout << std::string(11 * 6 + 4, '-')
                   << std::endl;
 
+    
         // ***********************************************
         // ************ CHANGE ROUTE HERE ***************
         // ***********************************************
@@ -72,7 +73,9 @@ void testAuton(bool inputReq){
            /*all_motors.move_velocity(50);
            pros::delay(10000);
            all_motors.brake();*/
-           drivePID(48,10000);
+           //drivePID(48,10000);
+           fullAWPLeft(1);
+           //intake.move(127);
 //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
         }
         

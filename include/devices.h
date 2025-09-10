@@ -25,6 +25,7 @@ extern adi::Port clamp;
 extern adi::Port intake_lift;
 extern adi::Port backGate; //
 extern adi::Port frontGate;
+extern adi::Port loader;
 
 
 extern PID lateralPID;

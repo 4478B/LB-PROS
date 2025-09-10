@@ -218,8 +218,9 @@ void opcontrol()
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     ballSensor.set_led_pwm(100);
     //backGate.set_value(LOW);
+    /*
     pros::Task IntakeTask([]
-                        { multiTake(); });
+                        { multiTake(); });*/
     //csort::color_sort_task(nullptr);
     
     // loop forever

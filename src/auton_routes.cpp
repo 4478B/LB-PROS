@@ -177,36 +177,38 @@ bool endSection(int delay)
 
 void fullAWPLeft(int i)
 {
-    int sectime = 100; //set to 500000 for a full section time
-    chassis.setPose(0,0,326);
-    intake.move(127);
-    drivePID(52);
-    endSection(sectime);
-    drivePID(-30);
-    chassis.turnToHeading(205,600);
-    drivePID(40);
-    chassis.turnToHeading(180,600);
-    endSection(sectime);
-    drivePID(-50,1000);
-    drivePID(16);
-    chassis.turnToHeading(55,600);
-    drivePID(48);
-    endSection(sectime);
-    drivePID(-20);
-    chassis.turnToHeading(90,600);
-    drivePID(60);
-    chassis.turnToHeading(60,600);
-    intake.move(127); //change so it is only bottom stage
-    drivePID(24);
-    endSection(sectime);
-    drivePID(-26);
-    chassis.turnToHeading(310,600);
-    intake.move(-127);//change so it is only bottom stage
-    drivePID(20);
-    endSection(sectime);
-    drivePID(-48);
-    chassis.turnToHeading(180,600);
-    drivePID(-30);
+   //fullAWPLeft();
+   chassis.setPose(0,0,52);
+   intakeTop.move_velocity(600);
+   intake.move_velocity(600);
+
+   drivePID(28,1000,20);
+   chassis.turnToHeading(300,1000,{},false);
+   drivePID(-17,1000);
+   smallIntake.move(-127);
+   intakeTop.move(-100);
+   backGate.set_value(HIGH);
+   chassis.turnToHeading(305,1000,{},false);
+   delay(500);
+    backGate.set_value(LOW);
+    intakeTop.move(127);
+    smallIntake.brake();
+   drivePID(52,1000);
+
+   loader.set_value(HIGH);
+   chassis.turnToHeading(270,1000,{},false);
+   
+   drivePID(15,1000);
+   delay(1000);
+   drivePID(-10,1000);
+   chassis.turnToHeading(270,1000,{},false);
+   loader.set_value(LOW);
+   drivePID(-20,1000);
+
+    backGate.set_value(HIGH);
+    smallIntake.move(-127);
+
+
 
 }
 
