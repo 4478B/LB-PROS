@@ -236,7 +236,7 @@ void opcontrol()
         if (!inCompetition)
         {
             IntakeTask.suspend();
-            delay(500);
+        
             testAuton();
         }
         handleDriveTrain();

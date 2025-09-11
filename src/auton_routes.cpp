@@ -195,22 +195,20 @@ void fullAWPLeft(int i)
     smallIntake.brake();
 
    loader.set_value(HIGH); 
-   drivePID(53.5,1300);
+   drivePID(57,1300); //53.5 before
 
    
    chassis.turnToHeading(270,1400,{},false);
    
-   drivePID(20,800,160);
-   drivePID(-5,700,120);
-   drivePID(10,500,120);
-   drivePID(-5,500,120);
-   drivePID(10,500,120);
-   drivePID(-5,500,120);
-   drivePID(10,500,120);
-   drivePID(-10,800,100);
+   drivePID(20,800,130);
+   drivePID(-3,700,120);
+   drivePID(5,500,120);
+   drivePID(-3,400,120);
+   drivePID(5,400,120);
+   drivePID(-5,800,100);
    chassis.turnToHeading(270,600,{},false);
    loader.set_value(LOW);
-   drivePID(-20,1000);
+   drivePID(-24.3,800);
 
     backGate.set_value(HIGH);
     smallIntake.move(-127);
