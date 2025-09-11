@@ -223,9 +223,9 @@ void opcontrol()
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     ballSensor.set_led_pwm(100);
     //backGate.set_value(LOW);
-    /*
+    
     pros::Task IntakeTask([]
-                        { multiTake(); });*/
+                        { multiTake(); });
     //csort::color_sort_task(nullptr);
     
     // loop forever
@@ -235,11 +235,14 @@ void opcontrol()
         // THIS WHOLE IF STATEMENT SHOULD BE COMMENTED OUT IN COMPS
         if (!inCompetition)
         {
+            IntakeTask.suspend();
+            delay(500);
             testAuton();
         }
         handleDriveTrain();
         handleSmallIntake();
         handleLoader();
+        handleIntake();
         //handleIntake();
 
         pros::lcd::print(3,"hue: %f",ballSensor.get_hue());

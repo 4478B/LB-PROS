@@ -186,7 +186,7 @@ void fullAWPLeft(int i)
    chassis.turnToHeading(308,800,{},false);
    drivePID(-15,800);
    smallIntake.move(-127);
-   intakeTop.move(-100);
+   intakeTop.move(-60);
    backGate.set_value(HIGH);
    chassis.turnToHeading(310,800,{},false);
    delay(700);
@@ -210,7 +210,7 @@ void fullAWPLeft(int i)
    drivePID(-10,800,100);
    chassis.turnToHeading(270,600,{},false);
    loader.set_value(LOW);
-   drivePID(-17,1000);
+   drivePID(-20,1000);
 
     backGate.set_value(HIGH);
     smallIntake.move(-127);
