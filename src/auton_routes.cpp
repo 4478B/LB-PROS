@@ -178,32 +178,39 @@ bool endSection(int delay)
 void fullAWPLeft(int i)
 {
    //fullAWPLeft();
-   chassis.setPose(0,0,52);
+   chassis.setPose(0,0,61);
    intakeTop.move_velocity(600);
    intake.move_velocity(600);
 
-   drivePID(28,1000,20);
-   chassis.turnToHeading(300,1000,{},false);
-   drivePID(-17,1000);
+   drivePID(30,800,20);
+   chassis.turnToHeading(308,800,{},false);
+   drivePID(-15,800);
    smallIntake.move(-127);
    intakeTop.move(-100);
    backGate.set_value(HIGH);
-   chassis.turnToHeading(305,1000,{},false);
-   delay(500);
+   chassis.turnToHeading(310,800,{},false);
+   delay(700);
     backGate.set_value(LOW);
     intakeTop.move(127);
     smallIntake.brake();
-   drivePID(52,1000);
 
-   loader.set_value(HIGH);
-   chassis.turnToHeading(270,1000,{},false);
+   loader.set_value(HIGH); 
+   drivePID(53.5,1300);
+
    
-   drivePID(15,1000);
-   delay(1000);
-   drivePID(-10,1000);
-   chassis.turnToHeading(270,1000,{},false);
+   chassis.turnToHeading(270,1400,{},false);
+   
+   drivePID(20,800,160);
+   drivePID(-5,700,120);
+   drivePID(10,500,120);
+   drivePID(-5,500,120);
+   drivePID(10,500,120);
+   drivePID(-5,500,120);
+   drivePID(10,500,120);
+   drivePID(-10,800,100);
+   chassis.turnToHeading(270,600,{},false);
    loader.set_value(LOW);
-   drivePID(-20,1000);
+   drivePID(-17,1000);
 
     backGate.set_value(HIGH);
     smallIntake.move(-127);

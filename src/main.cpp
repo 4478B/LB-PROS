@@ -112,6 +112,11 @@ void handleDriveTrain()
     left_motors.move_velocity(leftY);
     right_motors.move_velocity(rightY);
 }
+void handleLoader(){
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
+        loader.set_value(!loader.get_value());
+    }
+}
 
 void handleIntake(){
     /*
@@ -234,6 +239,7 @@ void opcontrol()
         }
         handleDriveTrain();
         handleSmallIntake();
+        handleLoader();
         //handleIntake();
 
         pros::lcd::print(3,"hue: %f",ballSensor.get_hue());
