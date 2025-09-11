@@ -74,7 +74,8 @@ void testAuton(bool inputReq){
            pros::delay(10000);
            all_motors.brake();*/
            //drivePID(48,10000);
-           fullAWPLeft(1);
+           fullAWPLeft(1);/////////////////////////////////////////////<-------- codes for 9/11
+           //skills(1);/////////////////////////////////////////////
            //intake.move(127);
 //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
         }
