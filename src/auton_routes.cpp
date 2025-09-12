@@ -211,30 +211,47 @@ void fullAWPLeft(int i)
 }
 void skills(int i){
     chassis.setPose(0,0,0);
-    drivePID(36,1000);//go to loader
+    drivePID(31.3,1000);//go to loader
     intakeTop.move_velocity(600);
     intake.move_velocity(600);
     chassis.turnToHeading(270,1000,{},false);
     loader.set_value(HIGH); 
+    delay(500);
     drivePID(20,1000);//get loader balls
-    drivePID(-3,700);//shimmy
+    chassis.turnToHeading(270,400,{},false);
+    drivePID(-1.5,500);//shimmy
     drivePID(5,500);
-    drivePID(-3,500);
+    drivePID(-1.5,500);
     drivePID(5,500);
+    drivePID(-5,500);
     chassis.turnToHeading(270,600,{},false);
-    drivePID(-36,1500);
     loader.set_value(LOW); 
+    drivePID(-24,1500);
+    smallIntake.move(-127);//score
+    backGate.set_value(HIGH);
+    delay(5000);
+    backGate.set_value(LOW);
+    smallIntake.brake();
+    drivePID(20,1000);
+    chassis.turnToHeading(135,1000,{},false);//go to other side of field
+    drivePID(33,1000);
     chassis.turnToHeading(180,1000,{},false);//go to other loader
-    drivePID(96,3000);
+    drivePID(53,1700);
+    chassis.turnToHeading(225,1000,{},false);
+    drivePID(27.5,1000);
     chassis.turnToHeading(270,1000,{},false);
     loader.set_value(HIGH); 
-    drivePID(36,1500);//get loader balls
-    drivePID(-3,700);//shimmy
+    delay(500);
+    drivePID(30,1500);//get loader balls
+    chassis.turnToHeading(270,400,{},false);
+    drivePID(-1.5,700);//shimmy
     drivePID(5,500);
-    drivePID(-3,500);
+    drivePID(-1.5,500);
     drivePID(5,500);
+    drivePID(-5,500);
     chassis.turnToHeading(270,500,{},false);
-    drivePID(-30,1500);//go to score
+    loader.set_value(LOW);
+    drivePID(-30,1500,30);//go to score
     backGate.set_value(HIGH);
     smallIntake.move(-127);//score
     delay(5000);
