@@ -182,7 +182,7 @@ void fullAWPLeft(int i)
    intakeTop.move_velocity(600);
    intake.move_velocity(600);
 
-   drivePID(34,900,17);
+   drivePID(35,2000,10);
    chassis.turnToHeading(315,850,{},false);
    drivePID(-15,800);
    smallIntake.move(-127);
@@ -195,12 +195,14 @@ void fullAWPLeft(int i)
     smallIntake.brake();
 
     loader.set_value(HIGH);
-   drivePID(55,1600,30); //53.5 before
+   drivePID(53.5,1600,30); //53.5 before
 
    chassis.turnToHeading(270,1400,{},false);
 
    drivePID(35,1000,150);
    chassis.turnToHeading(270,300,{},false);
+   drivePID(-1.5,500);
+   drivePID(4,500);
    drivePID(-5,800,100);
    chassis.turnToHeading(270,300,{},false);
    loader.set_value(LOW);
@@ -217,7 +219,7 @@ void skills(int i){
     chassis.turnToHeading(270,1000,{},false);
     loader.set_value(HIGH); 
     delay(500);
-    drivePID(20,1000);//get loader balls
+    drivePID(20,1000,30);//get loader balls
     chassis.turnToHeading(270,400,{},false);
     drivePID(-1.5,500);//shimmy
     drivePID(5,500);
@@ -229,33 +231,42 @@ void skills(int i){
     drivePID(-24,1500);
     smallIntake.move(-127);//score
     backGate.set_value(HIGH);
-    delay(5000);
+    chassis.turnToHeading(270,1000,{},false);
+    delay(3000);
     backGate.set_value(LOW);
     smallIntake.brake();
     drivePID(20,1000);
     chassis.turnToHeading(135,1000,{},false);//go to other side of field
-    drivePID(33,1000);
+    drivePID(47,1300,30);
+    drivePID(-12,1000);
     chassis.turnToHeading(180,1000,{},false);//go to other loader
-    drivePID(53,1700);
+    drivePID(56,2300,15);
     chassis.turnToHeading(225,1000,{},false);
-    drivePID(27.5,1000);
+    drivePID(30,1000);
     chassis.turnToHeading(270,1000,{},false);
     loader.set_value(HIGH); 
     delay(500);
-    drivePID(30,1500);//get loader balls
+    drivePID(30,1500,40);//get loader balls
     chassis.turnToHeading(270,400,{},false);
     drivePID(-1.5,700);//shimmy
     drivePID(5,500);
     drivePID(-1.5,500);
     drivePID(5,500);
     drivePID(-5,500);
-    chassis.turnToHeading(270,500,{},false);
+    chassis.turnToHeading(271.5,500,{},false);
     loader.set_value(LOW);
     drivePID(-30,1500,30);//go to score
+     chassis.turnToHeading(270,500,{},false);
     backGate.set_value(HIGH);
     smallIntake.move(-127);//score
     delay(5000);
     backGate.set_value(LOW);
+    drivePID(16,1000);
+    chassis.turnToHeading(315,1000,{},false);//
+    drivePID(20,1000);
+    chassis.turnToHeading(0,1000,{},false);//
+    drivePID(40,2000,160);
+    drivePID(-15,1000,100); 
 
 }
 

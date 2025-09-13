@@ -165,7 +165,7 @@ void handleIntake(){
         if(ballSensor.get_hue()<20){
             intake.move(127);
             intakeTop.move(-127);
-            delay(200);
+            delay(50);
         }
         else{
             intake.move(127);
@@ -223,27 +223,32 @@ void opcontrol()
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     ballSensor.set_led_pwm(100);
     //backGate.set_value(LOW);
-    
+    //bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
+/*
     pros::Task IntakeTask([]
-                        { multiTake(); });
+                        { multiTake(); 
+                        delay(20);});*/
     //csort::color_sort_task(nullptr);
     
     // loop forever
     while (true)
     {
-        
         // THIS WHOLE IF STATEMENT SHOULD BE COMMENTED OUT IN COMPS
         if (!inCompetition)
-        {
-            IntakeTask.suspend();
-        
+        {        
+            /*bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
+            if (buttonsPressed){
+                IntakeTask.suspend();
+            }*/
+
             testAuton();
+    
         }
         handleDriveTrain();
         handleSmallIntake();
         handleLoader();
-        handleIntake();
         //handleIntake();
+        handleIntake();
 
         pros::lcd::print(3,"hue: %f",ballSensor.get_hue());
         pros::lcd::print(4,"prox: %f",ballSensor.get_proximity());
