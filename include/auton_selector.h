@@ -9,14 +9,15 @@
 struct AutonRoutine;
 
 // Declaration of AutonSelector class
-class AutonSelector {
+class AutonSelector
+{
 private:
     std::vector<AutonRoutine> routines;
     int currentSelection;
 
 public:
     // Constructor
-    AutonSelector(const AutonRoutine* routinesArray, size_t routineCount, bool combineTesting = false, const AutonRoutine* extraRoutinesArray = nullptr, size_t extraCount = 0);
+    AutonSelector(const AutonRoutine *routinesArray, size_t routineCount, bool combineTesting = false, const AutonRoutine *extraRoutinesArray = nullptr, size_t extraCount = 0);
 
     // Display methods
     void displaySelectionBrain();
@@ -41,6 +42,7 @@ extern AutonSelector competitionSelector;
 extern AutonSelector testingSelector;
 
 // Function declarations
+extern bool red;
 void on_left_button();
 void on_right_button();
 

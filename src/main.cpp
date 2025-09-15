@@ -17,11 +17,12 @@
 #include "old_systems.h"
 // Task function for arm control
 
-
 // initialize function. Runs on program startup
 void initialize()
 {
-
+    backGate.set_value(HIGH);
+    leftWing.set_value(LOW);
+    rightWing.set_value(LOW);
     // controller.clear(); // clear controller screen
     lcd::initialize();   // initialize brain screen
     chassis.calibrate(); // calibrate sensors
@@ -56,6 +57,13 @@ void disabled() {}
 
 // this is a failsafe incase testing functions in opcontrol haven't been commented out
 bool inCompetition = false;
+bool red = false;
+bool colorSortEnabled = true; // Color sorting is on by default
+void onCenter_button()
+{
+    red = !red;
+    competitionSelector.displaySelectionBrain();
+}
 
 void competition_initialize()
 {
@@ -71,6 +79,8 @@ void competition_initialize()
     // assign buttons to actions in auton selector
     lcd::register_btn0_cb(on_left_button);
     lcd::register_btn2_cb(on_right_button);
+
+    lcd::register_btn1_cb(onCenter_button);
 }
 
 const double SMOOTHING_DENOMINATOR = 100; // Used to normalize the exponential curve
@@ -112,13 +122,30 @@ void handleDriveTrain()
     left_motors.move_velocity(leftY);
     right_motors.move_velocity(rightY);
 }
-void handleLoader(){
-    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
+void handleLoader()
+{
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
+    {
         loader.set_value(!loader.get_value());
     }
 }
 
-void handleIntake(){
+void handleWings()
+{
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y))
+    {
+        leftWing.set_value(HIGH);
+        rightWing.set_value(HIGH);
+    }
+    else
+    {
+        leftWing.set_value(LOW);
+        rightWing.set_value(LOW);
+    }
+}
+
+void handleIntake()
+{
     /*
     ballSensor.set_led_pwm(100);
 
@@ -152,56 +179,90 @@ void handleIntake(){
         intake.brake();
 
     }*/
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+    {
         intakeTop.move(-127);
         intake.move(127);
     }
-    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
+    {
         intake.move(127);
         intakeTop.move(127);
         backGate.set_value(HIGH);
     }
-    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)&& !(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))){
-        if(ballSensor.get_hue()<20){
-            intake.move(127);
-            intakeTop.move(-127);
-            delay(50);
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)))
+    {
+        if (colorSortEnabled)
+        {
+            if (red == true)
+            {
+                if (ballSensor.get_hue() < 20)
+                {
+                    intake.move(127);
+                    intakeTop.move(-127);
+                    delay(50);
+                }
+                else
+                {
+                    intake.move(127);
+                    intakeTop.move(127);
+                }
+            }
+            else if (red == false)
+            {
+                if (195 < ballSensor.get_hue() && ballSensor.get_hue() < 220)
+                {
+                    intake.move(127);
+                    intakeTop.move(-127);
+                }
+                else
+                {
+                    intake.move(127);
+                    intakeTop.move(127);
+                }
+            }
         }
-        else{
+        else
+        {
             intake.move(127);
             intakeTop.move(127);
         }
     }
-    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+    {
         intake.move(-127);
         intakeTop.move(-127);
     }
-    else{
+    else
+    {
         intake.brake();
         intakeTop.brake();
         backGate.set_value(LOW);
     }
 }
-void handleSmallIntake(){
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+void handleSmallIntake()
+{
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
+    {
         smallIntake.move(-127);
     }
-    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
+    {
         smallIntake.move(127);
     }
-    else{
+    else
+    {
         smallIntake.brake();
     }
 }
 
-
-void multiTake(){
-    while(true){
+void multiTake()
+{
+    while (true)
+    {
         handleIntake();
     }
 }
-
-
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -222,42 +283,47 @@ void opcontrol()
     // right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     ballSensor.set_led_pwm(100);
-    //backGate.set_value(LOW);
-    //bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
-/*
-    pros::Task IntakeTask([]
-                        { multiTake(); 
-                        delay(20);});*/
-    //csort::color_sort_task(nullptr);
-    
+    // backGate.set_value(LOW);
+    // bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
+
+    /* pros::Task IntakeTask([]
+                         { multiTake();});*/
+    // csort::color_sort_task(nullptr);
+
     // loop forever
     while (true)
     {
+        // Handle color sort toggle
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP))
+        {
+            colorSortEnabled = !colorSortEnabled;
+            controller.print(0, 0, "Sort: %s", colorSortEnabled ? "ON " : "OFF");
+        }
+
         // THIS WHOLE IF STATEMENT SHOULD BE COMMENTED OUT IN COMPS
         if (!inCompetition)
-        {        
+        {
             /*bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
             if (buttonsPressed){
                 IntakeTask.suspend();
             }*/
 
             testAuton();
-    
         }
         handleDriveTrain();
         handleSmallIntake();
         handleLoader();
-        //handleIntake();
+        handleWings();
         handleIntake();
+        // handleIntake();
 
-        pros::lcd::print(3,"hue: %f",ballSensor.get_hue());
-        pros::lcd::print(4,"prox: %f",ballSensor.get_proximity());
-        pros::lcd::print(5,"bright: %f",ballSensor.get_brightness());
-        pros::lcd::print(6,"raw: %f",ballSensor.get_raw());
-        pros::lcd::print(7,"saturation: %f",ballSensor.get_saturation());
-                
+        pros::lcd::print(3, "hue: %f", ballSensor.get_hue());
+        pros::lcd::print(4, "prox: %f", ballSensor.get_proximity());
+        pros::lcd::print(5, "bright: %f", ballSensor.get_brightness());
+        pros::lcd::print(6, "raw: %f", ballSensor.get_raw());
+        pros::lcd::print(7, "saturation: %f", ballSensor.get_saturation());
+
         // delay to save resources
         pros::delay(20);
     }
-    
 }

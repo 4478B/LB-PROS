@@ -43,6 +43,8 @@ void AutonSelector::displaySelectionBrain() {
         pros::lcd::print(4, "Invalid selection: %i", currentSelection);
         return;
     }
+    pros::lcd::clear_line(1);
+    pros::lcd::print(1, "Alliance: %s", red ? "Red" : "Blue");
     pros::lcd::clear_line(2);
     pros::lcd::print(2, "%s",routines[currentSelection - 1].displayName.c_str());
 }
@@ -75,7 +77,9 @@ int AutonSelector::getRoutineCount() const {
 
 // Global object definitions
 const AutonRoutine COMPETITION_ROUTINES[] = {                        
-
+    {"Left 7 Ball", fullAWPLeft, 1},
+    {"Skills", skills, 1},
+    {"Right 7 Ball", fullAWPRight, 1}
 };
 
 

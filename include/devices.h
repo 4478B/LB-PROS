@@ -24,6 +24,8 @@ extern Motor smallIntake;
 extern adi::Port clamp;
 extern adi::Port intake_lift;
 extern adi::Port backGate; //
+extern adi::Port rightWing;
+extern adi::Port leftWing;
 extern adi::Port frontGate;
 extern adi::Port loader;
 

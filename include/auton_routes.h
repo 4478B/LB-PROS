@@ -7,6 +7,7 @@ void drivePIDOdom(double goalInches, bool clamping = false, double clampDistInch
 bool endSection(int delay = 0);
 
 void fullAWPLeft(int i);
+void fullAWPRight(int i);
 void skills(int i);
 
 #endif // AUTON_ROUTES_H
