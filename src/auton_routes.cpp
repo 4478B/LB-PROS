@@ -177,6 +177,7 @@ bool endSection(int delay)
 
 void fullAWPLeft(int i)
 {
+    /*
    //fullAWPLeft();
    leftWing.set_value(LOW);
    rightWing.set_value(LOW);
@@ -224,6 +225,7 @@ void fullAWPLeft(int i)
     chassis.turnToHeading(270,1000,{},true);
     smallIntake.move(-127);
     drivePID(0.5,200,100);
+    */
     
 }
 void fullAWPRight(int i)
