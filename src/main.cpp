@@ -20,9 +20,7 @@
 // initialize function. Runs on program startup
 void initialize()
 {
-    backGate.set_value(HIGH);
-    leftWing.set_value(LOW);
-    rightWing.set_value(LOW);
+    deScores.set_value(LOW);
     // controller.clear(); // clear controller screen
     lcd::initialize();   // initialize brain screen
     chassis.calibrate(); // calibrate sensors
@@ -134,13 +132,11 @@ void handleWings()
 {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y))
     {
-        leftWing.set_value(HIGH);
-        rightWing.set_value(HIGH);
+        deScores.set_value(HIGH);
     }
     else
     {
-        leftWing.set_value(LOW);
-        rightWing.set_value(LOW);
+        deScores.set_value(LOW);
     }
 }
 
@@ -183,16 +179,11 @@ void handleIntake()
     {
         intakeTop.move(-127);
         intake.move(127);
-    }
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
-    {
-        intake.move(127);
-        intakeTop.move(127);
-        backGate.set_value(HIGH);
+        smallIntake.move(127);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)))
     {
-        if (colorSortEnabled)
+        /*if (colorSortEnabled)
         {
             if (red == true)
             {
@@ -226,18 +217,24 @@ void handleIntake()
         {
             intake.move(127);
             intakeTop.move(127);
-        }
+            smallIntake.move(-127);
+        }*/
+       intake.move(127);
+        intakeTop.move(127);
+        smallIntake.move(-127);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         intake.move(-127);
         intakeTop.move(-127);
+        smallIntake.move(127);
     }
     else
     {
         intake.brake();
         intakeTop.brake();
-        backGate.set_value(LOW);
+        //backGate.set_value(LOW);
+        smallIntake.brake();
     }
 }
 void handleSmallIntake()
@@ -252,7 +249,7 @@ void handleSmallIntake()
     }
     else
     {
-        smallIntake.brake();
+        //smallIntake.brake();
     }
 }
 
@@ -289,7 +286,7 @@ void opcontrol()
     /* pros::Task IntakeTask([]
                          { multiTake();});*/
     // csort::color_sort_task(nullptr);
-
+    colorSortEnabled = false; // Disable color sorting for competition
     // loop forever
     while (true)
     {
@@ -311,7 +308,7 @@ void opcontrol()
             testAuton();
         }
         handleDriveTrain();
-        handleSmallIntake();
+        //handleSmallIntake();
         handleLoader();
         handleWings();
         handleIntake();

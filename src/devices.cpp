@@ -15,19 +15,17 @@ MotorGroup arm_motors({12, -12}, pros::MotorGearset::blue);
 Controller controller(pros::E_CONTROLLER_MASTER);
 
 Motor intake(9, pros::MotorGearset::blue);
-Motor intakeTop(3, pros::MotorGearset::blue);
+Motor intakeTop(5, pros::MotorGearset::blue);
 
-Motor smallIntake(6, pros::MotorGearset::blue);
+Motor smallIntake(-6, pros::MotorGearset::blue);
 
 adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
 
 adi::Port intake_lift('A', pros::E_ADI_DIGITAL_OUT);
 
-adi::Port backGate('H', pros::E_ADI_DIGITAL_OUT);
-adi::Port leftWing('F', pros::E_ADI_DIGITAL_OUT);
-adi::Port rightWing('E', pros::E_ADI_DIGITAL_OUT);
-adi::Port frontGate('B', pros::E_ADI_DIGITAL_OUT);
-adi::Port loader('G', pros::E_ADI_DIGITAL_OUT);
+adi::Port stopper('B', pros::E_ADI_DIGITAL_OUT);
+adi::Port deScores('A', pros::E_ADI_DIGITAL_OUT);
+adi::Port loader('C', pros::E_ADI_DIGITAL_OUT);
 
 
 PID lateralPID(.11, 0, 0.15);

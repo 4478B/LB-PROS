@@ -231,9 +231,6 @@ void fullAWPLeft(int i)
 void fullAWPRight(int i)
 {
    //fullAWPLeft();
-   leftWing.set_value(LOW);
-   rightWing.set_value(LOW);
-    backGate.set_value(LOW);
 
    chassis.setPose(0,0,-63);
    intakeTop.move_velocity(600);
@@ -249,7 +246,6 @@ void fullAWPRight(int i)
    //backGate.set_value(HIGH);
    chassis.turnToHeading(-315,850,{},true);
    //delay(1700);
-    backGate.set_value(LOW);
     intakeTop.move(127);
     smallIntake.brake();
 
@@ -273,16 +269,12 @@ void fullAWPRight(int i)
    loader.set_value(LOW);
    
    drivePID(-25,800);
-    backGate.set_value(HIGH);
     chassis.turnToHeading(-270,1000,{},true);
     smallIntake.move(-127);
     drivePID(0.5,200,100);
     
 }
 void skills(int i){
-    leftWing.set_value(LOW);
-   rightWing.set_value(LOW);
-    backGate.set_value(LOW);
     chassis.setPose(0,0,0);
     drivePID(31.3,1000);//go to loader
     intakeTop.move_velocity(600);
@@ -301,10 +293,8 @@ void skills(int i){
     loader.set_value(LOW); 
     drivePID(-24,1500);
     smallIntake.move(-127);//score
-    backGate.set_value(HIGH);
     chassis.turnToHeading(270,1000,{},false);
     delay(3000);
-    backGate.set_value(LOW);
     smallIntake.brake();
     drivePID(20,1000);
     chassis.turnToHeading(135,1000,{},false);//go to other side of field
@@ -327,11 +317,9 @@ void skills(int i){
     chassis.turnToHeading(271.5,500,{},false);
     loader.set_value(LOW);
     drivePID(-30,1500,30);//go to score
-     chassis.turnToHeading(270,500,{},false);
-    backGate.set_value(HIGH);
+    chassis.turnToHeading(270,500,{},false);
     smallIntake.move(-127);//score
     delay(5000);
-    backGate.set_value(LOW);
     drivePID(16,1000);
     chassis.turnToHeading(315,1000,{},false);//
     drivePID(20,1000);
