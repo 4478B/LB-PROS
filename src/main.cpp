@@ -21,6 +21,7 @@
 void initialize()
 {
     deScores.set_value(LOW);
+    stopper.set_value(HIGH);
     // controller.clear(); // clear controller screen
     lcd::initialize();   // initialize brain screen
     chassis.calibrate(); // calibrate sensors
@@ -130,7 +131,7 @@ void handleLoader()
 
 void handleWings()
 {
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y))
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
     {
         deScores.set_value(HIGH);
     }
@@ -177,11 +178,11 @@ void handleIntake()
     }*/
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
-        intakeTop.move(-127);
+        intakeTop.move(127);
         intake.move(127);
         smallIntake.move(127);
     }
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)))
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
     {
         /*if (colorSortEnabled)
         {
@@ -237,19 +238,14 @@ void handleIntake()
         smallIntake.brake();
     }
 }
-void handleSmallIntake()
+void handleStopper()
 {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
     {
-        smallIntake.move(-127);
+        stopper.set_value(LOW);
     }
-    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
-    {
-        smallIntake.move(127);
-    }
-    else
-    {
-        //smallIntake.brake();
+    else{
+        stopper.set_value(HIGH);
     }
 }
 
@@ -309,6 +305,7 @@ void opcontrol()
         }
         handleDriveTrain();
         //handleSmallIntake();
+        handleStopper();
         handleLoader();
         handleWings();
         handleIntake();
