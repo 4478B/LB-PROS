@@ -3,11 +3,11 @@
 #include "pros/distance.hpp"
 
 // left motor group
-MotorGroup left_motors({-11, -12}, pros::MotorGearset::blue);
+MotorGroup left_motors({-11, -12,-13}, pros::MotorGearset::blue);
 // right motor group
-MotorGroup right_motors({19, 20}, pros::MotorGearset::blue);
+MotorGroup right_motors({18,19, 20}, pros::MotorGearset::blue);
 
-MotorGroup all_motors({-11,-12,19,20}, pros::MotorGearset::blue);
+MotorGroup all_motors({-11,-12,-13,18,19,20}, pros::MotorGearset::blue);
 
 MotorGroup arm_motors({12, -12}, pros::MotorGearset::blue);
 
