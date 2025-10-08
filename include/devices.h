@@ -6,6 +6,7 @@
 #include "lemlib/api.hpp"
 #include "lemlib/pid.hpp"
 #include "extended_chassis.h"
+#include "averaged_imu.h"
 
 // namespace for declarations
 using namespace pros;
@@ -38,7 +39,12 @@ extern Optical ballSensor;
 extern pros::Rotation vertical_encoder;
 extern pros::Rotation horizontal_encoder;
 
-extern Imu imu;
+// Individual IMUs
+extern Imu imu1;
+extern Imu imu2;
+
+// Averaged IMU (use this for odometry)
+extern AveragedIMU imu;
 extern OdomSensors sensors;
 extern ControllerSettings lateral_controller;
 extern ControllerSettings angular_controller;

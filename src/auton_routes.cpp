@@ -231,14 +231,14 @@ void fullAWPLeft(int i)
 void fullAWPRight(int i)
 {
     chassis.setPose(0,0,0);
-    drivePID(48,5000);
-    delay(500);
+    drivePID(48,2000);
+    //delay(500);
     chassis.turnToHeading(180,2000,{},false);
-    delay(500);
-    drivePID(48,5000);
-    delay(500);
-    chassis.turnToHeading(180,2000,{},false);
-    delay(500);
+    //delay(500);
+    drivePID(48,2000);
+    //delay(500);
+    chassis.turnToHeading(0,2000,{},false);
+    //delay(500);
 
 
 }

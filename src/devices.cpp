@@ -17,7 +17,7 @@ Controller controller(pros::E_CONTROLLER_MASTER);
 Motor intake(9, pros::MotorGearset::blue);
 Motor intakeTop(5, pros::MotorGearset::blue);
 
-Motor smallIntake(-6, pros::MotorGearset::blue);
+Motor smallIntake(-2, pros::MotorGearset::blue);
 
 adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
 
@@ -44,7 +44,12 @@ Drivetrain drivetrain(&left_motors,  // left motor group
                       8              // horizontal drift is 8 (center traction wheel drivebase)
 );
 
-Imu imu(7);
+// Individual IMUs
+Imu imu1(14);  // First IMU on port 7
+Imu imu2(17);  // Second IMU on port 8 (change this to your actual port)
+
+// Averaged IMU that combines both sensors
+AveragedIMU imu(&imu1, &imu2);
 
 pros::Rotation vertical_encoder(-9);
 pros::Rotation horizontal_encoder(-7);
