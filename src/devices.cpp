@@ -29,7 +29,7 @@ adi::Port loader('C', pros::E_ADI_DIGITAL_OUT);
 
 
 PID lateralPID(.11, 0, 0.15);
-PID angularPID(0.499, 0, 0.002);
+PID angularPID(0.495, 0, 0.002);
 
 Rotation autoRot(10);
 
