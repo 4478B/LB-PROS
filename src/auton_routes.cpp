@@ -206,7 +206,7 @@ void fullAWPLeft(int i)
    stopper.set_value(HIGH);
 
     //intake.move(-127);
-    loader.set_value(LOW);
+    loader.set_value(HIGH);
     drivePID(61,2000,30); 
                 //53.5 before
 
