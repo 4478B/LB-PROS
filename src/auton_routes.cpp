@@ -61,6 +61,14 @@ void driveInchesClamp(double gDist, double cDist = .5)
     drivePID(gDist, true, cDist);
 }
 
+void shortOutake(){
+    intake.move(-127);//intake out then in
+    intakeTop.move(-127);
+    smallIntake.move(127);
+
+    delay(100);
+}
+
 /*void chassis.turnToHeading(float theta)
 {
     chassis.turnToHeading(theta, 2000);
@@ -225,11 +233,7 @@ void fullAWPLeft(int i)
    
    drivePID(-30,1000,30);
     stopper.set_value(LOW);
-   intake.move(-127);//intake out then in
-        intakeTop.move(-127);
-        smallIntake.move(127);
-
-    delay(100);
+   shortOutake();
 
     intake.move(127);
     intakeTop.move(127);
@@ -291,11 +295,7 @@ void skills(int i){
     drivePID(-25,1500);
     stopper.set_value(LOW);
 
-        intake.move(-127);//intake out then in
-        intakeTop.move(-127);
-        smallIntake.move(127);
-
-    delay(100);
+    shortOutake();
 
     intake.move(127);
     intakeTop.move(127);
@@ -319,11 +319,8 @@ void skills(int i){
     stopper.set_value(LOW);
 
 
-            intake.move(-127);//intake out then in
-        intakeTop.move(-127);
-        smallIntake.move(127);
+    shortOutake();
 
-    delay(100);
 
     intake.move(127);
     intakeTop.move(127);
