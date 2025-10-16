@@ -63,8 +63,9 @@ void testAuton(bool inputReq){
         {
 
         }
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
         {
+            skills(1);
         }
         else
         {
