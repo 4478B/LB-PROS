@@ -61,12 +61,24 @@ void driveInchesClamp(double gDist, double cDist = .5)
     drivePID(gDist, true, cDist);
 }
 
-void shortOutake(){
+void outake(int time){
     intake.move(-127);//intake out then in
     intakeTop.move(-127);
     smallIntake.move(127);
 
-    delay(100);
+    delay(time);
+}
+void intakeAll(int time){
+    intake.move(127);//intake out then in
+    intakeTop.move(127);
+    smallIntake.move(-127);
+
+    delay(time);
+}
+void intakeStop(){
+    intake.brake();
+    intakeTop.brake();
+    smallIntake.brake();
 }
 
 /*void chassis.turnToHeading(float theta)
@@ -193,18 +205,20 @@ void fullAWPLeft(int i)
     smallIntake.move(-127);
 
    drivePID(48,2000,10);
-   drivePID(-9,1000);
+   drivePID(-8,1000);
 
    chassis.turnToHeading(315,850,{},false);
 
-   drivePID(-20.8,800);
-    intakeTop.move(127);
-    intake.move(127);
-    smallIntake.move(127);
+   drivePID(-18.8,1200,30);
+   outake(100);
 
    stopper.set_value(LOW);
-    delay(500);
+    intakeTop.move(127);
+    intake.move(127);
+    smallIntake.move(-127);
+    
 
+    delay(500);
 
    chassis.turnToHeading(315,850,{},true);
    intakeTop.move(127);
@@ -215,13 +229,13 @@ void fullAWPLeft(int i)
 
     //intake.move(-127);
     loader.set_value(HIGH);
-    drivePID(60.5,2000,30); 
+    drivePID(58.5,2000,30); 
                 //53.5 before
 
    chassis.turnToHeading(273,1400,{},false);
    //smallIntake.move(127);
 
-   drivePID(35,1000,18);
+   drivePID(35,1200,9);
    chassis.turnToHeading(270,500,{},false);
    
    drivePID(-1.5,300);
@@ -230,17 +244,19 @@ void fullAWPLeft(int i)
    chassis.turnToHeading(270,500,{},false);
    loader.set_value(LOW);
    
-   
+   stopper.set_value(LOW);
+   intakeStop();
+
    drivePID(-30,1000,30);
-    stopper.set_value(LOW);
-   shortOutake();
+    
+   outake(100);
 
     intake.move(127);
     intakeTop.move(127);
     smallIntake.move(-127);
 
     chassis.turnToHeading(270,1000,{},true);
-    delay(1000);
+    delay(1100);
 
     stopper.set_value(HIGH);
 
@@ -252,18 +268,73 @@ void fullAWPLeft(int i)
 }
 void fullAWPRight(int i)
 {
-    chassis.setPose(0,0,116);
+    chassis.setPose(0,0,-70);
+   intake.move(127);
+    intakeTop.move(127);
+    smallIntake.move(-127);
+
+   drivePID(48,2000,10);
+   drivePID(-8,800);
+
+   chassis.turnToHeading(-135,850,{},false);
+
+   drivePID(15.8,1200,30);
+   outake(100);
+
+   //stopper.set_value(LOW);
+    outake(1300);
+
+   //chassis.turnToHeading(-135,850,{},true);
+
+   outake(500);
+
+   stopper.set_value(HIGH);
+
+    //intake.move(-127);
+    
+    drivePID(-57.2,1700,30); //+.5
+                //53.5 before
+    loader.set_value(HIGH);
     intake.move(127);
     intakeTop.move(127);
     smallIntake.move(-127);
-    deScores.set_value(HIGH);
-    drivePID(48,2000);
-    delay(200);
-    drivePID(-33,1500);
+   chassis.turnToHeading(-273,800,{},false);
+   //smallIntake.move(127);
+
+   
+   drivePID(35,1200,14);
+   chassis.turnToHeading(-270,500,{},false);
+   
+   drivePID(-1.5,300);
+   drivePID(4,300);
+   drivePID(-5,700,100);
+   chassis.turnToHeading(-270,300,{},false);
+   //loader.set_value(LOW);
+   
+   stopper.set_value(LOW);
+   intakeStop();
+
+   drivePID(-30,1000,30);
+    
+   outake(100);
+
+    intake.move(127);
+    intakeTop.move(127);
+    smallIntake.move(-127);
+
+    chassis.turnToHeading(-270,1000,{},true);
+    delay(900);
+
+    intakeStop();
+
+    //stopper.set_value(HIGH);
+
+    drivePID(50,4000,20);
+    //drivePID(-13,1000,160);
 }
 
 void testPID(int i){
-    chassis.setPose(0,0,0);
+    chassis.setPose(0,0,270);
     drivePID(48,2000);
     //delay(500);
     chassis.turnToHeading(180,2000,{},false);
@@ -275,27 +346,30 @@ void testPID(int i){
 }
 
 void skills(int i){
+    
     chassis.setPose(0,0,0);
+
     intake.move(127);
     intakeTop.move(127);
     smallIntake.move(-127);
-    drivePID(29,1000);//go to loader
+    drivePID(32,1200,30);//go to loader
     chassis.turnToHeading(270,1000,{},false);
     loader.set_value(HIGH); 
     delay(500);
-    drivePID(20,1000,30);//get loader balls
+    drivePID(20,1200,23);//get loader balls
     chassis.turnToHeading(270,400,{},false);
-    drivePID(-1.5,500);//shimmy
-    drivePID(5,500);
-    drivePID(-1.5,500);
-    drivePID(5,500);
+    drivePID(1.5,500);//shimmy
+    drivePID(-3,500);
+    drivePID(5,700);//shimmy
     drivePID(-5,500);
     chassis.turnToHeading(270,600,{},false);
     loader.set_value(LOW); 
-    drivePID(-25,1500);
     stopper.set_value(LOW);
+    intakeStop();
+    drivePID(-25,1500);
+    
 
-    shortOutake();
+    outake(100);
 
     intake.move(127);
     intakeTop.move(127);
@@ -312,14 +386,16 @@ void skills(int i){
     chassis.turnToHeading(180,1000,{},false);//go to other loader
     drivePID(50,2300,15);
     chassis.turnToHeading(225,1000,{},false);
-    drivePID(33,1000);
+    drivePID(32.6,1000);
     chassis.turnToHeading(270,1000,{},false);
-    loader.set_value(HIGH); 
+    intakeStop();
+    loader.set_value(HIGH);
+    stopper.set_value(LOW); 
     drivePID(-20,1000);
-    stopper.set_value(LOW);
+    
 
 
-    shortOutake();
+    outake(100);
 
 
     intake.move(127);
@@ -334,27 +410,32 @@ void skills(int i){
     drivePID(15,1000);
     chassis.turnToHeading(270,1000,{},false);
     delay(500);
-    drivePID(20,1500,40);//get loader balls
+    drivePID(20,1500,23);//get loader balls
     chassis.turnToHeading(270,400,{},false);
     drivePID(-1.5,700);//shimmy
     drivePID(5,500);
     drivePID(-1.5,500);
     drivePID(5,500);
     drivePID(-5,500);
-    chassis.turnToHeading(270,500,{},false);
+    chassis.turnToHeading(267,500,{},false);
     loader.set_value(LOW);
-    drivePID(-25,1500,30);//go to score
-    chassis.turnToHeading(270,500,{},false);
     stopper.set_value(LOW);
+    intakeStop();
+    drivePID(-28,1500,30);//go to score
+    intake.move(127);
+    intakeTop.move(127);
+    smallIntake.move(-127);
+    chassis.turnToHeading(270,500,{},false);
     delay(5000);
-    drivePID(21,1000);
+    
+    drivePID(17,1000);
     stopper.set_value(HIGH);
-
+    outake(1000);
     chassis.turnToHeading(150,1000,{},false);//
-    drivePID(-18,1000,30);
-    chassis.turnToHeading(160,1000,{},false);//
-    drivePID(-60,2000,100);
-    drivePID(20,1000,100); 
+    drivePID(-27,1000,30);
+    chassis.turnToHeading(157,1000,{},false);//
+    drivePID(-70,2000,50);
+    drivePID(10,1000,100); 
 
 }
 
