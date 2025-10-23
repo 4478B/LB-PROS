@@ -180,10 +180,10 @@ void handleIntake()
     {
         intakeTop.move(127);
         intake.move(127);
-        smallIntake.move(127);
+        smallIntake.move(40);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
-    {
+    { 
         /*if (colorSortEnabled)
         {
             if (red == true)

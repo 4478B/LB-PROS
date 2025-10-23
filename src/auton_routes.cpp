@@ -345,7 +345,66 @@ void testPID(int i){
     chassis.turnToHeading(0,2000,{},false);
     //delay(500);
 }
+void fullLocalAWP(int i){
+    chassis.setPose(0,0,0);
+    loader.set_value(HIGH); 
+    intake.move(127);
+    intakeTop.move(127);
+    smallIntake.move(-127);
+    drivePID(29.5,900);//go to loader
+    chassis.turnToHeading(-270,700,{},false);
+    drivePID(20,1000,23);//get loader balls
+    //chassis.turnToHeading(-270,400,{},false);
+    drivePID(1.5,200);//shimmy
+    drivePID(-5,200,130);
+    chassis.turnToHeading(-272,400,{},false);
+    
+    loader.set_value(LOW); 
+    stopper.set_value(LOW);
+    delay(100);
+    outake(100);
+    intakeStop(); 
+    drivePID(-28,1000);
+    
 
+    outake(100);
+
+    intake.move(127);
+    intakeTop.move(127);
+    smallIntake.move(-127);
+
+    drivePID(-5,300);
+    chassis.turnToHeading(-270,1000,{},false); 
+    delay(500);
+    drivePID(17.1,1000);
+    
+    chassis.turnToHeading(-134,800,{},false);//go to other side of field
+    stopper.set_value(HIGH);
+    intakeAll(1);
+    drivePID(52.5,1300,30);
+    delay(150);
+    outake(1);
+    chassis.turnToHeading(-133,800,{},false);//go to other side of field
+    delay(400);
+    drivePID(-13.5,800);
+    chassis.turnToHeading(-180,800,{},false);//go to other loader
+    intakeAll(1);
+    drivePID(52,1300);
+    drivePID(-13.3,600,150);
+
+    chassis.turnToHeading(-231,850,{},false);
+
+   drivePID(-12.5,900); //22 if top
+   outake(200);
+    stopper.set_value(LOW);
+    intakeTop.move(127);
+    intake.move(127);
+    smallIntake.move(-127);
+   //drivePID(3,400,150);
+}
+void tylerAuton(int i){
+    chassis.setPose(0,0,0);
+}
 void skills(int i){
     
     chassis.setPose(0,0,0);
@@ -353,7 +412,7 @@ void skills(int i){
     intake.move(127);
     intakeTop.move(127);
     smallIntake.move(-127);
-    drivePID(31.8,1200,30);//go to loader
+    drivePID(31.8,1500,30);//go to loader
     chassis.turnToHeading(270,1000,{},false);
     loader.set_value(HIGH); 
     delay(500);
@@ -363,10 +422,12 @@ void skills(int i){
     drivePID(-3,500);
     drivePID(5,700);//shimmy
     drivePID(-5,500);
-    chassis.turnToHeading(270,600,{},false);
+    chassis.turnToHeading(269,600,{},false);
+    
     loader.set_value(LOW); 
     stopper.set_value(LOW);
-    intakeStop();
+    outake(50);
+    intakeStop(); 
     drivePID(-25,1500);
     
 
@@ -388,8 +449,9 @@ void skills(int i){
     drivePID(50,2300,15);
     chassis.turnToHeading(223,1400,{},false);
 
-    drivePID(33,1000);
+    drivePID(32,1000);
     chassis.turnToHeading(270,1000,{},false);
+    outake(50);
     intakeStop();
     loader.set_value(HIGH);
     stopper.set_value(LOW); 
@@ -401,7 +463,7 @@ void skills(int i){
 
 
     intake.move(127);
-    intakeTop.move(127);
+    intakeTop.move(127); 
     smallIntake.move(-127);
 
 
@@ -422,6 +484,7 @@ void skills(int i){
     chassis.turnToHeading(268,500,{},false);
     loader.set_value(LOW);
     stopper.set_value(LOW);
+    outake(50);
     intakeStop();
     drivePID(-30,1500,30);//go to score
     intake.move(127);

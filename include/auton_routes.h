@@ -8,6 +8,8 @@ bool endSection(int delay = 0);
 
 void fullAWPLeft(int i);
 void fullAWPRight(int i);
+void fullLocalAWP(int i);
+void tylerAuton(int i);
 void skills(int i);
 
 #endif // AUTON_ROUTES_H
