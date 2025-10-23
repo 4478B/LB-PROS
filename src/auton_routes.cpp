@@ -403,7 +403,44 @@ void fullLocalAWP(int i){
    //drivePID(3,400,150);
 }
 void tylerAuton(int i){
-    chassis.setPose(0,0,0);
+    chassis.setPose(0,0,-67);//start pose
+    intake.move(127);
+    intakeTop.move(127);
+    smallIntake.move(-127);
+    drivePID(41,1500,60);//get 3 mid
+    chassis.turnToHeading(-10,1000,{},false);
+    drivePID(17,700,50);//get 2 under goal
+    loader.set_value(HIGH);
+    chassis.turnToHeading(-10,1000,{},false);
+    drivePID(-10,1000,60);
+    chassis.turnToHeading(-38,800,{},false);
+    drivePID(-15,1000);
+    chassis.turnToHeading(-135,1200,{},false);//turn to mid goal
+    loader.set_value(LOW);
+    delay(100);
+    drivePID(11,1000);
+    outake(50);
+    delay(1100);//drop 3 balls mid goal
+    intake.move(127);
+    intakeTop.move(127);
+    smallIntake.move(-127);
+    drivePID(-55,2000);//drive to matchloader
+    loader.set_value(HIGH);//matchloader down
+    chassis.turnToHeading(90,1000,{},false);//turn to matchloader
+    drivePID(20,1500,25);//drive into matchloader
+    chassis.turnToHeading(88,200,{},false);
+    delay(400);
+    drivePID(-30,800);//go to highgoal
+    outake(50);
+    drivePID(5,500);
+    stopper.set_value(LOW);
+    intake.move(127);
+    intakeTop.move(127);
+    smallIntake.move(-127);
+    drivePID(-7,500);
+    
+
+
 }
 void skills(int i){
     
