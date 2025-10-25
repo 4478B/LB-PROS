@@ -407,28 +407,28 @@ void tylerAuton(int i){
     intake.move(127);
     intakeTop.move(127);
     smallIntake.move(-127);
-    drivePID(41,1400,60);//get 3 mid
+    drivePID(41,1250,60);//get 3 mid
     chassis.turnToHeading(-10,750,{},false);
-    drivePID(17,600,50);//get 2 under goal
+    drivePID(17,650,50);//get 2 under goal
     loader.set_value(HIGH);
-    chassis.turnToHeading(-10,1000,{},false);
+    chassis.turnToHeading(-10,800,{},false);
     drivePID(-10,1000,60);
     chassis.turnToHeading(-38,800,{},false);
-    drivePID(-15,700);
-    chassis.turnToHeading(-135,900,{},false);//turn to mid goal
+    drivePID(-16,700);
+    chassis.turnToHeading(-136,900,{},false);//turn to mid goal
     loader.set_value(LOW);
-    delay(50);
     outake(50);
-    drivePID(11,600);
-    delay(500);//drop 3 balls mid goal
+    delay(50);
+    drivePID(10,600);
+    delay(275);//drop 3 balls mid goal
     intake.move(127);
     intakeTop.move(127);
     smallIntake.move(-127);
-    drivePID(-55,1600);//drive to matchloader
+    drivePID(-53,1600);//drive to matchloader
     loader.set_value(HIGH);//matchloader down
     chassis.turnToHeading(90,600,{},false);//turn to matchloader
-    drivePID(20,1200,25);//drive into matchloader
-    chassis.turnToHeading(88,200,{},false);
+    drivePID(23\,1200,25);//drive into matchloader
+    chassis.turnToHeading(87,200,{},false);
     drivePID(-30,800);//go to highgoal
     outake(50);
     drivePID(3,500);
