@@ -79,7 +79,9 @@ int AutonSelector::getRoutineCount() const {
 const AutonRoutine COMPETITION_ROUTINES[] = {                        
     {"Left 7 Ball", fullAWPLeft, 1},
     {"Skills", skills, 1},
-    {"Right 7 Ball", fullAWPRight, 1}
+    {"Right 7 Ball", fullAWPRight, 1},
+    {"Full AWP", fullLocalAWP, 1},
+    {"Elim 9 Ball", tylerAuton,1}
 };
 
 

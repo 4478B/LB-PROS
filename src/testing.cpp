@@ -71,7 +71,7 @@ void testAuton(bool inputReq){
         {
 
            // aggressive P only trial
-           /*all_motors.move_velocity(50);
+           /*all_motors.move_velocity(50); 
            pros::delay(10000);
            all_motors.brake();*/
            //drivePID(48,10000);
