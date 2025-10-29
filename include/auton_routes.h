@@ -11,5 +11,6 @@ void fullAWPRight(int i);
 void fullLocalAWP(int i);
 void tylerAuton(int i);
 void skills(int i);
+void skillsNew(int i);
 
 #endif // AUTON_ROUTES_H

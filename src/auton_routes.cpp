@@ -543,3 +543,46 @@ void skills(int i){
 
 }
 
+void skillsNew(int i){
+    chassis.setPose(0,0,0);
+    
+    intake.move(127);
+    intakeTop.move(127);
+    smallIntake.move(-127);
+    drivePID(31.8,1500,30);//go to loader
+    chassis.turnToHeading(270,1000,{},false);
+    loader.set_value(HIGH); 
+    delay(500);
+    drivePID(20,1200,23);//get loader balls
+    chassis.turnToHeading(270,400,{},false);
+    drivePID(1.5,500);//shimmy
+    drivePID(-3,500);
+    drivePID(5,700);//shimmy
+    drivePID(-5,500);
+    chassis.turnToHeading(269,600,{},false);
+    
+    loader.set_value(LOW); 
+    stopper.set_value(LOW);
+    outake(50);
+    intakeStop(); 
+    drivePID(-25,1500);
+    
+
+    outake(100);
+
+    intake.move(127);
+    intakeTop.move(127);
+    smallIntake.move(-127);
+
+    drivePID(-2,200);
+    chassis.turnToHeading(270,1000,{},false);
+    delay(3000);
+    stopper.set_value(HIGH);
+    drivePID(20,1000);
+    chassis.turnToHeading(135,1100,{},false);//go to other side of field
+    drivePID(49,1300,30);
+    drivePID(-10,1000);
+    chassis.turnToHeading(90,1100,{},false);
+    //drivePID(50,)
+}
+

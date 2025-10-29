@@ -220,8 +220,14 @@ void drivePID(double inches, int timeout, double kP, double kI, double kD, doubl
     // Main PID loop; runs until target is reached
     // Read motor position (you can average left and right motor values for straight driving)
     
-    // finds average motor position
-    double currentPosition = (all_motors.get_position(0) + all_motors.get_position(1) + all_motors.get_position(2) + all_motors.get_position(3)+all_motors.get_position(5)) / 5.0;
+    // finds median motor position
+    std::vector<double> motorPositions = {
+        all_motors.get_position(0), all_motors.get_position(1), all_motors.get_position(2),
+        all_motors.get_position(3), all_motors.get_position(4), all_motors.get_position(5)
+    };
+    std::sort(motorPositions.begin(), motorPositions.end());
+    // For 6 motors, median is average of 3rd and 4th values (indices 2 and 3)
+    double currentPosition = (motorPositions[2] + motorPositions[3]) / 2.0;
     pros::lcd::print(0, "LM1 Pos: %f", all_motors.get_position(0));
     pros::lcd::print(1, "LM2 Pos: %f", all_motors.get_position(1));
     pros::lcd::print(2, "LM3 Pos: %f", all_motors.get_position(2));
