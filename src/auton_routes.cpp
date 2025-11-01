@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include "devices.h"
 #include "old_systems.h"
+#include "opticalAlign.h"
 #include "pros/rtos.h"
 #include "testing.h"
 #include <iomanip>

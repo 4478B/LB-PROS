@@ -35,6 +35,7 @@ extern PID angularPID;
 extern Rotation autoRot;
 extern Drivetrain drivetrain;
 extern Optical ballSensor;
+extern Distance backDistance;
 
 extern pros::Rotation vertical_encoder;
 extern pros::Rotation horizontal_encoder;

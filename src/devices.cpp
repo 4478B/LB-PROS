@@ -33,7 +33,8 @@ PID angularPID(0.495, 0, 0.002);
 
 Rotation autoRot(10);
 
-Optical ballSensor(19); // Optical sensor on port 1
+Optical ballSensor(19); // Optical sensor on port 19
+Distance backDistance(8); // Back distance sensor on port 8
 
 // drivetrain settings
 Drivetrain drivetrain(&left_motors,  // left motor group
