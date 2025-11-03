@@ -14,6 +14,7 @@
 #include "auton_selector.h"
 #include "auton_routes.h"
 #include "testing.h"
+#include "opticalAlign.h"
 #include "old_systems.h"
 // Task function for arm control
 
@@ -26,6 +27,20 @@ void initialize()
     lcd::initialize();   // initialize brain screen
     chassis.calibrate(); // calibrate sensors
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
+
+    // Screen task to display distance sensor values and pose info
+    pros::Task screen_task([] {
+        while (true) {
+            pros::lcd::clear_line(0);
+            pros::lcd::print(0, "Dist Size: %d Dist: %.0fmm", backDistance.get_object_size(), backDistance.get());
+            pros::lcd::clear_line(1);
+            pros::lcd::print(1, "X: %.1f Y: %.1f", chassis.getPose().x, chassis.getPose().y);
+            pros::lcd::clear_line(2);
+            pros::lcd::print(2, "Theta: %.1f", chassis.getPose().theta);
+            
+            pros::delay(100);
+        }
+    });
 }
 
 void autonomous()
@@ -276,6 +291,7 @@ void opcontrol()
     // right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     ballSensor.set_led_pwm(100);
+    chassis.setPose(0, 0, 0);
     // backGate.set_value(LOW);
     // bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
 
@@ -303,6 +319,11 @@ void opcontrol()
 
             testAuton();
         }
+        /*
+        if (controller.get_digital(E_CONTROLLER_DIGITAL_B))
+        {
+            alignToLongGoal(93,true);
+        }  */ 
         handleDriveTrain();
         //handleSmallIntake();
         handleStopper();

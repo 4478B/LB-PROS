@@ -78,9 +78,9 @@ void testAuton(bool inputReq){
            //fullAWPLeft(1);
         //fullAWPRight(1);/////////////////////////////////////////////<-------- codes for 9/11
            //skills(1);/////////////////////////////////////////////
-           //fullLocalAWP(1);
+           fullLocalAWP(1);
            //tylerAuton(1);
-           skillsNew(1);
+           //skillsNew(1);
            //intake.move(127);
 //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
         }

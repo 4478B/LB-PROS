@@ -34,7 +34,7 @@ PID angularPID(0.495, 0, 0.002);
 Rotation autoRot(10);
 
 Optical ballSensor(19); // Optical sensor on port 19
-Distance backDistance(8); // Back distance sensor on port 8
+Distance backDistance(2); // Back distance sensor on port 8
 
 // drivetrain settings
 Drivetrain drivetrain(&left_motors,  // left motor group
@@ -46,7 +46,7 @@ Drivetrain drivetrain(&left_motors,  // left motor group
 );
 
 // Individual IMUs
-Imu imu1(15);  // First IMU on port 7
+Imu imu1(14);  // First IMU on port 7
 Imu imu2(17);  // Second IMU on port 8 (change this to your actual port)
 
 // Averaged IMU that combines both sensors

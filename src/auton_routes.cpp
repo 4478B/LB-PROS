@@ -310,7 +310,8 @@ void fullAWPRight(int i)
    drivePID(-1.5,300);
    drivePID(4,300);
    drivePID(-5,700,100);
-   chassis.turnToHeading(-272,300,{},false);
+   //chassis.turnToHeading(-272,300,{},false);
+   alignToLongGoal(-272,false);
    //loader.set_value(LOW);
    
    stopper.set_value(LOW);
@@ -352,14 +353,16 @@ void fullLocalAWP(int i){
     intake.move(127);
     intakeTop.move(127);
     smallIntake.move(-127);
-    drivePID(29.4,900);//go to loader
+    drivePID(29.4,950);//go to loader
     chassis.turnToHeading(-270,600,{},false);
     drivePID(20,900,23);//get loader balls
     //chassis.turnToHeading(-270,400,{},false);
     drivePID(1.5,200);//shimmy 
     drivePID(-5,200,130);
-    chassis.turnToHeading(-271,400,{},false);
-    
+    //chassis.turnToHeading(-271,400,{},false);
+
+    alignToLongGoal(-265,false);
+
     loader.set_value(LOW); 
     stopper.set_value(LOW);
     //delay(100);
