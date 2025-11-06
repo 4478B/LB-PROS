@@ -26,6 +26,7 @@ adi::Port intake_lift('A', pros::E_ADI_DIGITAL_OUT);
 adi::Port stopper('B', pros::E_ADI_DIGITAL_OUT);
 adi::Port deScores('A', pros::E_ADI_DIGITAL_OUT);
 adi::Port loader('C', pros::E_ADI_DIGITAL_OUT);
+adi::Port frontGate('D', pros::E_ADI_DIGITAL_OUT);
 
 
 PID lateralPID(.11, 0, 0.15);

@@ -29,7 +29,7 @@ void initialize()
     pros::lcd::set_text_align(pros::lcd::Text_Align::CENTER);
 
     // Screen task to display distance sensor values and pose info
-    pros::Task screen_task([] {
+    /*pros::Task screen_task([] {
         while (true) {
             pros::lcd::clear_line(0);
             pros::lcd::print(0, "Dist Size: %d Dist: %.0fmm", backDistance.get_object_size(), backDistance.get());
@@ -40,7 +40,7 @@ void initialize()
             
             pros::delay(100);
         }
-    });
+    });*/
 }
 
 void autonomous()
@@ -195,7 +195,8 @@ void handleIntake()
     {
         intakeTop.move(127);
         intake.move(127);
-        smallIntake.move(40);
+        smallIntake.move(127);
+        //frontGate.set_value(HIGH);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
     { 
@@ -238,12 +239,16 @@ void handleIntake()
        intake.move(127);
         intakeTop.move(127);
         smallIntake.move(-127);
+        //frontGate.set_value(LOW);
+
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         intake.move(-127);
         intakeTop.move(-127);
         smallIntake.move(127);
+        //frontGate.set_value(LOW);
+
     }
     else
     {
@@ -251,6 +256,15 @@ void handleIntake()
         intakeTop.brake();
         //backGate.set_value(LOW);
         smallIntake.brake();
+        //frontGate.set_value(LOW);
+
+    }
+}
+void handlefrontGate()
+{
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
+    {
+        frontGate.set_value(!frontGate.get_value());
     }
 }
 void handleStopper()
@@ -322,14 +336,15 @@ void opcontrol()
         /*
         if (controller.get_digital(E_CONTROLLER_DIGITAL_B))
         {
-            alignToLongGoal(93,true);
-        }  */ 
+            alignToLongGoal(93,false);
+        }  */
         handleDriveTrain();
         //handleSmallIntake();
         handleStopper();
         handleLoader();
         handleWings();
         handleIntake();
+        handlefrontGate();
         // handleIntake();
 
         pros::lcd::print(3, "hue: %f", ballSensor.get_hue());
