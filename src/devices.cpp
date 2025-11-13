@@ -17,14 +17,14 @@ Controller controller(pros::E_CONTROLLER_MASTER);
 Motor intake(9, pros::MotorGearset::blue);
 Motor intakeTop(5, pros::MotorGearset::blue);
 
-Motor smallIntake(-1, pros::MotorGearset::blue);
+Motor smallIntake(-3, pros::MotorGearset::blue);
 
 adi::Port clamp('B', pros::E_ADI_DIGITAL_OUT);
  
 adi::Port intake_lift('A', pros::E_ADI_DIGITAL_OUT);
 
-adi::Port stopper('B', pros::E_ADI_DIGITAL_OUT);
-adi::Port deScores('A', pros::E_ADI_DIGITAL_OUT);
+adi::Port stopper('A', pros::E_ADI_DIGITAL_OUT);
+adi::Port deScores('E', pros::E_ADI_DIGITAL_OUT);
 adi::Port loader('C', pros::E_ADI_DIGITAL_OUT);
 adi::Port frontGate('D', pros::E_ADI_DIGITAL_OUT);
 
@@ -40,30 +40,27 @@ Distance backDistance(2); // Back distance sensor on port 8
 // drivetrain settings
 Drivetrain drivetrain(&left_motors,  // left motor group
                       &right_motors, // right motor group
-                      11,            // 11 inch track width
+                      11.5,            // 11 inch track width
                       2.75,          // using new 2.75" omnis
                       450,           // drivetrain rpm is 450
-                      8              // horizontal drift is 8 (center traction wheel drivebase)
+                      2              // horizontal drift is 8 (center traction wheel drivebase)
 );
 
 // Individual IMUs
-Imu imu1(14);  // First IMU on port 7
+Imu imu1(16);  // First IMU on port 7
 Imu imu2(17);  // Second IMU on port 8 (change this to your actual port)
 
 // Averaged IMU that combines both sensors
 AveragedIMU imu(&imu1, &imu2);
 
-pros::Rotation vertical_encoder(-9);
-pros::Rotation horizontal_encoder(-7);
+lemlib::TrackingWheel left_tracking_wheel(&left_motors, drivetrain.wheelDiameter, -drivetrain.trackWidth / 2.0f, drivetrain.rpm);
+lemlib::TrackingWheel right_tracking_wheel(&right_motors, drivetrain.wheelDiameter, drivetrain.trackWidth / 2.0f, drivetrain.rpm);
 
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, 2, -2.44);
-lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, 2, .375);
-
-OdomSensors sensors(&vertical_tracking_wheel,   // vertical tracking wheel 1
-                    nullptr,                    // vertical tracking wheel 2
-                    &horizontal_tracking_wheel, // horizontal tracking wheel 1
-                    nullptr,                    // horizontal tracking wheel 2
-                    &imu                        // inertial sensor
+OdomSensors sensors(&left_tracking_wheel,  // vertical tracking wheel 1 (left drive)
+                    &right_tracking_wheel, // vertical tracking wheel 2 (right drive)
+                    nullptr,               // horizontal tracking wheel 1
+                    nullptr,               // horizontal tracking wheel 2
+                    &imu                   // inertial sensor
 );
 
 // lateral PID controller

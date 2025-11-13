@@ -38,8 +38,8 @@ extern Drivetrain drivetrain;
 extern Optical ballSensor;
 extern Distance backDistance;
 
-extern pros::Rotation vertical_encoder;
-extern pros::Rotation horizontal_encoder;
+extern lemlib::TrackingWheel left_tracking_wheel;
+extern lemlib::TrackingWheel right_tracking_wheel;
 
 // Individual IMUs
 extern Imu imu1;

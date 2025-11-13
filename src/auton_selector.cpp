@@ -81,6 +81,7 @@ const AutonRoutine COMPETITION_ROUTINES[] = {
     {"Skills", skills, 1},
     {"Right 7 Ball", fullAWPRight, 1},
     {"Full AWP", fullLocalAWP, 1},
+    {"Full AWP LEFT SIDE", newfullLocalAWP,1},
     {"Elim 9 Ball", tylerAuton,1}
 };
 
