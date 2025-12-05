@@ -77,13 +77,11 @@ int AutonSelector::getRoutineCount() const {
 
 // Global object definitions
 const AutonRoutine COMPETITION_ROUTINES[] = {                        
-    {"Left 7 Ball", fullAWPLeft, 1},
-    {"Skills", skills, 1},
-    {"Right 7 Ball", fullAWPRight, 1},
-    {"Full AWP", fullLocalAWP, 1},
+    {"Left 7 Ball Push", leftPush, 1},
+    {"Right 7 Ball Push", rightPush, 1},
     {"Full AWP LEFT SIDE", newfullLocalAWP,1},
     {"Full FIELD SKILLS", skillsNew,1},
-    {"Odom AWP Right", odomAWP,1},
+    {"Odom AWP Right", odomAWPHigh,1},
     {"Elim 9 Ball", tylerAuton,1}
 };
 

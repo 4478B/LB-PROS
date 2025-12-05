@@ -80,9 +80,12 @@ void testAuton(bool inputReq){
            //skills(1);/////////////////////////////////////////////
            //fullLocalAWP(1);
            //tylerAuton(1);
-           //newfullLocalAWP(1);
-           //skillsNew(1);
-           odomAWP(1);
+           //newfullLocalAWP(1); 
+           //testPID(1);
+            //skillsNew(1);
+            //leftPush(1);
+           odomAWPHigh(1);
+           //rightPush(1);
            //intake.move(127);
 //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
         }
