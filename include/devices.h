@@ -42,11 +42,11 @@ extern lemlib::TrackingWheel left_tracking_wheel;
 extern lemlib::TrackingWheel right_tracking_wheel;
 
 // Individual IMUs
-extern Imu imu1;
+extern Imu imu;
 extern Imu imu2;
 
 // Averaged IMU (use this for odometry)
-extern AveragedIMU imu;
+extern AveragedIMU imu1;
 extern OdomSensors sensors;
 extern ControllerSettings lateral_controller;
 extern ControllerSettings angular_controller;

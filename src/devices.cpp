@@ -3,24 +3,24 @@
 #include "pros/distance.hpp"
 
 // left motor group
-MotorGroup left_motors({-13, -12,-11}, pros::MotorGearset::blue);
+MotorGroup left_motors({-7, 9, -8}, pros::MotorGearset::blue);
 // right motor group
-MotorGroup right_motors({18,19, 20}, pros::MotorGearset::blue);
+MotorGroup right_motors({1, -2, 3}, pros::MotorGearset::blue);
 
-MotorGroup all_motors({-13,-12,-11,18,19,20}, pros::MotorGearset::blue);
+MotorGroup all_motors({-7, 9, -8, 1, -2, 3}, pros::MotorGearset::blue);
 
 MotorGroup arm_motors({1, -1}, pros::MotorGearset::blue);
 
 // controller definition
 Controller controller(pros::E_CONTROLLER_MASTER);
 
-Motor intake(10, pros::MotorGearset::blue);
-Motor intakeTop(2, pros::MotorGearset::blue);
+Motor intake(19, pros::MotorGearset::blue);
+Motor intakeTop(-13, pros::MotorGearset::blue);
 
-Motor smallIntake(-1, pros::MotorGearset::blue);
+Motor smallIntake(-12, pros::MotorGearset::blue);
 
 adi::Port clamp('F', pros::E_ADI_DIGITAL_OUT);
- 
+
 adi::Port intake_lift('G', pros::E_ADI_DIGITAL_OUT);
 
 adi::Port stopper('C', pros::E_ADI_DIGITAL_OUT);
@@ -28,30 +28,29 @@ adi::Port deScores('B', pros::E_ADI_DIGITAL_OUT);
 adi::Port loader('A', pros::E_ADI_DIGITAL_OUT);
 adi::Port frontGate('E', pros::E_ADI_DIGITAL_OUT);
 
-
 PID lateralPID(.11, 0, 0.15);
 PID angularPID(0.495, 0, 0.002);
 
 Rotation autoRot(10);
 
-Optical ballSensor(19); // Optical sensor on port 19
+Optical ballSensor(19);   // Optical sensor on port 19
 Distance backDistance(2); // Back distance sensor on port 8
 
 // drivetrain settings
 Drivetrain drivetrain(&left_motors,  // left motor group
                       &right_motors, // right motor group
-                      11.5,            // 11 inch track width
+                      11.5,          // 11 inch track width
                       3.25,          // using new 2.75" omnis
                       450,           // drivetrain rpm is 450
-                      1.5              // horizontal drift is 8 (center traction wheel drivebase)
+                      1.5            // horizontal drift is 8 (center traction wheel drivebase)
 );
 
 // Individual IMUs
-Imu imu1(14);  // First IMU on port 7
-Imu imu2(16);  // Second IMU on port 8 (change this to your actual port)
+Imu imu(5);  // First IMU on port 7
+Imu imu2(16); // Second IMU on port 8 (change this to your actual port)
 
 // Averaged IMU that combines both sensors
-AveragedIMU imu(&imu1, &imu2);
+AveragedIMU imu1(&imu, &imu2);
 
 lemlib::TrackingWheel left_tracking_wheel(&left_motors, drivetrain.wheelDiameter, -drivetrain.trackWidth / 2.0f, drivetrain.rpm);
 lemlib::TrackingWheel right_tracking_wheel(&right_motors, drivetrain.wheelDiameter, drivetrain.trackWidth / 2.0f, drivetrain.rpm);

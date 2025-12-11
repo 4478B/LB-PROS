@@ -792,12 +792,12 @@ void skillsNew(int i){
 
     chassis.moveToPose(-26.868,-61.222,270,2000,{.forwards=false},false);
     loader.set_value(LOW); 
-    chassis.moveToPose(51.066,-60.958,270,2000,{.forwards=false, .lead=.1},false);
-    chassis.moveToPose(25.57,-47.805,90,3000,{.forwards=false, .lead=.5},false);//-48.805
+    chassis.moveToPose(51.066,-60.958,270,2000,{.forwards=false, .lead=.5},false);
+    chassis.moveToPose(25.57,-49.805,90,3000,{.forwards=false, .lead=.5},false);//-48.805
     //outake(200);
     stopper.set_value(LOW); 
     intakeAll(1);
-    drivePID(-10,100);
+    drivePID(-10,200,100);
     chassis.turnToHeading(90,2000,{},false);
     delay(1000);
     loader.set_value(HIGH); 
@@ -816,7 +816,7 @@ void skillsNew(int i){
     loader.set_value(LOW);
     outake(100);
     intakeStop();
-    drivePID(-30,1500,30);//go to score
+    drivePID(-30,1500,50);//go to score
     //outake(200);
     stopper.set_value(LOW);
     //outake(200);
@@ -838,7 +838,7 @@ void skillsNew(int i){
     chassis.moveToPose(40.913,-24.716,0,1500,{.forwards=true, .lead=.5},false);
     stopper.set_value(HIGH);
     intakeAll(1);
-    chassis.moveToPose(52.072,45.049,90,2100,{.forwards=true, .lead=.1},false);//47.637
+    chassis.moveToPose(52.072,46.049,90,2400,{.forwards=true, .lead=.1},false);//47.637
     chassis.turnToHeading(90,200,{},false);
     loader.set_value(HIGH);
     delay(100);
@@ -849,35 +849,35 @@ void skillsNew(int i){
     drivePID(-1.5,500);
     drivePID(5,500);
     chassis.turnToHeading(90,500,{},false);
-    chassis.setPose(56.761,46.711,chassis.getPose().theta); //46.711 , 47.211
+    chassis.setPose(56.761,48.76,chassis.getPose().theta); //46.711 , 47.211
     delay(100);
     chassis.moveToPose(26.868,61.222,90,2000,{.forwards=false},false);
     loader.set_value(LOW);
-    chassis.moveToPose(-51.066,60.958,90,2000,{.forwards=false, .lead=.5},false);
-    chassis.moveToPose(-25.57,48.805,270,3000,{.forwards=false, .lead=.5},false);
+    chassis.moveToPose(-51.066,62.958,90,2000,{.forwards=false, .lead=.5},false);
+    chassis.moveToPose(-24.57,49.805,270,3000,{.forwards=false, .lead=.5},false);
     //outake(200);
     stopper.set_value(LOW); 
     outake(75);
     intakeAll(1);
-    drivePID(-10,200);
+    drivePID(-10,500,100);
     chassis.turnToHeading(270,1000,{},false);
     delay(1000);
     loader.set_value(HIGH); 
     
     drivePID(15,1000);
     stopper.set_value(HIGH);
-    chassis.turnToHeading(270,500,{},false);
+    chassis.turnToHeading(272,500,{},false);
     //delay(500);
     drivePID(22,1000,30);//get loader balls
-    chassis.turnToHeading(270,400,{},false);
+    chassis.turnToHeading(272,400,{},false);
     drivePID(-1.5,700);//shimmy
     drivePID(5,500);
     drivePID(-5,500);
-    chassis.turnToHeading(272,500,{},false);
+    chassis.turnToHeading(271,500,{},false);
     loader.set_value(LOW);
     //outake(100);
     intakeStop();
-    drivePID(-35,1200,30);//go to score
+    drivePID(-35,1200,50);//go to score
     //outake(200);
     stopper.set_value(LOW);
     outake(100);
@@ -897,11 +897,11 @@ void skillsNew(int i){
     //delay(100);
     chassis.setPose(-25.57,48.805,chassis.getPose().theta);
     intakeAll(1);
-    chassis.moveToPose(-59.127,29.633,199,1700,{.forwards=true, .lead=.5},false);
+    chassis.moveToPose(-59.127,29.633,193,1700,{.forwards=true, .lead=.5},false);
     stopper.set_value(LOW);
     //outake(1);
-    drivePID(70,2200,100);
-    drivePID(-10,1500,100);
+    drivePID(45,2200,100);
+    drivePID(-7,1500,100);
 
     /*
    chassis.setPose(-49.618,-17.441,180);
@@ -923,7 +923,7 @@ void leftPush(int i){
     drivePID(27.5,950);//go to loader //29.3
     chassis.turnToHeading(270,800,{},false);
     deScores.set_value(LOW);
-    drivePID(20,900,23);//get loader balls
+    drivePID(20,800,23);//get loader balls
     //chassis.turnToHeading(-270,400,{},false);
     drivePID(1.5,200);//shimmy 
     drivePID(-5,200,130);
@@ -963,8 +963,9 @@ void leftPush(int i){
     chassis.turnToHeading(315,300,{},false);
     delay(500);
     intakeAll(1);
-    chassis.moveToPose(-23.958,37.158,45,1500,{.forwards=true, .lead=.5},false);
-    chassis.moveToPose(-3.63,39.965,90,1800,{.forwards=true, .lead=.5},false);
+    chassis.moveToPose(-23.458,36.258,45,1700,{.forwards=true, .lead=.5},false);
+    chassis.moveToPose(-1.93,39.965,90,1800,{.forwards=true, .lead=.5},false);
+    //chassis.turnToHeading(120,600,{},false);
 
 
 }

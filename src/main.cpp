@@ -97,8 +97,8 @@ void competition_initialize()
     lcd::register_btn1_cb(onCenter_button);
 }
 
-const double SMOOTHING_DENOMINATOR = 100; // Used to normalize the exponential curve
-const double EXPONENTIAL_POWER = 2;       // Controls how aggressive the curve is
+const double SMOOTHING_DENOMINATOR = 251; // Used to normalize the exponential curve
+const double EXPONENTIAL_POWER = 2.2;       // Controls how aggressive the curve is
 // Helper function that makes joystick input more precise for small movements
 // while maintaining full power at maximum joystick
 double logDriveJoystick(double joystickPCT)
@@ -191,6 +191,7 @@ void handleIntake()
         intake.brake();
 
     }*/
+
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         intakeTop.move(127);
@@ -259,7 +260,42 @@ void handleIntake()
         //frontGate.set_value(LOW);
 
     }
+    
+    
 }
+
+void handleIntakeNew(){
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+    {
+        intakeTop.move(127);
+        intake.move(127);
+        smallIntake.move(127);
+        //frontGate.set_value(HIGH);
+    }
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+    { 
+       
+       intake.move(127);
+        //frontGate.set_value(LOW);
+    }
+     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+    {
+        intake.move(-127);
+        intakeTop.move(-127);
+        //frontGate.set_value(LOW);
+
+    }
+     else
+    {
+        intake.brake();
+        //backGate.set_value(LOW);
+        smallIntake.brake();
+        //frontGate.set_value(LOW);
+
+    }
+
+}
+
 void handlefrontGate()
 {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
@@ -269,13 +305,22 @@ void handlefrontGate()
 }
 void handleStopper()
 {
+    /*
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
     {
         stopper.set_value(LOW);
     }
     else{
         stopper.set_value(HIGH);
+    }*/
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
+    {
+        intakeTop.move(127);
     }
+    else{
+        intakeTop.brake();
+    }
+
 }
 
 void multiTake()
@@ -284,6 +329,15 @@ void multiTake()
     {
         handleIntake();
     }
+}
+void outputHeading(){
+    while (true)
+    {
+        std::cout << "Heading: " << imu1.get_heading() << std::endl;
+        std::cout << "Heading: " << imu2.get_heading() << std::endl;
+        std::cout << " " << std::endl;
+    }
+    
 }
 
 /**
@@ -309,8 +363,8 @@ void opcontrol()
     // backGate.set_value(LOW);
     // bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
 
-    /* pros::Task IntakeTask([]
-                         { multiTake();});*/
+    pros::Task IntakeTask([]
+                         { outputHeading();});
     // csort::color_sort_task(nullptr);
     colorSortEnabled = false; // Disable color sorting for competition
     // loop forever
@@ -343,7 +397,7 @@ void opcontrol()
         handleStopper();
         handleLoader();
         handleWings();
-        handleIntake();
+        handleIntakeNew();
         handlefrontGate();
         // handleIntake();
 
