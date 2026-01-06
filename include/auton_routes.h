@@ -6,6 +6,7 @@ extern int autonSection;
 void drivePIDOdom(double goalInches, bool clamping = false, double clampDistInches = 2);
 bool endSection(int delay = 0);
 
+void park();
 void fullAWPLeft(int i);
 void fullAWPRight(int i);
 void fullLocalAWP(int i);

@@ -14,8 +14,8 @@ MotorGroup arm_motors({1, -1}, pros::MotorGearset::blue);
 // controller definition
 Controller controller(pros::E_CONTROLLER_MASTER);
 
-Motor intake(19, pros::MotorGearset::blue);
-Motor intakeTop(-13, pros::MotorGearset::blue);
+MotorGroup intake({19, -13}, pros::MotorGearset::blue);
+Motor intakeTop(-18, pros::MotorGearset::blue);
 
 Motor smallIntake(-12, pros::MotorGearset::blue);
 
@@ -23,8 +23,10 @@ adi::Port clamp('F', pros::E_ADI_DIGITAL_OUT);
 
 adi::Port intake_lift('G', pros::E_ADI_DIGITAL_OUT);
 
-adi::Port stopper('C', pros::E_ADI_DIGITAL_OUT);
-adi::Port deScores('B', pros::E_ADI_DIGITAL_OUT);
+adi::Port stopper('B', pros::E_ADI_DIGITAL_OUT);
+adi::Port stopperTwo('D', pros::E_ADI_DIGITAL_OUT);
+
+adi::Port deScores('C', pros::E_ADI_DIGITAL_OUT);
 adi::Port loader('A', pros::E_ADI_DIGITAL_OUT);
 adi::Port frontGate('E', pros::E_ADI_DIGITAL_OUT);
 
@@ -46,7 +48,7 @@ Drivetrain drivetrain(&left_motors,  // left motor group
 );
 
 // Individual IMUs
-Imu imu(5);  // First IMU on port 7
+Imu imu(20);  // First IMU on port 7
 Imu imu2(16); // Second IMU on port 8 (change this to your actual port)
 
 // Averaged IMU that combines both sensors

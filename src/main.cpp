@@ -22,7 +22,7 @@
 void initialize()
 {
     deScores.set_value(LOW);
-    stopper.set_value(HIGH);
+    //stopper.set_value(HIGH);
     // controller.clear(); // clear controller screen
     lcd::initialize();   // initialize brain screen
     chassis.calibrate(); // calibrate sensors
@@ -270,7 +270,8 @@ void handleIntakeNew(){
         intakeTop.move(127);
         intake.move(127);
         smallIntake.move(127);
-        //frontGate.set_value(HIGH);
+        stopperTwo.set_value(HIGH);
+        frontGate.set_value(LOW);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
     { 
@@ -290,10 +291,10 @@ void handleIntakeNew(){
         intake.brake();
         //backGate.set_value(LOW);
         smallIntake.brake();
-        //frontGate.set_value(LOW);
+        frontGate.set_value(HIGH);
+        stopperTwo.set_value(LOW);
 
     }
-
 }
 
 void handlefrontGate()
@@ -305,21 +306,17 @@ void handlefrontGate()
 }
 void handleStopper()
 {
-    /*
+    
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
     {
-        stopper.set_value(LOW);
-    }
-    else{
         stopper.set_value(HIGH);
-    }*/
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
-    {
-        intakeTop.move(127);
+        stopperTwo.set_value(LOW);
     }
     else{
-        intakeTop.brake();
+        stopper.set_value(LOW);
+       //stopperTwo.set_value(HIGH);
     }
+
 
 }
 
@@ -362,9 +359,8 @@ void opcontrol()
     chassis.setPose(0, 0, 0);
     // backGate.set_value(LOW);
     // bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
-
-    pros::Task IntakeTask([]
-                         { outputHeading();});
+    /*    pros::Task IntakeTask([]
+                         { outputHeading();});*/
     // csort::color_sort_task(nullptr);
     colorSortEnabled = false; // Disable color sorting for competition
     // loop forever
@@ -401,7 +397,7 @@ void opcontrol()
         handlefrontGate();
         // handleIntake();
 
-        pros::lcd::print(3, "hue: %f", ballSensor.get_hue());
+        pros::lcd::print(3, "imu: %f", imu.get_roll());
         pros::lcd::print(4, "prox: %f", ballSensor.get_proximity());
         pros::lcd::print(5, "bright: %f", ballSensor.get_brightness());
         pros::lcd::print(6, "raw: %f", ballSensor.get_raw());
