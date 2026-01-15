@@ -22,6 +22,7 @@
 void initialize()
 {
     deScores.set_value(LOW);
+    lift.set_value(LOW);
     //stopper.set_value(HIGH);
     // controller.clear(); // clear controller screen
     lcd::initialize();   // initialize brain screen
@@ -267,7 +268,6 @@ void handleIntake()
 void handleIntakeNew(){
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
-        intakeTop.move(127);
         intake.move(127);
         smallIntake.move(127);
         stopperTwo.set_value(HIGH);
@@ -277,11 +277,13 @@ void handleIntakeNew(){
     { 
        
        intake.move(127);
+       //intakeTop.move(20);
         //frontGate.set_value(LOW);
     }
      else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         intake.move(-127);
+        intakeTop.move(-127);
  
         //frontGate.set_value(LOW);
 
@@ -289,6 +291,8 @@ void handleIntakeNew(){
      else
     {
         intake.brake();
+        //intakeTop.brake();
+
         //backGate.set_value(LOW);
         smallIntake.brake();
         frontGate.set_value(HIGH);
@@ -304,16 +308,25 @@ void handlefrontGate()
         frontGate.set_value(!frontGate.get_value());
     }
 }
+void handleLift(){
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
+    {
+        lift.set_value(!lift.get_value());
+    }
+}
+
 void handleStopper()
 {
     
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
     {
         stopper.set_value(HIGH);
-        stopperTwo.set_value(LOW);
+        intakeTop.move(127);
     }
     else{
         stopper.set_value(LOW);
+        intakeTop.brake();
+
        //stopperTwo.set_value(HIGH);
     }
 
@@ -356,6 +369,7 @@ void opcontrol()
     // right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     ballSensor.set_led_pwm(100);
+    lift.set_value(LOW);
     chassis.setPose(0, 0, 0);
     // backGate.set_value(LOW);
     // bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
@@ -391,6 +405,7 @@ void opcontrol()
         handleDriveTrain();
         //handleSmallIntake();
         handleStopper();
+        handleLift();
         handleLoader();
         handleWings();
         handleIntakeNew();

@@ -3,31 +3,33 @@
 #include "pros/distance.hpp"
 
 // left motor group
-MotorGroup left_motors({-7, 9, -8}, pros::MotorGearset::blue);
+MotorGroup left_motors({11, -13, -14}, pros::MotorGearset::blue);
 // right motor group
-MotorGroup right_motors({1, -2, 3}, pros::MotorGearset::blue);
+MotorGroup right_motors({18, -17, 20}, pros::MotorGearset::blue);
 
-MotorGroup all_motors({-7, 9, -8, 1, -2, 3}, pros::MotorGearset::blue);
+MotorGroup all_motors({11, -13, -14, 18, -17, 20}, pros::MotorGearset::blue);
 
 MotorGroup arm_motors({1, -1}, pros::MotorGearset::blue);
 
 // controller definition
 Controller controller(pros::E_CONTROLLER_MASTER);
 
-MotorGroup intake({18, -13}, pros::MotorGearset::blue);
-Motor intakeTop(-18, pros::MotorGearset::blue);
+Motor intake(2, pros::MotorGearset::blue);
+Motor intakeTop(-10, pros::MotorGearset::blue);
 
-Motor smallIntake(-12, pros::MotorGearset::blue);
+Motor smallIntake(-19, pros::MotorGearset::blue);
 
 adi::Port clamp('F', pros::E_ADI_DIGITAL_OUT);
 
 adi::Port intake_lift('G', pros::E_ADI_DIGITAL_OUT);
 
-adi::Port stopper('B', pros::E_ADI_DIGITAL_OUT);
-adi::Port stopperTwo('D', pros::E_ADI_DIGITAL_OUT);
+adi::Port stopper('C', pros::E_ADI_DIGITAL_OUT);
+adi::Port stopperTwo('H', pros::E_ADI_DIGITAL_OUT);
+adi::Port lift('A', pros::E_ADI_DIGITAL_OUT);
 
-adi::Port deScores('C', pros::E_ADI_DIGITAL_OUT);
-adi::Port loader('A', pros::E_ADI_DIGITAL_OUT);
+
+adi::Port deScores('B', pros::E_ADI_DIGITAL_OUT);
+adi::Port loader('D', pros::E_ADI_DIGITAL_OUT);
 adi::Port frontGate('E', pros::E_ADI_DIGITAL_OUT);
 
 PID lateralPID(.11, 0, 0.15);
@@ -48,7 +50,7 @@ Drivetrain drivetrain(&left_motors,  // left motor group
 );
 
 // Individual IMUs
-Imu imu(20);  // First IMU on port 7
+Imu imu(3);  // First IMU on port 7
 Imu imu2(16); // Second IMU on port 8 (change this to your actual port)
 
 // Averaged IMU that combines both sensors

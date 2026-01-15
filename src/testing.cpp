@@ -83,8 +83,8 @@ void testAuton(bool inputReq){
            //newfullLocalAWP(1); 
            //testPID(1);
             //skillsNew(1);
-            leftPush(1);
-           //odomAWPHigh(1);
+            //leftPush(1);
+           odomAWPHigh(1);
           //rightPush(1);
           //park();
            //intake.move(127);

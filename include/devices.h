@@ -18,7 +18,7 @@ extern MotorGroup right_motors;
 extern MotorGroup all_motors;
 extern MotorGroup arm_motors;
 extern Controller controller;
-extern MotorGroup intake;
+extern Motor intake;
 extern Motor intakeTop;
 extern Motor smallIntake;
 
@@ -26,6 +26,7 @@ extern adi::Port clamp;
 extern adi::Port intake_lift;
 extern adi::Port stopper; //
 extern adi::Port stopperTwo;
+extern adi::Port lift;
 extern adi::Port deScores;
 extern adi::Port loader;
 extern adi::Port frontGate;
