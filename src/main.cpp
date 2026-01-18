@@ -273,6 +273,10 @@ void handleIntakeNew(){
         stopperTwo.set_value(HIGH);
         frontGate.set_value(LOW);
     }
+    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+        intake.move(127);
+        intakeTop.move(127);
+    }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
     { 
        
@@ -321,7 +325,7 @@ void handleStopper()
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
     {
         stopper.set_value(HIGH);
-        intakeTop.move(127);
+        //intakeTop.move(127);
     }
     else{
         stopper.set_value(LOW);
@@ -369,7 +373,7 @@ void opcontrol()
     // right_motors.set_brake_mode_all(E_MOTOR_BRAKE_COAST);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     ballSensor.set_led_pwm(100);
-    lift.set_value(LOW);
+    //lift.set_value(LOW);
     chassis.setPose(0, 0, 0);
     // backGate.set_value(LOW);
     // bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
