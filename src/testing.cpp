@@ -20,7 +20,8 @@ int prevTime;
 // This function runs in driver control WITHOUT COMM SWITCH, it is a better way of testing the
 // autons since you can take inputs from the controller and test multiple times.
 // NOTE: The arm is on a different task, so don't hit those buttons during auton
-void testAuton(bool inputReq){
+void testAuton(bool inputReq)
+{
 
     // if the parameter inputReq is set to true (default), these buttons
     // will start the route when all pressed
@@ -53,15 +54,12 @@ void testAuton(bool inputReq){
         std::cout << std::string(11 * 6 + 4, '-')
                   << std::endl;
 
-    
         // ***********************************************
         // ************ CHANGE ROUTE HERE ***************
         // ***********************************************
 
-
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
         {
-
         }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
         {
@@ -70,29 +68,29 @@ void testAuton(bool inputReq){
         else
         {
 
-           // aggressive P only trial
-           /*all_motors.move_velocity(50); 
-           pros::delay(10000);
-           all_motors.brake();*/
-           //drivePID(48,10000);
-           //fullAWPLeft(1);
-        //fullAWPRight(1);/////////////////////////////////////////////<-------- codes for 9/11
-           //skills(1);/////////////////////////////////////////////
-           //fullLocalAWP(1);
-           //tylerAuton(1);
-           //newfullLocalAWP(1); 
-           //testPID(1);
+            // aggressive P only trial
+            /*all_motors.move_velocity(50);
+            pros::delay(10000);
+            all_motors.brake();*/
+            // drivePID(48,10000);
+            // fullAWPLeft(1);
+            // fullAWPRight(1);/////////////////////////////////////////////<-------- codes for 9/11
+            // skills(1);/////////////////////////////////////////////
+            // fullLocalAWP(1);
+            // tylerAuton(1);
+            // newfullLocalAWP(1);
+            // testPID(1);
             //skillsNew(1);
-            leftPush(1);
-           //odomAWPHigh(1);
-          //rightPush(1);
-          //park();
-           //intake.move(127);
-//////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
+            //leftPush(1);
+            skillsFinal(1);
+             //odomAWPHigh(1);
+            // rightPush(1);
+            // park();
+            // intake.move(127);
+            //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
         }
-        
-        // ***********************************************
 
+        // ***********************************************
 
         // ***********************************************
 

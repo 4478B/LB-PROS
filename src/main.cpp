@@ -281,13 +281,13 @@ void handleIntakeNew(){
     { 
        
        intake.move(127);
-       //intakeTop.move(20);
+       intakeTop.move(15);
         //frontGate.set_value(LOW);
     }
      else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         intake.move(-127);
-        intakeTop.move(-127);
+        intakeTop.move(-70);
  
         //frontGate.set_value(LOW);
 
