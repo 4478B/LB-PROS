@@ -20,5 +20,6 @@ void skillsNew(int i);
 void leftPush(int i);
 void rightPush(int i);
 void skillsFinal(int i);
-
+void nineBallRight(int i);
+void nineBallLeft(int i);
 #endif // AUTON_ROUTES_H

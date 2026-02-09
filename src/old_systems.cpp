@@ -318,7 +318,6 @@ void drivePIDCurve(double inches, int timeout, double kP, double leftPowerPCT, d
   double P = 0, I = 0, D = 0, totalPID;        // PID terms
   double pollingRate = 20;                     // Polling rate in ms
   // Convert inches into encoder rotations
-
   double targetLeft = (inches * GEAR_RATIO / WHEEL_CIRCUMFERENCE) * (leftPowerPCT / 100.0);  // Adjust target for left motor based on power percentage
   double targetRight = (inches * GEAR_RATIO / WHEEL_CIRCUMFERENCE) * (rightPowerPCT / 100.0); // Adjust target for right motor based on power percentage
 
@@ -352,7 +351,6 @@ void drivePIDCurve(double inches, int timeout, double kP, double leftPowerPCT, d
     // Proportional: Larger error results in larger response
     double PLeft = kP * currentDeltaLeft;
     double PRight = kP * currentDeltaRight;
-
     // Integral: Sum of all errors helps correct for small errors over time
     integralSumLeft += currentDeltaLeft;
     integralSumRight += currentDeltaRight;
@@ -360,47 +358,38 @@ void drivePIDCurve(double inches, int timeout, double kP, double leftPowerPCT, d
     double IRight = kI * integralSumRight;
     ILeft = std::clamp(ILeft, -50.0, 50.0);
     IRight = std::clamp(IRight, -50.0, 50.0);
-
     // Derivative: React to the rate of error change
     double DLeft = kD * (currentDeltaLeft - previousDeltaLeft) / pollingRate;
     double DRight = kD * (currentDeltaRight - previousDeltaRight) / pollingRate;
-
     // Calculate total PID response
     double totalPIDLeft = PLeft + ILeft + DLeft;
     double totalPIDRight = PRight + IRight + DRight;
     totalPIDLeft = std::clamp(totalPIDLeft, -127.0, 127.0);
     totalPIDRight = std::clamp(totalPIDRight, -127.0, 127.0);
-
     // Apply power proportionally to left and right motors
     double leftPower = totalPIDLeft * (leftPowerPCT / 100.0);
     double rightPower = totalPIDRight * (rightPowerPCT / 100.0);
-
     left_motors.move(leftPower);
     right_motors.move(rightPower);
-
     // Check if the error is small enough to stop for left motor
     if (fabs(currentDeltaLeft) < (targetLeft)) {
       inGoalLeft++;
     } else {
       inGoalLeft = 0;
     }
-
     // Check if the error is small enough to stop for right motor
     if (fabs(currentDeltaRight) < (targetRight)) {
       inGoalRight++;
     } else {
       inGoalRight = 0;
     }
-
     // Check if timeout is reached
     if ((pros::millis() - startTime) >= timeout) {
       break;
     }
-
     // Update the previous errors for the next loop
     previousDeltaLeft = currentDeltaLeft;
     previousDeltaRight = currentDeltaRight;
-
     // Wait for the polling rate before next iteration
     delay(pollingRate);
   }

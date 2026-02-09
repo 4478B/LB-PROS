@@ -98,8 +98,8 @@ void competition_initialize()
     lcd::register_btn1_cb(onCenter_button);
 }
 
-const double SMOOTHING_DENOMINATOR = 251; // Used to normalize the exponential curve
-const double EXPONENTIAL_POWER = 2.2;       // Controls how aggressive the curve is
+const double SMOOTHING_DENOMINATOR = 10000; // Used to normalize the exponential curve
+const double EXPONENTIAL_POWER = 3;       // Controls how aggressive the curve is
 // Helper function that makes joystick input more precise for small movements
 // while maintaining full power at maximum joystick
 double logDriveJoystick(double joystickPCT)
@@ -268,27 +268,33 @@ void handleIntake()
 void handleIntakeNew(){
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
-        intake.move(127);
-        smallIntake.move(127);
-        stopperTwo.set_value(HIGH);
-        frontGate.set_value(LOW);
+        intake.move(80);
+        intakeTop.move(20);
+        //smallIntake.move(127);
+        //stopperTwo.set_value(HIGH);
+        //frontGate.set_value(LOW);
     }
     else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-        intake.move(127);
-        intakeTop.move(127);
+        if(lift.get_value() == HIGH){
+            intake.move(127);
+            intakeTop.move(127);
+        }
+        else{
+            intake.move(127);
+            intakeTop.move(127);
+        }      
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
     { 
        
        intake.move(127);
-       intakeTop.move(15);
+       intakeTop.move(10);
         //frontGate.set_value(LOW);
     }
      else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         intake.move(-127);
-        intakeTop.move(-70);
- 
+        intakeTop.move(-127);
         //frontGate.set_value(LOW);
 
     }
@@ -301,6 +307,7 @@ void handleIntakeNew(){
         smallIntake.brake();
         frontGate.set_value(HIGH);
         stopperTwo.set_value(LOW);
+        intakeTop.brake();
 
     }
 }
@@ -329,7 +336,7 @@ void handleStopper()
     }
     else{
         stopper.set_value(LOW);
-        intakeTop.brake();
+        
 
        //stopperTwo.set_value(HIGH);
     }

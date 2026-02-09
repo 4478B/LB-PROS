@@ -159,6 +159,7 @@ bool scanForGoal(double& targetHeading, double intendedHeading) {
  * @param intendedHeading The heading the robot expects the goal to be at (determines sweep direction)
  * @return true if goal was found, false otherwise
  */
+
 bool scanForGoalAverage(double& targetHeading, double intendedHeading) {
     // Cancel any existing motions first
     chassis.cancelAllMotions();

@@ -81,10 +81,11 @@ void testAuton(bool inputReq)
             // newfullLocalAWP(1);
             // testPID(1);
             //skillsNew(1);
+            //nineBallLeft(1);
             //leftPush(1);
-            skillsFinal(1);
-             //odomAWPHigh(1);
-            // rightPush(1);
+            //skillsFinal(1);
+            //odomAWPHigh(1);
+            rightPush(1);
             // park();
             // intake.move(127);
             //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////
@@ -153,9 +154,11 @@ void tunePID()
         }
         else if (bUP)
         {
+
             valMag *= 10; // Increments magnitude by a factor of 10
             cout << "magnitude set to " << valMag << endl;
             updateController(currentConst, valMag, PID);
+
         }
         else if (bDOWN)
         {
@@ -163,7 +166,6 @@ void tunePID()
             cout << "magnitude set to " << valMag << endl;
             updateController(currentConst, valMag, PID);
         }
-
         if (bLEFT || bRIGHT)
         {
             double deltaVal;
@@ -188,10 +190,9 @@ void tunePID()
                 PID.kD += deltaVal;
                 break;
             }
-
             updateController(currentConst, valMag, PID);
+                
         }
-
         if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_Y))
         { // Controls value being changed
             currentConst += 1;
