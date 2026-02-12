@@ -18,7 +18,7 @@ extern MotorGroup right_motors;
 extern MotorGroup all_motors;
 extern MotorGroup arm_motors;
 extern Controller controller;
-extern Motor intake;
+extern MotorGroup intake;
 extern Motor intakeTop;
 extern Motor smallIntake;
 

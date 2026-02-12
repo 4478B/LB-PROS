@@ -14,8 +14,8 @@ MotorGroup arm_motors({1, -1}, pros::MotorGearset::blue);
 // controller definition
 Controller controller(pros::E_CONTROLLER_MASTER);
 
-Motor intake(2, pros::MotorGearset::blue);
-Motor intakeTop(-10, pros::MotorGearset::blue);
+MotorGroup intake({2, -9}, pros::MotorGearset::blue);
+Motor intakeTop(10, pros::MotorGearset::blue);
 
 Motor smallIntake(-19, pros::MotorGearset::blue);
 
