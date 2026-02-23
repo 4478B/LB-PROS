@@ -61,10 +61,6 @@ include/
 | B | `deScores` | De-scoring wings (push balls off goals) |
 | C | `stopper` | Ball stopper (prevents rollback out of intake) |
 | D | `loader` | Match-loader gate (releases balls from field wall) |
-| E | `frontGate` | Front ball-retention gate |
-| F | `clamp` | Mobile-goal clamp arm |
-| G | `intake_lift` | Lifts intake for climbing |
-| H | `stopperTwo` | Secondary stopper |
 
 ### Sensors
 | Sensor | Port | Use |
@@ -73,7 +69,6 @@ include/
 | IMU (`imu2`) | 16 | Secondary IMU — averaged with `imu` via `AveragedIMU` |
 | Optical (`ballSensor`) | 19 | Ball color + proximity detection |
 | Distance (`backDistance`) | 2 | Rear goal-alignment detection |
-| Rotation (`autoRot`) | 10 | Mechanism feedback |
 
 ---
 
