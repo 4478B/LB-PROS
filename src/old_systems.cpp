@@ -1,3 +1,21 @@
+/**
+ * @file old_systems.cpp
+ * @brief Custom motor-encoder PID drive functions.
+ *
+ * drivePID() is a hand-rolled PID straight-line drive that directly reads all six
+ * drive-motor encoder positions, takes their median (to discard any faulty motor
+ * reading), and applies a PID loop to drive the whole drivetrain a precise distance.
+ *
+ * It is preferred over LemLib's moveToPoint for short straight-line segments in auton
+ * because:
+ *   1. It runs synchronously (blocks until done), making auton sequencing simpler.
+ *   2. It has minimal overhead – no path-planning or odometry update required.
+ *   3. The tuned kP/kD values make it fast and accurate for typical 5–50 inch moves.
+ *
+ * drivePIDCurve() is an experimental variant that applies different power percentages
+ * to the left and right side for curved driving – currently unused in competition routes.
+ */
+
 #include "testing.h"
 #include "lemlib/chassis/chassis.hpp"
 #include "main.h"
@@ -15,7 +33,7 @@
 #include "auton_routes.h"
 #include <numeric>
 
-// Define constants for conversions
+// ─── Physical Robot Constants ──────────────────────────────────────────────────
 const double WHEEL_RADIUS = 1.625;               // Inches
 const double WHEEL_CIRCUMFERENCE = 2 * M_PI * WHEEL_RADIUS; // Circumference in inches
 const double GEAR_RATIO = 48.0 / 36.0;            // Ratio for gear adjustment

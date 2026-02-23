@@ -1,10 +1,26 @@
+/**
+ * @file auton_selector.cpp
+ * @brief Implements the AutonSelector class and defines the competition routine list.
+ *
+ * To add a new routine to the selector:
+ *   1. Declare and implement the function in auton_routes.h / auton_routes.cpp.
+ *   2. Add a new entry to COMPETITION_ROUTINES below:
+ *        {"Display Name", functionPointer, parameter}
+ *   3. The selector will automatically include it in the cycle.
+ */
+
 #include "auton_selector.h"
 #include "auton_routes.h"
 #include "testing.h"
 #include "devices.h"
 #include <iostream>
 
-// Define the AutonRoutine structure
+/**
+ * Represents one selectable autonomous routine.
+ *   displayName – shown on the brain LCD during pre-match selection
+ *   func        – pointer to the autonomous function (signature: void f(int))
+ *   parameter   – integer argument forwarded to func() when it runs (usually 1)
+ */
 struct AutonRoutine {
     std::string displayName;
     std::function<void(int)> func;
@@ -75,14 +91,16 @@ int AutonSelector::getRoutineCount() const {
     return routines.size();
 }
 
-// Global object definitions
-const AutonRoutine COMPETITION_ROUTINES[] = {                        
-    {"Full AWP LEFT SIDE", newfullLocalAWP,1},
-    {"Full FIELD SKILLS", skillsNew,1},
-    {"Elim 9 Ball", tylerAuton,1},
-    {"Odom AWP Right", odomAWPHigh,1},
-    {"Left 7 Ball Push", leftPush, 1},
-    {"Right 7 Ball Push", rightPush, 1}
+// ─── Competition Routine List ──────────────────────────────────────────────────
+// This array drives the brain-screen selector during pre-match.
+// Order here = order shown on screen. Cycle with left/right LCD buttons.
+const AutonRoutine COMPETITION_ROUTINES[] = {
+    {"Full AWP LEFT SIDE",       newfullLocalAWP, 1}, // Primary match AWP (left start)
+    {"Full FIELD SKILLS",        skillsNew,       1}, // 60-second skills run
+    {"Elim 9 Ball",              tylerAuton,      1}, // 9-ball elimination route
+    {"Odom AWP Right",           odomAWPHigh,     1}, // Right-side AWP using odometry
+    {"Left 7 Ball Push",         leftPush,        1}, // Left-side push routine
+    {"Right 7 Ball Push Fast",   rightPushFast,   1}, // Fast right-side push
 };
 
 

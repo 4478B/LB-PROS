@@ -1,3 +1,26 @@
+/**
+ * @file auton_routes.cpp
+ * @brief All autonomous routines and motion helper functions.
+ *
+ * This file is the main body of auton code. It contains:
+ *   - Helper wrappers (drivePIDOdom, outake, intakeAll, intakeStop) that simplify
+ *     calling the raw motion / intake APIs.
+ *   - endSection() – a development tool for splitting and timing auton sections.
+ *   - Every competition and skills autonomous routine.
+ *
+ * Typical auton structure:
+ *   1. chassis.setPose(x, y, theta)     – set starting position for odometry
+ *   2. intake / mechanism setup
+ *   3. Sequence of drivePID() / chassis.turnToHeading() / chassis.moveToPose() calls
+ *   4. Mechanism actions between movements (outake, stopper, loader, etc.)
+ *
+ * Motion primitives used:
+ *   drivePID(inches, timeout, kP)      – straight drive via motor encoders (old_systems.h)
+ *   chassis.turnToHeading(deg, ms)     – turn to absolute heading using LemLib
+ *   chassis.moveToPose(x, y, θ, ms)   – curve to a pose using LemLib odometry
+ *   drivePIDOdom(inches)               – straight drive computed from current odometry pose
+ */
+
 #include "auton_routes.h"
 #include "lemlib/chassis/chassis.hpp"
 #include "main.h"
@@ -16,8 +39,7 @@
 #include "testing.h"
 #include <iomanip>
 
-
-// These our functions made for backwards-compatibility with VEXCode routes
+// Backwards-compatibility helpers (originally written for VEXCode-style autons)
 
 void drivePIDOdom(double goalInches, bool clamping, double clampDistInches)
 {
@@ -62,20 +84,24 @@ void driveInchesClamp(double gDist, double cDist = .5)
     drivePID(gDist, true, cDist);
 }
 
+// ─── Intake Shorthand Helpers ──────────────────────────────────────────────────
+
+/** Run all intake motors in reverse for `time` ms (ejects balls). */
 void outake(int time){
-    intake.move(-127);//intake out then in
+    intake.move(-127);
     intakeTop.move(-127);
     smallIntake.move(127);
-
     delay(time);
 }
+
+/** Run bottom intake and small intake forward for `time` ms (intakes balls). */
 void intakeAll(int time){
-    intake.move(127);//intake out then in
-    //intakeTop.move(127);
+    intake.move(127);
     smallIntake.move(-127);
-
     delay(time);
 }
+
+/** Immediately stop all intake motors. */
 void intakeStop(){
     intake.brake();
     intakeTop.brake();
@@ -219,6 +245,13 @@ void park(){
     //drivePID(-35,1000,10);
 }
 
+// ─── Autonomous Routines ──────────────────────────────────────────────────────
+
+/**
+ * fullAWPLeft – Full Autonomous Win Point route from the left side of the field.
+ * Starts at heading 69°. Scores in mid goal, loads balls from the match-loader,
+ * and ends scoring in the high goal.
+ */
 void fullAWPLeft(int i)
 {
     
@@ -291,6 +324,10 @@ void fullAWPLeft(int i)
 
     
 }
+/**
+ * fullAWPRight – Full AWP route from the right side of the field.
+ * Mirror of fullAWPLeft, starting at heading -70°.
+ */
 void fullAWPRight(int i)
 {
     chassis.setPose(0,0,-70);
@@ -361,6 +398,7 @@ void fullAWPRight(int i)
     //drivePID(-13,1000,160);
 }
 
+/** testPID – Simple 48-inch drive + 180° turn used to tune PID constants. */
 void testPID(int i){
     chassis.setPose(0,0,0);
     drivePID(48,2000);
@@ -371,6 +409,11 @@ void testPID(int i){
     //chassis.turnToHeading(0,2500,{},false);
     //delay(500);
 }
+/**
+ * fullLocalAWP – Local-coordinate AWP (no odometry moveToPose).
+ * Uses drivePID + turnToHeading only. Scores loader balls, crosses field, repeats.
+ * Superseded by newfullLocalAWP.
+ */
 void fullLocalAWP(int i){
     chassis.setPose(0,0,0);
     loader.set_value(HIGH); 
@@ -435,6 +478,12 @@ void fullLocalAWP(int i){
     
    //drivePID(3,400,150);
 }
+/**
+ * newfullLocalAWP – Current primary competition AWP route (left side, heading 69°).
+ * Sequence: intake mid balls → clamp mobile goal → cross field →
+ *           load match-loader balls → score in high goal.
+ * Uses drivePID + turnToHeading (no odometry moveToPose).
+ */
 void newfullLocalAWP(int i){
  chassis.setPose(0,0,69);
    intake.move(127);
@@ -490,6 +539,11 @@ void newfullLocalAWP(int i){
     smallIntake.move(-127);
     drivePID(-7,500);
 }
+/**
+ * odomAWP – Odometry-based AWP using moveToPose for curved paths.
+ * Runs two match-loader cycles using globally-tracked coordinates.
+ * Recalibrates pose mid-route to correct for odometry drift.
+ */
 void odomAWP(int i){
     chassis.setPose(0,0,180);
     loader.set_value(HIGH); 
@@ -564,24 +618,30 @@ void odomAWP(int i){
 
     
 }
+/**
+ * odomAWPHigh – Odometry AWP that also targets the elevated high goal.
+ * Uses moveToPose for approach curves and a spawned background task to
+ * lower the loader at the right moment during motion.
+ */
 void odomAWPHigh(int i){
     chassis.setPose(0,0,0);
     stopper.set_value(LOW);
     lift.set_value(HIGH);
     //deScores.set_value(HIGH);
     intake.move(127);
+    intakeTop.move(20);
     //intakeTop.move(127);
     //smallIntake.move(-127);
     drivePID(5,500,100);
     chassis.turnToHeading(0,100,{},false);
-    drivePID(-48.3,1000);//go to loader //29.3
+    drivePID(-47.3,1000);//go to loader //29.3
     loader.set_value(HIGH); 
     chassis.turnToHeading(270,500,{},false);
-    drivePID(25,800,23);//get loader balls
+    drivePID(32,800,23);//get loader balls
     //chassis.turnToHeading(-270,400 ,{},false);
     drivePID(1.5,200);//shimmy 
     drivePID(-5,200,130);
-    chassis.turnToHeading(269,300,{},false);
+    chassis.turnToHeading(272,300,{},false);
 
     //alignToLongGoal(-273,false);
 
@@ -611,6 +671,9 @@ void odomAWPHigh(int i){
     stopper.set_value(LOW);
     intakeTop.brake();
     intake.move(127);
+    pros::Task IntakeTask([]
+                         { delay(1300);
+                        loader.set_value(HIGH);});
     chassis.moveToPose(-18.942,30.97,0,1800,{.forwards=true, .lead=.1},false);
     loader.set_value(HIGH);
     //lift.set_value(LOW);
@@ -619,8 +682,8 @@ void odomAWPHigh(int i){
     //stopper.set_value(HIGH);
     chassis.moveToPose(-8.879,6.897,315,1500,{.forwards=false, .lead=.3},false);
    outake(100);
-    intakeTop.move(-80);
-    intake.move(127);
+    intakeTop.move(-50);
+    intake.move(80);
     
 
 
@@ -649,7 +712,7 @@ void odomAWPHigh(int i){
     //chassis.turnToHeading(-270,400,{},false);
     drivePID(1.5,300);//shimmy 
     drivePID(-5,200,130);
-    chassis.turnToHeading(270,250,{},false);
+    chassis.turnToHeading(273,250,{},false);
 
     //alignToLongGoal(-273,false);
 
@@ -673,6 +736,11 @@ void odomAWPHigh(int i){
     
     
 }
+/**
+ * tylerAuton – Elimination 9-ball route starting at heading -67°.
+ * Picks up 3 mid balls, 2 balls under the goal, loads from match-loader,
+ * and scores in the high goal. Designed for elimination rounds.
+ */
 void tylerAuton(int i){
     chassis.setPose(0,0,-67);//start pose
     intake.move(127);
@@ -710,6 +778,11 @@ void tylerAuton(int i){
     smallIntake.move(-127);
     drivePID(-7,500);
 }
+/**
+ * skills – Original 60-second skills run (older version).
+ * Two full match-loader cycles + cross-field traversal.
+ * Superseded by skillsNew.
+ */
 void skills(int i){
     
     chassis.setPose(0,0,0);
@@ -810,6 +883,12 @@ void skills(int i){
 
 }
 
+/**
+ * skillsNew – Current full-field 60-second skills run using odometry (moveToPose).
+ * Starts at (-47.105, -12.737, 180°). Executes four match-loader cycles,
+ * traverses the full field twice, and scores in all four goals.
+ * Uses chassis.setPose() mid-route to re-anchor odometry after long straight drives.
+ */
 void skillsNew(int i){
     chassis.setPose(-47.105,-12.737,180);
     //stopperTwo.set_value(LOW);
@@ -842,7 +921,7 @@ void skillsNew(int i){
     deScores.set_value(HIGH);
     loader.set_value(HIGH); 
     intakeTop.move(10);
-    drivePID(30.7,1000,40);
+    drivePID(31.7,1000,40);
     chassis.turnToHeading(270,800,{},false);
     drivePID(20,1200,23);//get loader balls
     chassis.turnToHeading(270,400,{},false);
@@ -858,10 +937,10 @@ void skillsNew(int i){
     chassis.setPose(-58.761,-47.334,chassis.getPose().theta); //-47.334 , -45.334
     delay(100);
 
-    chassis.moveToPose(-26.868,-61.222,270,2000,{.forwards=false},false);
+    chassis.moveToPose(-26.868,-58.222,270,2000,{.forwards=false},false);
     loader.set_value(LOW); 
-    chassis.moveToPose(40.066,-62.958,270,2500,{.forwards=false, .lead=.5,.minSpeed=100},false);
-    chassis.moveToPose(25.57,-45.305,90,3000,{.forwards=false, .lead=.5},false);//-48.805
+    chassis.moveToPose(45.066,-59.958,270,2500,{.forwards=false, .lead=.5},false);
+    chassis.moveToPose(25.57,-49.305,90,3000,{.forwards=false, .lead=.5},false);//-48.805
     loader.set_value(HIGH); 
 
     //outake(200);
@@ -918,8 +997,8 @@ void skillsNew(int i){
 
     intake.move(127);
     loader.set_value(HIGH);
-    chassis.moveToPose(47.637,52.143,0,1900,{.forwards=true, .lead=.0},false);//47.637
-    chassis.turnToHeading(90,500,{},false);
+    chassis.moveToPose(41.637,49.143,0,1900,{.forwards=true, .lead=.0},false);//47.637
+    chassis.turnToHeading(90,500,{},false); 
     /*intakeAll(1);
     chassis.moveToPose(17.046,-18.234,315,2400,{.forwards=true, .lead=.1},false);//47.637
     chassis.turnToHeading(135,800,{},false);
@@ -949,9 +1028,9 @@ void skillsNew(int i){
     chassis.turnToHeading(90,500,{},false);
     chassis.setPose(56.761,48.76,chassis.getPose().theta); //46.711 , 47.211
     delay(100);
-    chassis.moveToPose(26.868,64.222,90,2000,{.forwards=false},false);
+    chassis.moveToPose(26.868,60.222,90,2000,{.forwards=false},false);
     loader.set_value(LOW);
-    chassis.moveToPose(-51.066,63.958,90,2000,{.forwards=false, .lead=.5},false);
+    chassis.moveToPose(-44.066,61.958,90,2000,{.forwards=false, .lead=.5},false);
     chassis.moveToPose(-24.57,49.805,270,3000,{.forwards=false, .lead=.5},false);
     //outake(200);
     stopper.set_value(HIGH); 
@@ -1021,6 +1100,10 @@ void skillsNew(int i){
 
 
 }
+/**
+ * leftPush – 7-ball match routine from the left side.
+ * Loads balls, scores high goal, then pushes remaining balls via odometry moveToPose.
+ */
 void leftPush(int i){
     chassis.setPose(0,0,0);
     loader.set_value(HIGH); 
@@ -1092,18 +1175,23 @@ void leftPush(int i){
 
 
 }
+/**
+ * rightPush – 7-ball match routine from the right side.
+ * Mirror of leftPush; starts at heading 180°.
+ */
 void rightPush(int i){
     chassis.setPose(0,0,180);
     loader.set_value(HIGH); 
     lift.set_value(HIGH);
     intake.move(127);
+    intakeTop.move(15);
     //intakeTop.move(127);
     //smallIntake.move(-127);
     //frontGate.set_value(HIGH);
 
     deScores.set_value(HIGH);
 
-    drivePID(28.3,700);//go to loader //29.3
+    drivePID(27.2,700);//go to loader //29.3
     deScores.set_value(LOW);
     chassis.turnToHeading(270,500,{},false);
     drivePID(20,700,23);//get loader balls
@@ -1139,7 +1227,7 @@ void rightPush(int i){
     //chassis.moveToPose(-34.936,-36.884,45,2500,{.forwards=true, .lead=.9, .minSpeed=50},false);
     stopper.set_value(LOW);
     chassis.moveToPose(-22.899,-17.97,45,1000,{.forwards=true, .lead=.1},false);
-    chassis.moveToPose(-10.201,-9.504,45,1000,{.forwards=true, .lead=.5},false);
+    chassis.moveToPose(-9.54,-10.166,45,1000,{.forwards=true, .lead=.5},false);
     intake.move(-80);
     intakeTop.move(-127);
     delay(1000);
@@ -1149,6 +1237,12 @@ void rightPush(int i){
     chassis.turnToHeading(225,500,{},false);
 
 }
+/**
+ * skillsFinal – Alternate full-field skills variant.
+ * Starts at heading 270°. Performs multi-cycle loader routine with
+ * carefully timed intake reversals to seat balls correctly, then
+ * mirrors skillsNew's cross-field traversal.
+ */
 void skillsFinal(int i){
     chassis.setPose(0,0,270);
     lift.set_value(HIGH);
@@ -1218,7 +1312,7 @@ void skillsFinal(int i){
     intake.move(127);
     drivePID(10,500);
     chassis.turnToHeading(270,300,{},false);
-    drivePID(-30,1200);
+    drivePID(-36,1400,25);
     chassis.turnToHeading(270,300,{},false);
     drivePID(30,1500,8);
     chassis.setPose(-44.592,0,chassis.getPose().theta); //46.711 , 47.211
@@ -1231,24 +1325,23 @@ void skillsFinal(int i){
     drivePID(5,300);
     intake.move(-80);
     intakeTop.move(-127);
-    delay(600);
-    stopper.set_value(HIGH);
+    chassis.turnToHeading(315,300,{},false);
+    //stopper.set_value(HIGH);
     intake.move(80);
     intakeTop.move(-30);
-    chassis.turnToHeading(315,300,{},false);
-    delay(1000);
+    delay(500);
     intake.move(-127);
     intakeTop.move(-127);
     delay(160);
     intake.move(60);
     intakeTop.move(-20);
-    delay(1000);
+    delay(600);
     intake.move(-127);
     intakeTop.move(-127);
     delay(160);
     intake.move(60);
     intakeTop.move(-20);
-    delay(1000);
+    delay(1500);
     lift.set_value(HIGH);
     drivePID(-5,400);
     stopper.set_value(LOW);
@@ -1409,6 +1502,11 @@ void skillsFinal(int i){
     drivePID(50,2500,100);
     drivePID(-7,1500,100);
 }
+/**
+ * nineBallRight – 9-ball elimination route starting at (-45.385, -14.531, 90°).
+ * Uses moveToPose to collect balls around the right side of the field,
+ * scores in the goal, then loads from the match-loader.
+ */
 void nineBallRight(int i){
     chassis.setPose(-45.385,-14.531,90);
     //lift.set_value(HIGH);
@@ -1451,6 +1549,10 @@ void nineBallRight(int i){
     deScores.set_value(LOW);
     chassis.moveToPose(-10.334,-40.456,270,2000,{.forwards=false, .lead=.1},false);
 }
+/**
+ * nineBallLeft – 9-ball elimination route starting at (-45.65, 14.569, 90°).
+ * Mirror of nineBallRight for the left side of the field.
+ */
 void nineBallLeft(int i){
     chassis.setPose(-45.65,14.569,90);
     intake.move(127);
@@ -1498,5 +1600,39 @@ void nineBallLeft(int i){
     intakeTop.move(10);
     deScores.set_value(LOW);
     chassis.moveToPose(-17.334,52.836,270,1700,{.forwards=false, .lead=.1},false);
+}
+/**
+ * rightPushFast – Fast right-side push route; starts at heading 90°.
+ * Spawns a background task to drop the loader at the right moment during the
+ * first drive so intake and loader happen simultaneously. Ends by driving
+ * to the far corner alliance zone.
+ */
+void rightPushFast(int i){
+    chassis.setPose(0,0,90);
+    intake.move(127);
+    intakeTop.move(10);
+    lift.set_value(HIGH);
+    pros::Task IntakeTask([]
+                         { delay(480);
+                        loader.set_value(HIGH);});
+    drivePID(25,700);
+    loader.set_value(HIGH);
+    chassis.turnToHeading(230,700,{},false);
+    drivePID(40,870);
+    chassis.turnToHeading(270,300,{},false);
+    drivePID(20,700,23);//get loader balls
+    drivePID(1.5,200);//shimmy
+    drivePID(-5,200,130);
+    chassis.turnToHeading(270,200,{},false);
+    drivePID(-38,800);
+    loader.set_value(LOW);
+    intake.move(127);
+    intakeTop.move(127);
+    stopper.set_value(HIGH);
+    delay(950);
+    chassis.setPose(-31.232,-47.334,chassis.getPose().theta);
+    chassis.moveToPose(-48.692,-38.036,270,1000,{.forwards=true, .lead=.1},false);
+    chassis.turnToHeading(270,200,{},false);
+    drivePID(-28,2000,100);
 }
 

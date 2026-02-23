@@ -1,52 +1,79 @@
+/**
+ * @file devices.cpp
+ * @brief Hardware definitions for every sensor, motor, and pneumatic on the robot.
+ *
+ * All objects declared as extern in devices.h are constructed here.
+ * Motor port numbers follow VEX Brain port numbering (1-21).
+ * A negative port number means the motor is physically reversed (flipped in the
+ * gearbox) so that calling move(+x) produces forward motion on both sides.
+ *
+ * ADI ports A-H are the 8 digital/analog expansion ports on the V5 Brain
+ * and are used here exclusively as pneumatic solenoid outputs (DIGITAL_OUT).
+ *
+ * LemLib chassis:
+ *   Drivetrain  – 3L / 3R blue-cartridge motors, 3.25" wheels, 11.5" track
+ *   Odometry    – left & right drive encoders + single IMU (port 3)
+ *   PIDs        – lateral (kP=10, kD=3) and angular (kP=2.9, kI=0.2, kD=24)
+ */
+
 #include "devices.h"
 #include "extended_chassis.h"
 #include "pros/distance.hpp"
 
+// ─── Drive Motors ──────────────────────────────────────────────────────────────
 // left motor group
 MotorGroup left_motors({11, -13, -14}, pros::MotorGearset::blue);
 // right motor group
 MotorGroup right_motors({18, -17, 20}, pros::MotorGearset::blue);
 
+// Combined group used when commanding all drive motors at once (e.g., drivePID)
 MotorGroup all_motors({11, -13, -14, 18, -17, 20}, pros::MotorGearset::blue);
 
+// Arm motors (unused in current build; kept for future expansion)
 MotorGroup arm_motors({1, -1}, pros::MotorGearset::blue);
 
-// controller definition
+// ─── Controller ────────────────────────────────────────────────────────────────
 Controller controller(pros::E_CONTROLLER_MASTER);
 
+// ─── Intake Motors ─────────────────────────────────────────────────────────────
+// intake      – bottom roller that pulls game objects into the robot
+// intakeTop   – upper roller that feeds objects into the scoring mechanism
+// smallIntake – auxiliary roller (e.g., for a small side intake or anti-jam)
 MotorGroup intake({2, -9}, pros::MotorGearset::blue);
 Motor intakeTop(10, pros::MotorGearset::blue);
-
 Motor smallIntake(-19, pros::MotorGearset::blue);
 
-adi::Port clamp('F', pros::E_ADI_DIGITAL_OUT);
+// ─── Pneumatic Actuators (ADI Digital Outputs) ─────────────────────────────────
+// Each adi::Port controls one pneumatic solenoid via a digital signal.
+// HIGH = solenoid energized (piston extended), LOW = retracted.
+adi::Port clamp('F', pros::E_ADI_DIGITAL_OUT);       // Mobile-goal clamp arm
+adi::Port intake_lift('G', pros::E_ADI_DIGITAL_OUT); // Lifts intake for climb
+adi::Port stopper('C', pros::E_ADI_DIGITAL_OUT);     // Blocks ball from falling back out of intake
+adi::Port stopperTwo('H', pros::E_ADI_DIGITAL_OUT);  // Secondary stopper
+adi::Port lift('A', pros::E_ADI_DIGITAL_OUT);        // Ball-scoring lift piston
+adi::Port deScores('B', pros::E_ADI_DIGITAL_OUT);    // De-scoring wings (pushes balls off goals)
+adi::Port loader('D', pros::E_ADI_DIGITAL_OUT);      // Match-loader gate (drops balls from field wall)
+adi::Port frontGate('E', pros::E_ADI_DIGITAL_OUT);   // Front gate to retain balls in intake
 
-adi::Port intake_lift('G', pros::E_ADI_DIGITAL_OUT);
-
-adi::Port stopper('C', pros::E_ADI_DIGITAL_OUT);
-adi::Port stopperTwo('H', pros::E_ADI_DIGITAL_OUT);
-adi::Port lift('A', pros::E_ADI_DIGITAL_OUT);
-
-
-adi::Port deScores('B', pros::E_ADI_DIGITAL_OUT);
-adi::Port loader('D', pros::E_ADI_DIGITAL_OUT);
-adi::Port frontGate('E', pros::E_ADI_DIGITAL_OUT);
-
+// ─── PID Objects (standalone; separate from LemLib ControllerSettings below) ───
 PID lateralPID(.11, 0, 0.15);
 PID angularPID(0.495, 0, 0.002);
 
-Rotation autoRot(10);
+// ─── Sensors ──────────────────────────────────────────────────────────────────
+Rotation autoRot(10);               // Rotational sensor (port 10) for mechanisms
 
-Optical ballSensor(19);   // Optical sensor on port 19
-Distance backDistance(2); // Back distance sensor on port 8
+Optical ballSensor(19);             // Optical sensor (port 19) – detects ball color/proximity
+Distance backDistance(2);           // Distance sensor (port 2) – used for goal alignment
 
-// drivetrain settings
+// ─── LemLib Drivetrain Configuration ──────────────────────────────────────────
+// Drivetrain describes the physical geometry and gearing to LemLib so it can
+// correctly convert wheel revolutions into inches traveled.
 Drivetrain drivetrain(&left_motors,  // left motor group
                       &right_motors, // right motor group
-                      11.5,          // 11 inch track width
-                      3.25,          // using new 2.75" omnis
-                      450,           // drivetrain rpm is 450
-                      1.5            // horizontal drift is 8 (center traction wheel drivebase)
+                      11.5,          // track width in inches (wheel-to-wheel)
+                      3.25,          // wheel diameter in inches
+                      450,           // drivetrain rpm
+                      1.5            // horizontal drift factor (1.5 = slight center-traction bias)
 );
 
 // Individual IMUs

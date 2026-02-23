@@ -1,3 +1,23 @@
+/**
+ * @file testing.cpp
+ * @brief Developer utilities for iteratively testing autonomous routines.
+ *
+ * testAuton() is designed to be called every opcontrol loop when NOT connected
+ * to a competition switch. It allows the driver to:
+ *   1. Select a route by holding L1 or L2 (or neither for the default route).
+ *   2. Trigger it with A + X + Y simultaneously.
+ *   3. After the route finishes, drive the robot back by hand and repeat.
+ *
+ * Per-section timing is logged to the USB serial console via std::cout so that
+ * the team can benchmark how long each phase of the auton takes and where time
+ * is being lost.
+ *
+ * tunePID() provides a live PID tuning interface via the controller D-pad:
+ *   UP/DOWN  – multiply / divide the adjustment magnitude by 10
+ *   LEFT/RIGHT – decrease / increase the currently selected gain
+ *   Y        – cycle through kP → kI → kD
+ */
+
 #include "testing.h"
 #include "lemlib/chassis/chassis.hpp"
 #include "main.h"
@@ -15,8 +35,9 @@
 #include "old_systems.h"
 #include <iomanip>
 
-int totalTime;
-int prevTime;
+// Shared section-timer state (updated by endSection() in auton_routes.cpp)
+int totalTime; // Cumulative ms elapsed across all completed sections
+int prevTime;  // pros::millis() at the start of the current section
 // This function runs in driver control WITHOUT COMM SWITCH, it is a better way of testing the
 // autons since you can take inputs from the controller and test multiple times.
 // NOTE: The arm is on a different task, so don't hit those buttons during auton
@@ -84,8 +105,8 @@ void testAuton(bool inputReq)
             //nineBallLeft(1);
             //leftPush(1);
             //skillsFinal(1);
-            odomAWPHigh(1);
-            //rightPush(1);
+            //odomAWPHigh(1);
+            rightPushFast(1);
             // park();
             // intake.move(127);
             //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////

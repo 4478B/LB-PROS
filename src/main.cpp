@@ -1,3 +1,21 @@
+/**
+ * @file main.cpp
+ * @brief Main entry point for the VEX robot program (PROS + LemLib framework).
+ *
+ * This file contains the four PROS lifecycle callbacks:
+ *   - initialize()        : runs once on startup before anything else
+ *   - competition_initialize() : runs before autonomous when connected to a competition switch
+ *   - autonomous()        : runs during the 15-second autonomous period
+ *   - opcontrol()         : runs during the 1m45s driver-control period
+ *
+ * It also defines all the per-subsystem driver-control handler functions
+ * (drivetrain, intake, lift, wings, etc.) that are called every loop in opcontrol().
+ *
+ * Framework:
+ *   PROS  – https://pros.cs.purdue.edu/  (real-time OS for VEX V5)
+ *   LemLib – https://lemlib.readthedocs.io/ (motion planning / odometry)
+ */
+
 #include "main.h"
 #include "extended_chassis.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
@@ -16,7 +34,6 @@
 #include "testing.h"
 #include "opticalAlign.h"
 #include "old_systems.h"
-// Task function for arm control
 
 // initialize function. Runs on program startup
 void initialize()
@@ -70,9 +87,16 @@ void disabled() {}
  * starts.
  */
 
-// this is a failsafe incase testing functions in opcontrol haven't been commented out
+// Safety flag: set to true when connected to a competition/field switch.
+// testAuton() checks this and skips its manual trigger logic during a real match.
 bool inCompetition = false;
+
+// Alliance color for color-sorting; true = Red alliance, false = Blue alliance.
+// Toggled by pressing the center brain screen button during competition_initialize().
 bool red = false;
+
+// Whether the intake should automatically reject balls of the opposing alliance color.
+// Toggled with the UP button on the controller during opcontrol.
 bool colorSortEnabled = true; // Color sorting is on by default
 void onCenter_button()
 {
@@ -98,10 +122,15 @@ void competition_initialize()
     lcd::register_btn1_cb(onCenter_button);
 }
 
+// --- Joystick Expo Curve Constants ---
+// Joystick values are passed through a power curve (x^3 / DENOMINATOR) so that
+// slow movements are more precise while full-stick input still reaches 100% power.
 const double SMOOTHING_DENOMINATOR = 10000; // Used to normalize the exponential curve
 const double EXPONENTIAL_POWER = 3;       // Controls how aggressive the curve is
+
 // Helper function that makes joystick input more precise for small movements
-// while maintaining full power at maximum joystick
+// while maintaining full power at maximum joystick deflection.
+// Input range: -100 to 100 (percent). Output range: -100 to 100 (percent).
 double logDriveJoystick(double joystickPCT)
 {
     // Get the absolute value for calculation
@@ -114,6 +143,12 @@ double logDriveJoystick(double joystickPCT)
     return joystickPCT >= 0 ? smoothedValue : -smoothedValue;
 }
 
+/**
+ * Tank-drive handler called every opcontrol loop iteration.
+ * Reads left/right joystick Y-axes, applies the expo curve, scales
+ * the result to motor velocity units (±600 RPM for 600 RPM "blue" cartridge),
+ * and commands the drivetrain motor groups.
+ */
 void handleDriveTrain()
 {
 
@@ -137,6 +172,10 @@ void handleDriveTrain()
     left_motors.move_velocity(leftY);
     right_motors.move_velocity(rightY);
 }
+/**
+ * Toggles the ball loader (match-loader gate) pneumatic on each press of RIGHT.
+ * The loader is a pneumatic piston that controls the ball-intake gate at the field wall.
+ */
 void handleLoader()
 {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
@@ -145,6 +184,10 @@ void handleLoader()
     }
 }
 
+/**
+ * Controls the de-scoring wings (side pneumatics that push game objects off goals).
+ * Held HIGH while L2 is depressed; returns LOW when released.
+ */
 void handleWings()
 {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
@@ -265,6 +308,18 @@ void handleIntake()
     
 }
 
+/**
+ * Current active intake handler (replaces handleIntake).
+ *
+ * Button mapping:
+ *   R1 + R2  – Reverse bottom intake, run top intake backwards (eject)
+ *   R1 + L1  – Run both intake stages forward (full intake)
+ *   R1 only  – Run bottom intake forward, top at low power (feed into scorer)
+ *   R2 only  – Run both intake stages in reverse (spit out)
+ *   none     – Brake all intake motors, raise front gate, lower stopperTwo
+ *
+ * Note: intakeTop runs at low power (10) during R1-only to avoid jamming.
+ */
 void handleIntakeNew(){
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
@@ -312,6 +367,7 @@ void handleIntakeNew(){
     }
 }
 
+/** Toggles the front gate pneumatic on each press of DOWN. */
 void handlefrontGate()
 {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
@@ -319,6 +375,8 @@ void handlefrontGate()
         frontGate.set_value(!frontGate.get_value());
     }
 }
+
+/** Toggles the lift pneumatic (raises/lowers ball-scoring lift) on each press of DOWN. */
 void handleLift(){
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
     {
@@ -326,9 +384,14 @@ void handleLift(){
     }
 }
 
+/**
+ * Controls the ball stopper pneumatic.
+ * The stopper blocks the ball path so balls don't fall back out of the intake.
+ * Held HIGH while L1 is depressed; returns LOW when released.
+ */
 void handleStopper()
 {
-    
+
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
     {
         stopper.set_value(HIGH);
