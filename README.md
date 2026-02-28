@@ -1,4 +1,4 @@
-# 4478B — VEX Push Back Robot (PROS)
+# 4478B — VEX Push Back Robot (PROS) Final
 
 PROS remake of our VEX 25-26 Push Back competition robot.
 
