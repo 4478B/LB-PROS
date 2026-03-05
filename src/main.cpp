@@ -91,35 +91,25 @@ void disabled() {}
 // testAuton() checks this and skips its manual trigger logic during a real match.
 bool inCompetition = false;
 
-// Alliance color for color-sorting; true = Red alliance, false = Blue alliance.
-// Toggled by pressing the center brain screen button during competition_initialize().
-bool red = false;
-
 // Whether the intake should automatically reject balls of the opposing alliance color.
 // Toggled with the UP button on the controller during opcontrol.
 bool colorSortEnabled = true; // Color sorting is on by default
-void onCenter_button()
-{
-    red = !red;
-    competitionSelector.displaySelectionBrain();
-}
 
 void competition_initialize()
 {
-
     inCompetition = true;
+
     // show current route on brain screen
     competitionSelector.displaySelectionBrain();
 
-    // run buttons once to print values on screen
+    // run buttons once to refresh the display
     on_left_button();
     on_right_button();
 
-    // assign buttons to actions in auton selector
+    // LEFT/RIGHT cycle routines; CENTER enters push delay adjustment
     lcd::register_btn0_cb(on_left_button);
     lcd::register_btn2_cb(on_right_button);
-
-    lcd::register_btn1_cb(onCenter_button);
+    lcd::register_btn1_cb(enterPushDelayMode);
 }
 
 // --- Joystick Expo Curve Constants ---
@@ -343,7 +333,7 @@ void handleIntakeNew(){
     { 
        
        intake.move(127);
-       intakeTop.move(10);
+       intakeTop.move(100);
         //frontGate.set_value(LOW);
     }
      else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))

@@ -104,9 +104,12 @@ void testAuton(bool inputReq)
             //skillsNew(1);
             //nineBallLeft(1);
             //leftPush(1);
-            //skillsFinal(1);
+            skillsFinal(1);
+            //testMid(1);
             //odomAWPHigh(1);
-            rightPushFast(1);
+            //rightPushFast(1);
+            //rightPush(1);
+            //leftPushFast(1);
             // park();
             // intake.move(127);
             //////////////////   TESTING AUTO HERE SWITCH WHICH ONE U WANNA RUN DOWN HERE   ///////////////////////////////

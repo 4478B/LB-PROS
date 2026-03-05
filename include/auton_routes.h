@@ -16,6 +16,10 @@
 // Tracks the current section index during a split-section auton test (see endSection).
 extern int autonSection;
 
+// Variable delay (ms) inserted at the push timing point in leftPushFast / rightPushFast.
+// Adjusted in 500 ms increments via selectPushDelay() before a match.
+extern int pushDelay;
+
 /**
  * Drives forward/backward `goalInches` inches using odometry-based motion.
  * Computes a goal coordinate from the current pose and calls LemLib moveToPoint.
@@ -53,8 +57,9 @@ void skillsNew(int i);       // Full-field skills run (current, uses odometry)
 void leftPush(int i);        // 7-ball left-side push route (match play)
 void rightPush(int i);       // 7-ball right-side push route (match play)
 void skillsFinal(int i);     // Final skills run variant
+void testMid(int i);         // Mid-field test route for tuning and diagnostics
 void nineBallRight(int i);   // 9-ball route from right alliance zone
 void nineBallLeft(int i);    // 9-ball route from left alliance zone
 void rightPushFast(int i);   // Fast variant of the right-side push route
-
+void leftPushFast(int i);    // Fast variant of the left-side push route
 #endif // AUTON_ROUTES_H

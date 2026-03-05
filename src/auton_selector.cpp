@@ -13,6 +13,7 @@
 #include "auton_routes.h"
 #include "testing.h"
 #include "devices.h"
+#include "liblvgl/llemu.hpp"
 #include <iostream>
 
 /**
@@ -60,9 +61,11 @@ void AutonSelector::displaySelectionBrain() {
         return;
     }
     pros::lcd::clear_line(1);
-    pros::lcd::print(1, "Alliance: %s", red ? "Red" : "Blue");
+    pros::lcd::print(1, "%s", routines[currentSelection - 1].displayName.c_str());
     pros::lcd::clear_line(2);
-    pros::lcd::print(2, "%s",routines[currentSelection - 1].displayName.c_str());
+    pros::lcd::print(2, "CENTER to set push delay");
+    pros::lcd::clear_line(3);
+    pros::lcd::print(3, "Push Delay: %d ms", pushDelay);
 }
 
 void AutonSelector::prevSelection() {
@@ -95,11 +98,12 @@ int AutonSelector::getRoutineCount() const {
 // This array drives the brain-screen selector during pre-match.
 // Order here = order shown on screen. Cycle with left/right LCD buttons.
 const AutonRoutine COMPETITION_ROUTINES[] = {
-    {"Full AWP LEFT SIDE",       newfullLocalAWP, 1}, // Primary match AWP (left start)
+    {"Left Fast 7 Ball",       leftPushFast, 1}, // Primary match AWP (left start)
     {"Full FIELD SKILLS",        skillsNew,       1}, // 60-second skills run
     {"Elim 9 Ball",              tylerAuton,      1}, // 9-ball elimination route
     {"Odom AWP Right",           odomAWPHigh,     1}, // Right-side AWP using odometry
-    {"Left 7 Ball Push",         leftPush,        1}, // Left-side push routine
+    {"Left 4-3 Ball Push",         leftPush,    1}, // Left-side push routine
+    {"Right 4-3 Ball Push",         rightPush,    1}, // Right-side push routine
     {"Right 7 Ball Push Fast",   rightPushFast,   1}, // Fast right-side push
 };
 
@@ -116,4 +120,54 @@ void on_left_button() {
 void on_right_button() {
     competitionSelector.nextSelection();
     competitionSelector.displaySelectionBrain();
+}
+
+// ─── Push Delay Selector (non-blocking state machine) ─────────────────────────
+// Pressing CENTER on the brain during routine selection swaps all three buttons
+// into delay-adjustment mode. Pressing CENTER again swaps back. No blocking loops
+// are used — callbacks return immediately, avoiding LCD task deadlocks.
+
+void enterPushDelayMode(); // forward declaration needed by exitPushDelayMode
+
+static void showDelayScreen() {
+    pros::lcd::clear_line(0);
+    pros::lcd::clear_line(1);
+    pros::lcd::clear_line(2);
+    pros::lcd::clear_line(3);
+    pros::lcd::print(1, "-- Set Push Delay --");
+    pros::lcd::print(2, "< -500ms | DONE | +500ms >");
+    pros::lcd::print(3, "Push Delay: %d ms", pushDelay);
+}
+
+static void exitPushDelayMode() {
+    lcd::register_btn0_cb(on_left_button);
+    lcd::register_btn2_cb(on_right_button);
+    lcd::register_btn1_cb(enterPushDelayMode);
+    competitionSelector.displaySelectionBrain();
+}
+
+static void pushDelayDecrease() {
+    if (pushDelay >= 500) pushDelay -= 500;
+    showDelayScreen();
+}
+
+static void pushDelayIncrease() {
+    pushDelay += 500;
+    showDelayScreen();
+}
+
+/**
+ * Switches the three brain LCD buttons into push-delay adjustment mode.
+ * Register this as the CENTER button callback in competition_initialize().
+ *
+ * While active:
+ *   LEFT   – decrease push delay by 500 ms (floor 0)
+ *   RIGHT  – increase push delay by 500 ms
+ *   CENTER – confirm and return to routine selection
+ */
+void enterPushDelayMode() {
+    lcd::register_btn0_cb(pushDelayDecrease);
+    lcd::register_btn2_cb(pushDelayIncrease);
+    lcd::register_btn1_cb(exitPushDelayMode);
+    showDelayScreen();
 }

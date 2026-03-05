@@ -75,8 +75,14 @@ extern AutonSelector competitionSelector;
 extern AutonSelector testingSelector;
 
 // Function declarations
-extern bool red;
 void on_left_button();
 void on_right_button();
+
+/**
+ * Switches the brain LCD buttons into push-delay adjustment mode.
+ * LEFT/RIGHT = ±500 ms, CENTER = confirm and return to routine selection.
+ * Register as the CENTER button callback in competition_initialize().
+ */
+void enterPushDelayMode();
 
 #endif // AUTON_SELECTOR_H
