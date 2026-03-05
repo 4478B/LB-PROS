@@ -1317,7 +1317,7 @@ void skillsFinal(int i){
     
     chassis.turnToHeading(315,400,{},false);
     pros::Task IntakeTask([]
-                         { delay(600);
+                         { delay(100);
                         loader.set_value(HIGH);});
     
     chassis.moveToPose(-9.935,6.229,315,1300,{.forwards=false, .lead=.1},false);
@@ -1331,19 +1331,19 @@ void skillsFinal(int i){
     //stopper.set_value(HIGH);
     delay(200);
     intake.move(100);
-    intakeTop.move(-17);
+    intakeTop.move(-25);
     delay(1000);
     intake.move(-127);
     intakeTop.move(-127);
-    delay(250);
+    delay(270);
     intake.move(127);
-    intakeTop.move(-17);
+    intakeTop.move(-25);
     delay(60);
-    intake.move(100);
+    intake.move(80);
     delay(1400);
     
     intake.move(60);
-    intakeTop.move(-15);
+    intakeTop.move(-20);
     delay(700);
     drivePID(-5,400);
     
@@ -1480,7 +1480,7 @@ void skillsFinal(int i){
     drivePID(5,500);
     drivePID(-5,500);*/
     drivePID(100,1700,5);
-    chassis.turnToHeading(271,500,{},false);
+    chassis.turnToHeading(269,500,{},false);
     loader.set_value(LOW);
     //outake(100);
 
@@ -1513,7 +1513,7 @@ void skillsFinal(int i){
     chassis.turnToHeading(0,800);
     intake.move(127);
     intakeTop.move(127);
-    drivePID(42,1600,30);
+    drivePID(44,1600,30);
     chassis.turnToHeading(270,800,{},false);
     drivePID(70,1000,20);
     
