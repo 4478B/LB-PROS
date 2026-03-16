@@ -99,7 +99,7 @@ int AutonSelector::getRoutineCount() const {
 // Order here = order shown on screen. Cycle with left/right LCD buttons.
 const AutonRoutine COMPETITION_ROUTINES[] = {
     {"Left Fast 7 Ball",       leftPushFast, 1}, // Primary match AWP (left start)
-    {"Full FIELD SKILLS",        skillsNew,       1}, // 60-second skills run
+    {"Full Field Skills 7 fill",        skillsFinal,       1}, // 60-second skills run
     {"Elim 9 Ball",              tylerAuton,      1}, // 9-ball elimination route
     {"Odom AWP Right",           odomAWPHigh,     1}, // Right-side AWP using odometry
     {"Left 4-3 Ball Push",         leftPush,    1}, // Left-side push routine

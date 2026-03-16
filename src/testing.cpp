@@ -106,9 +106,9 @@ void testAuton(bool inputReq)
             //leftPush(1);
             //skillsFinal(1);
             //testMid(1);
-            odomAWPHigh(1);
+            //odomAWPHigh(1);
             //rightPushFast(1);
-            //rightPush(1);
+            rightPush(1);
             //leftPushFast(1);
             // park();
             // intake.move(127);
