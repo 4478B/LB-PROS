@@ -228,9 +228,8 @@ void handleIntake()
 
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
-        intakeTop.move(127);
+        intakeTop.move(-127);
         intake.move(127);
-        smallIntake.move(127);
         //frontGate.set_value(HIGH);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
@@ -273,7 +272,6 @@ void handleIntake()
         }*/
        intake.move(127);
         intakeTop.move(127);
-        smallIntake.move(-127);
         //frontGate.set_value(LOW);
 
     }
@@ -281,7 +279,6 @@ void handleIntake()
     {
         intake.move(-127);
         intakeTop.move(-127);
-        smallIntake.move(127);
         //frontGate.set_value(LOW);
 
     }
@@ -314,7 +311,7 @@ void handleIntakeNew(){
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         intake.move(127);//55
-        intakeTop.move(-127);//-22
+        intakeTop.move(-50);//-22
         //smallIntake.move(127);
         //stopperTwo.set_value(HIGH);
         //frontGate.set_value(LOW);
@@ -333,13 +330,13 @@ void handleIntakeNew(){
     { 
        
        intake.move(127);
-       intakeTop.move(100);
+       intakeTop.move(60);
         //frontGate.set_value(LOW);
     }
      else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         intake.move(-127);
-        intakeTop.move(-127);//40
+        intakeTop.move(-85);//40
         //frontGate.set_value(LOW);
 
     }

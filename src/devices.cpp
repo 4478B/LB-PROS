@@ -22,12 +22,12 @@
 
 // ─── Drive Motors ──────────────────────────────────────────────────────────────
 // left motor group
-MotorGroup left_motors({11, -13, -14}, pros::MotorGearset::blue);
+MotorGroup left_motors({-11, 12, -13}, pros::MotorGearset::blue);
 // right motor group
-MotorGroup right_motors({18, -17, 20}, pros::MotorGearset::blue);
+MotorGroup right_motors({20, -19, 18}, pros::MotorGearset::blue);
 
 // Combined group used when commanding all drive motors at once (e.g., drivePID)
-MotorGroup all_motors({11, -13, -14, 18, -17, 20}, pros::MotorGearset::blue);
+MotorGroup all_motors({-11, 12, -13, 20, -19, 18}, pros::MotorGearset::blue);
 
 // Arm motors (unused in current build; kept for future expansion)
 MotorGroup arm_motors({1, -1}, pros::MotorGearset::blue);
@@ -39,20 +39,20 @@ Controller controller(pros::E_CONTROLLER_MASTER);
 // intake      – bottom roller that pulls game objects into the robot
 // intakeTop   – upper roller that feeds objects into the scoring mechanism
 // smallIntake – auxiliary roller (e.g., for a small side intake or anti-jam)
-MotorGroup intake({2, -9}, pros::MotorGearset::blue);
-Motor intakeTop(10, pros::MotorGearset::blue);
-Motor smallIntake(-19, pros::MotorGearset::blue);
+MotorGroup intake({10, -9}, pros::MotorGearset::blue);
+Motor intakeTop(-1, pros::MotorGearset::blue);
+Motor smallIntake(-5, pros::MotorGearset::blue);
 
 // ─── Pneumatic Actuators (ADI Digital Outputs) ─────────────────────────────────
 // Each adi::Port controls one pneumatic solenoid via a digital signal.
 // HIGH = solenoid energized (piston extended), LOW = retracted.
 adi::Port clamp('F', pros::E_ADI_DIGITAL_OUT);       // Mobile-goal clamp arm
 adi::Port intake_lift('G', pros::E_ADI_DIGITAL_OUT); // Lifts intake for climb
-adi::Port stopper('C', pros::E_ADI_DIGITAL_OUT);     // Blocks ball from falling back out of intake
+adi::Port stopper('A', pros::E_ADI_DIGITAL_OUT);     // Blocks ball from falling back out of intake
 adi::Port stopperTwo('H', pros::E_ADI_DIGITAL_OUT);  // Secondary stopper
-adi::Port lift('A', pros::E_ADI_DIGITAL_OUT);        // Ball-scoring lift piston
-adi::Port deScores('B', pros::E_ADI_DIGITAL_OUT);    // De-scoring wings (pushes balls off goals)
-adi::Port loader('D', pros::E_ADI_DIGITAL_OUT);      // Match-loader gate (drops balls from field wall)
+adi::Port lift('D', pros::E_ADI_DIGITAL_OUT);        // Ball-scoring lift piston
+adi::Port deScores('C', pros::E_ADI_DIGITAL_OUT);    // De-scoring wings (pushes balls off goals)
+adi::Port loader('B', pros::E_ADI_DIGITAL_OUT);      // Match-loader gate (drops balls from field wall)
 adi::Port frontGate('E', pros::E_ADI_DIGITAL_OUT);   // Front gate to retain balls in intake
 
 // ─── PID Objects (standalone; separate from LemLib ControllerSettings below) ───
@@ -77,8 +77,8 @@ Drivetrain drivetrain(&left_motors,  // left motor group
 );
 
 // Individual IMUs
-Imu imu(3);  // First IMU on port 7
-Imu imu2(16); // Second IMU on port 8 (change this to your actual port)
+Imu imu(14);  // First IMU on port 7
+Imu imu2(17); // Second IMU on port 8 (change this to your actual port)
 
 // Averaged IMU that combines both sensors
 AveragedIMU imu1(&imu, &imu2);
