@@ -41,7 +41,7 @@ Controller controller(pros::E_CONTROLLER_MASTER);
 // smallIntake – auxiliary roller (e.g., for a small side intake or anti-jam)
 MotorGroup intake({10, -9}, pros::MotorGearset::blue);
 Motor intakeTop(-1, pros::MotorGearset::blue);
-Motor smallIntake(-5, pros::MotorGearset::blue);
+Motor smallIntake(-9, pros::MotorGearset::blue);
 
 // ─── Pneumatic Actuators (ADI Digital Outputs) ─────────────────────────────────
 // Each adi::Port controls one pneumatic solenoid via a digital signal.
