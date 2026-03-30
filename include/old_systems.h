@@ -32,7 +32,7 @@ extern void drivePIDTest(double, double=100, int=1000); // Legacy test variant (
  * @param goalThreshold  Error threshold (inches) considered "close enough" to stop.
  * @param clamping       If true, fires the clamp pneumatic when within CLAMP_DISTANCE.
  */
-void drivePID(double inches, int timeout = 1000, double kP = 40, double kI = 0, double kD = 7, double goalThreshold = .2, bool clamping = false);
+void drivePID(double inches, int timeout = 1000, double kP = 45, double kI = 0, double kD = 7, double goalThreshold = .2, bool clamping = false);
 
 /** Variant of drivePID with clamping enabled and conservative defaults. */
 void drivePIDClamp(double inches, int timeout = 3000, double kP = 50, double kI = 0, double kD = 0, double goalThreshold = .5);

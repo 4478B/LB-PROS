@@ -1252,8 +1252,7 @@ void skillsFinal(int i){
     lift.set_value(HIGH);
     intake.move(127);
     intakeTop.move(85);
-    loader.set_value(HIGH);
-    /*
+  /*
     drivePID(-5,500);
     loader.set_value(HIGH);
     delay(300);
@@ -1283,22 +1282,18 @@ void skillsFinal(int i){
     chassis.turnToHeading(315,500,{},false); 
     intake.move(127);*/
     delay(100);
-    loader.set_value(LOW);
+    
 
     delay(400);   
-    drivePID(16,550);
+    drivePID(30,550);
     
     drivePID(-4,250);
     
     delay(200);
     
-    intake.move(-127);
-    delay(150);
-    intake.move(127);
-
     
     drivePID(25,800);
-    drivePID(-8,500);
+    drivePID(-2,500);
     chassis.turnToHeading(280,200,{},false);
     chassis.turnToHeading(260,200,{},false);
     chassis.turnToHeading(270,350,{},false);
@@ -1307,7 +1302,7 @@ void skillsFinal(int i){
     intake.move(127);
     delay(200);
     chassis.turnToHeading(270,300,{},false);
-    drivePID(-30,750,40);
+    drivePID(-25,750);
     chassis.turnToHeading(270,300,{},false);
     drivePID(30,1000,8);
     chassis.setPose(-44.592,0,chassis.getPose().theta); //46.711 , 47.211
@@ -1320,30 +1315,33 @@ void skillsFinal(int i){
                          { delay(350);
                         loader.set_value(HIGH);});
     
-    chassis.moveToPose(-9.935,5.229,315,1300,{.forwards=false, .lead=.1},false);
+    chassis.moveToPose(-10.935,3.229,315,1300,{.forwards=false, .lead=.1},false);
     loader.set_value(HIGH);
     intake.move(-127);
-    intakeTop.move(-90);
+    intakeTop.move(-50);
     drivePID(3,340);
-    intake.move(127);//85
-    intakeTop.move(-50);//-39
+    intake.move(100);//85
+    smallIntake.move(127);
+    intakeTop.move(-40);//-39
     chassis.turnToHeading(315,300,{},false);
     //stopper.set_value(HIGH);
     delay(200);
-    intake.move(95);
+    intake.move(70);
+    smallIntake.move(115);
     intakeTop.move(-35);//25
     delay(500);
     intake.move(-127);
     intakeTop.move(-30);
     drivePID(3,200);
-    intake.move(60.7);
+    intake.move(40);
+    smallIntake.move(60);
     intakeTop.move(-22);
-    drivePID(-4,250);
-    delay(1400);
-    intake.move(50);
+    delay(500);
+    intake.move(30);
+    smallIntake.move(60);
     intakeTop.move(-20);
-    delay(1300);
-    drivePID(-5.8,400);
+    delay(800);
+    drivePID(-2,400);
     delay(300);
     
 

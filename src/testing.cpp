@@ -100,15 +100,15 @@ void testAuton(bool inputReq)
             // fullLocalAWP(1);
             // tylerAuton(1);
             // newfullLocalAWP(1);
-            // testPID(1);
+            //testPID(1);
             //skillsNew(1);
             //nineBallLeft(1);
             //leftPush(1);
-            //skillsFinal(1);
+            skillsFinal(1);
             //testMid(1);
             //odomAWPHigh(1);
             //rightPushFast(1);
-            rightPush(1);
+            //rightPush(1);
             //leftPushFast(1);
             // park();
             // intake.move(127);
