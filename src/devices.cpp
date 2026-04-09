@@ -60,10 +60,10 @@ PID lateralPID(.11, 0, 0.15);
 PID angularPID(0.495, 0, 0.002);
 
 // ─── Sensors ──────────────────────────────────────────────────────────────────
-Rotation autoRot(10);               // Rotational sensor (port 10) for mechanisms
+Rotation autoRot(10); // Rotational sensor (port 10) for mechanisms
 
-Optical ballSensor(19);             // Optical sensor (port 19) – detects ball color/proximity
-Distance backDistance(2);           // Distance sensor (port 2) – used for goal alignment
+Optical ballSensor(19);   // Optical sensor (port 19) – detects ball color/proximity
+Distance backDistance(2); // Distance sensor (port 2) – used for goal alignment
 
 // ─── LemLib Drivetrain Configuration ──────────────────────────────────────────
 // Drivetrain describes the physical geometry and gearing to LemLib so it can
@@ -73,7 +73,7 @@ Drivetrain drivetrain(&left_motors,  // left motor group
                       11.5,          // track width in inches (wheel-to-wheel)
                       3.25,          // wheel diameter in inches
                       450,           // drivetrain rpm
-                      1.5            // horizontal drift factor (1.5 = slight center-traction bias)
+                      2.0            // horizontal drift: higher = more overshoot (standard omni default is 2.0)
 );
 
 // Individual IMUs

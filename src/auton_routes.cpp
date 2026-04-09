@@ -640,12 +640,12 @@ void odomAWPHigh(int i){
     chassis.turnToHeading(0,100,{},false);
     drivePID(-50.3,1050);//go to loader //29.3
     loader.set_value(HIGH); 
-    chassis.turnToHeading(272,620,{},false);
+    chassis.turnToHeading(270,620,{},false);
     drivePID(32,800,20);//get loader balls
     //chassis.turnToHeading(-270,400 ,{},false);
     drivePID(1.5,250);//shimmy 
     drivePID(-5,200,130);
-    chassis.turnToHeading(273,300,{},false);
+    chassis.turnToHeading(270,300,{},false);
 
     //alignToLongGoal(-273,false);
 
