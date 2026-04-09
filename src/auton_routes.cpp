@@ -1315,7 +1315,7 @@ void skillsFinal(int i){
                          { delay(350);
                         loader.set_value(HIGH);});
     
-    chassis.moveToPose(-10.935,3.229,315,1300,{.forwards=false, .lead=.1},false);
+    chassis.moveToPose(-10.935,-2.229,315,1300,{.forwards=false, .lead=.1},false);
     loader.set_value(HIGH);
     intake.move(-127);
     intakeTop.move(-50);
@@ -1371,54 +1371,59 @@ void skillsFinal(int i){
     chassis.setPose(-10.731,9.939,chassis.getPose().theta);
     loader.set_value(HIGH);
     lift.set_value(HIGH);
-    chassis.moveToPose(-43.93,45.949,315,1400,{.forwards=true, .lead=.0},false);
+    chassis.moveToPose(-43.93,47.949,315,1400,{.forwards=true, .lead=.0},false);
     deScores.set_value(HIGH);
     intake.move(127);
     intakeTop.move(-127);
     chassis.turnToHeading(270,750,{},false);
     intakeTop.move(100);
-    intake.move(127);
+    intake.move(75);
     drivePID(30,800,23);
-    drivePID(-0.5,400);//shimmy
-    drivePID(5,500);
+    drivePID(-0.5,200);//shimmy
+    drivePID(5,300);
     //drivePID(-1.5,500);
-    drivePID(100,800,5);
+    drivePID(100,800,5);                     //MATCHLOADER 1 FINISHED
 
-    chassis.setPose(-55.613,46.182, chassis.getPose().theta);
-    chassis.moveToPose(-26.868,61.222,270,2000,{.forwards=false},false);
     loader.set_value(LOW);
+    chassis.setPose(-55.613,46.182, chassis.getPose().theta);
+    chassis.moveToPose(-30.868,55.222,260,2500,{.forwards=false},false);
+    drivePID(-80,2000);
+    chassis.setPose(55.066,61.958,270);
+    chassis.moveToPose(21.57,49.305,90,1600,{.forwards=false, .lead=.5},false);
+    /* odom loader to goal
+    chassis.moveToPose(-26.868,61.222,270,2000,{.forwards=false},false);
     chassis.moveToPose(55.066,61.958,270,2000,{.forwards=false, .lead=.5},false);
     chassis.moveToPose(21.57,49.305,90,1600,{.forwards=false, .lead=.5},false);
-    stopper.set_value(HIGH); 
+    */
+    stopper.set_value(HIGH);                 //SCORE FIRST
     intake.move(127);
     intakeTop.move(127);
     //intakeTop.move(127);
-    drivePID(-10,200,100);
+    drivePID(-50,200,100);
     chassis.turnToHeading(90,1000,{},false);
     loader.set_value(HIGH); 
     drivePID(-10,500);
-    stopper.set_value(LOW);
     //drivePID(5,1000);
-    
     intakeTop.move(100);
-    chassis.turnToHeading(89,500,{},false);
+    chassis.turnToHeading(90,500,{},false);
     //delay(500);
     intake.move(127);
-    drivePID(40,1200,18);//get loader balls
+    stopper.set_value(LOW);
+    drivePID(40,1200,18);                      //get loader balls
     chassis.turnToHeading(90,400,{},false);
-    /*drivePID(-1.5,700);//shimmy
+    /*drivePID(-1.5,700);                      //shimmy
     drivePID(5,500);
     drivePID(-1.5,500);*/
-    drivePID(100,1700,5);
-    chassis.turnToHeading(91.5,500,{},false);
-    loader.set_value(LOW);
-    drivePID(-30,1000,50);//go to score
+    drivePID(100,1100,5);
+    chassis.turnToHeading(90,500,{},false);
+    drivePID(-30,1000,50);                     //go to score
     stopper.set_value(HIGH);
     //outake(200);
     intake.move(127);
     intakeTop.move(127);
     drivePID(-10,1100,100);
     chassis.turnToHeading(90,500,{},false);
+    loader.set_value(LOW);
     
 
     
@@ -1450,8 +1455,8 @@ void skillsFinal(int i){
     chassis.turnToHeading(90,200,{},false);
     chassis.setPose(56.761,-48.76,chassis.getPose().theta); //46.711 , 47.211
     delay(100);
-    chassis.moveToPose(26.868,-61.222,90,2000,{.forwards=false},false);
     loader.set_value(LOW);
+    chassis.moveToPose(26.868,-61.222,90,2000,{.forwards=false},false);
     chassis.moveToPose(-55.066,-63.958,90,2000,{.forwards=false, .lead=.5},false);
     chassis.moveToPose(-22.57,-51.805,270,1600,{.forwards=false, .lead=.5},false);
     //outake(200);
@@ -1468,7 +1473,7 @@ void skillsFinal(int i){
     intakeTop.move(100);
     
 
-    chassis.turnToHeading(267,500,{},false);
+    chassis.turnToHeading(270,500,{},false);
     //delay(500);
     drivePID(40,1200,18);//get loader balls
     chassis.turnToHeading(270,400,{},false);
@@ -1476,7 +1481,7 @@ void skillsFinal(int i){
     drivePID(5,500);
     drivePID(-5,500);*/
     drivePID(100,1700,5);
-    chassis.turnToHeading(271,500,{},false);
+    chassis.turnToHeading(270,500,{},false);
     loader.set_value(LOW);
     //outake(100);
 
