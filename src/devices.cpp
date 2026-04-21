@@ -40,7 +40,7 @@ Controller controller(pros::E_CONTROLLER_MASTER);
 // intakeTop   – upper roller that feeds objects into the scoring mechanism
 // smallIntake – auxiliary roller (e.g., for a small side intake or anti-jam)
 MotorGroup intake({10, -9}, pros::MotorGearset::blue);
-Motor intakeTop(-1, pros::MotorGearset::blue);
+Motor intakeTop(1, pros::MotorGearset::blue);
 Motor smallIntake(-9, pros::MotorGearset::blue);
 
 // ─── Pneumatic Actuators (ADI Digital Outputs) ─────────────────────────────────
@@ -50,7 +50,8 @@ adi::Port clamp('F', pros::E_ADI_DIGITAL_OUT);       // Mobile-goal clamp arm
 adi::Port intake_lift('G', pros::E_ADI_DIGITAL_OUT); // Lifts intake for climb
 adi::Port stopper('A', pros::E_ADI_DIGITAL_OUT);     // Blocks ball from falling back out of intake
 adi::Port stopperTwo('H', pros::E_ADI_DIGITAL_OUT);  // Secondary stopper
-adi::Port lift('D', pros::E_ADI_DIGITAL_OUT);        // Ball-scoring lift piston
+adi::Port lift('E', pros::E_ADI_DIGITAL_OUT);        // Ball-scoring lift piston
+adi::Port liftReal('D', pros::E_ADI_DIGITAL_OUT);
 adi::Port deScores('C', pros::E_ADI_DIGITAL_OUT);    // De-scoring wings (pushes balls off goals)
 adi::Port loader('B', pros::E_ADI_DIGITAL_OUT);      // Match-loader gate (drops balls from field wall)
 adi::Port frontGate('E', pros::E_ADI_DIGITAL_OUT);   // Front gate to retain balls in intake
@@ -77,8 +78,8 @@ Drivetrain drivetrain(&left_motors,  // left motor group
 );
 
 // Individual IMUs
-Imu imu(14);  // First IMU on port 7
-Imu imu2(17); // Second IMU on port 8 (change this to your actual port)
+Imu imu(17);  // First IMU on port 7
+Imu imu2(14); // Second IMU on port 8 (change this to your actual port)
 
 // Averaged IMU that combines both sensors
 AveragedIMU imu1(&imu, &imu2);

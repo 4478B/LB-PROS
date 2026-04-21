@@ -310,9 +310,9 @@ void handleIntake()
 void handleIntakeNew(){
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
-        intake.move(40);//55
+        intake.move(127);//55
         smallIntake.move(60);
-        intakeTop.move(-25);//-22
+        intakeTop.move(-80);//-22
         //smallIntake.move(127);
         //stopperTwo.set_value(HIGH);
         //frontGate.set_value(LOW);
@@ -369,7 +369,7 @@ void handlefrontGate()
 void handleLift(){
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
     {
-        lift.set_value(!lift.get_value());
+        liftReal.set_value(!liftReal.get_value());
     }
 }
 

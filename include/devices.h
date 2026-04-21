@@ -44,6 +44,7 @@ extern adi::Port intake_lift;    // ADI G – lifts intake mechanism
 extern adi::Port stopper;        // ADI C – ball stopper (prevents rollback)
 extern adi::Port stopperTwo;     // ADI H – secondary stopper
 extern adi::Port lift;           // ADI A – ball-scoring lift
+extern adi::Port liftReal; 
 extern adi::Port deScores;       // ADI B – de-scoring wings
 extern adi::Port loader;         // ADI D – match-loader gate
 extern adi::Port frontGate;      // ADI E – front ball-retention gate
