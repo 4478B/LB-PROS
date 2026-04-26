@@ -39,7 +39,7 @@
 void initialize()
 {
     deScores.set_value(LOW);
-    lift.set_value(LOW);
+    liftReal.set_value(HIGH);
     //stopper.set_value(HIGH);
     // controller.clear(); // clear controller screen
     lcd::initialize();   // initialize brain screen
@@ -64,6 +64,8 @@ void initialize()
 void autonomous()
 {
     all_motors.set_brake_mode_all(E_MOTOR_BRAKE_HOLD);
+    liftReal.set_value(LOW);
+
     competitionSelector.runSelection();
     all_motors.brake();
     delay(2000);
@@ -311,8 +313,8 @@ void handleIntakeNew(){
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         intake.move(127);//55
-        smallIntake.move(60);
-        intakeTop.move(-80);//-22
+        smallIntake.move(80);
+        intakeTop.move(-127);//-22
         //smallIntake.move(127);
         //stopperTwo.set_value(HIGH);
         //frontGate.set_value(LOW);
@@ -434,6 +436,7 @@ void opcontrol()
     ballSensor.set_led_pwm(100);
     //lift.set_value(LOW);
     chassis.setPose(0, 0, 0);
+    liftReal.set_value(LOW);
     // backGate.set_value(LOW);
     // bool buttonsPressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
     /*    pros::Task IntakeTask([]

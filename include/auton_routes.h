@@ -62,4 +62,5 @@ void nineBallRight(int i);   // 9-ball route from right alliance zone
 void nineBallLeft(int i);    // 9-ball route from left alliance zone
 void rightPushFast(int i);   // Fast variant of the right-side push route
 void leftPushFast(int i);    // Fast variant of the left-side push route
+void empty(int i);
 #endif // AUTON_ROUTES_H

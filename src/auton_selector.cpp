@@ -98,6 +98,7 @@ int AutonSelector::getRoutineCount() const {
 // This array drives the brain-screen selector during pre-match.
 // Order here = order shown on screen. Cycle with left/right LCD buttons.
 const AutonRoutine COMPETITION_ROUTINES[] = {
+    {"Do nothing",       empty, 1},
     {"Left Fast 7 Ball",       leftPushFast, 1}, // Primary match AWP (left start)
     {"Full Field Skills 7 fill",        skillsFinal,       1}, // 60-second skills run
     {"Elim 9 Ball",              tylerAuton,      1}, // 9-ball elimination route
